@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.job.model.resume.ResumeRepository;
 import shop.mtcoding.job.model.user.User;
 
@@ -48,13 +49,25 @@ public class UserPageControllerTest {
         mockSession.setAttribute("principal", user);
     }
 
-    @Test
+    @Test @Transactional
     public void userPage_test() throws Exception {
         // given
 
         // when
         ResultActions resultActions = mvc.perform(
                 get("/myapply").session(mockSession));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+
+        System.out.println("테스트 : " + responseBody);
+        // then
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test @Transactional
+    public void bookmark_test() throws Exception {
+        ResultActions resultActions = mvc.perform(
+                get("/mybookmark").session(mockSession));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
 
         System.out.println("테스트 : " + responseBody);

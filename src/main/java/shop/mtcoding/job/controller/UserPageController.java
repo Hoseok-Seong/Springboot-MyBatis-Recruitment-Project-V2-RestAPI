@@ -12,11 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import shop.mtcoding.job.dto.ResponseDto;
-import shop.mtcoding.job.dto.bookmark.BookmarkReqDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostListRespDto;
 import shop.mtcoding.job.dto.userPage.UserPageApplyDto;
+import shop.mtcoding.job.dto.userPage.UserPageBookmarkDto;
 import shop.mtcoding.job.dto.userSkill.UserMatchingDto;
 import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.apply.ApplyRepository;
@@ -42,7 +43,7 @@ public class UserPageController {
     private final BookmarkRepository bookmarkRepository;
 
     @GetMapping("/myapply")
-    public ResponseEntity mypage(Model model) {
+    public ResponseEntity<?> mypage() {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
@@ -58,7 +59,7 @@ public class UserPageController {
     }
 
     @GetMapping("/mymatching")
-    public String mymatching(Model model) {
+    public ResponseEntity<?> mymatching(Model model) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
@@ -91,29 +92,26 @@ public class UserPageController {
         model.addAttribute("skillMap", skillMap);
         model.addAttribute("userSkillDtos", userSkillRepository.findByUserId(principal.getId()));
 
-        return "userpage/mymatching";
+        return new ResponseEntity<>(new ResponseDto<>(1, "매칭서비스 완료", null), HttpStatus.OK);
     }
 
     @GetMapping("/mybookmark")
-    public String mybookmark(Model model, BookmarkReqDto bookmarkReqDto) {
+    public @ResponseBody ResponseEntity mybookmark() {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
         }
+//            List<BookmarkReqDto> bookmarkDto = bookmarkRepository.findByUserId(principal.getId());
+//            model.addAttribute("bookmarkDto", bookmarkDto);
 
-        if (principal != null) {
-            List<BookmarkReqDto> bookmarkDto = bookmarkRepository.findByUserId(principal.getId());
-            model.addAttribute("bookmarkDto", bookmarkDto);
-        }
-
-        List<RecruitmentPostListRespDto> posts = recruitmentPostRepository.findByPost();
+        List<UserPageBookmarkDto> posts = bookmarkRepository.BookmarkJoinRecruitOfUserPage(principal.getId());
         // d-day 계산
-        for (RecruitmentPostListRespDto post : posts) {
-            post.calculateDiffDays(); // D-Day 계산
-        }
+//        for (RecruitmentPostListRespDto post : posts) {
+//            post.calculateDiffDays(); // D-Day 계산
+//        }
 
-        model.addAttribute("Posts", posts);
+//        model.addAttribute("Posts", posts);
 
-        return "userpage/mybookmark";
+        return new ResponseEntity<>(new ResponseDto<>(1, "북마크 목록", posts), HttpStatus.OK);
     }
 }

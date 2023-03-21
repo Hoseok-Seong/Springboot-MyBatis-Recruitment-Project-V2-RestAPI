@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import shop.mtcoding.job.dto.bookmark.BookmarkEntReqDto;
 import shop.mtcoding.job.dto.bookmark.BookmarkReqDto;
+import shop.mtcoding.job.dto.userPage.UserPageBookmarkDto;
 
 @Mapper
 public interface BookmarkRepository {
@@ -26,4 +27,6 @@ public interface BookmarkRepository {
         public List<BookmarkReqDto> findByUserId(@Param("userId") int userId);
 
         public List<BookmarkEntReqDto> findByEnterpriseId(@Param("recruitmentId") int recruitmentId);
+
+        public List<UserPageBookmarkDto> BookmarkJoinRecruitOfUserPage(int userId);
 }

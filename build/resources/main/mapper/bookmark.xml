@@ -21,6 +21,8 @@
       select * from bookmark_tb where recruitment_id = #{recruitmentId} and user_id = #{userId}
    </select>
 
+
+
    <select id="findByUserId" resultType="shop.mtcoding.job.dto.bookmark.BookmarkReqDto">
       select b.recruitment_id, e.enterprise_name, r.title, r.sector, r.deadline
       from bookmark_tb b
@@ -39,5 +41,44 @@
       join recruitment_post_tb rp
       on b.recruitment_id = rp.id
       where b.recruitment_id = #{recruitmentId}
+   </select>
+
+   <resultMap id="UserPageBookmark" type="shop.mtcoding.job.dto.userPage.UserPageBookmarkDto">
+      <association property="bookmark" javaType="shop.mtcoding.job.dto.userPage.UserPageBookmarkDto$BookmarkReqDto">
+         <id property="id" column="id"/>
+         <result property="recruitmentId" column="recruitment_id"/>
+         <result property="enterpriseName" column="enterprise_name"/>
+         <result property="title" column="title"/>
+         <result property="sector" column="sector"/>
+         <result property="deadline" column="deadline"/>
+         <result property="diffDays" column="diff_days"/>
+      </association>
+
+      <association property="recruitmentList" javaType="shop.mtcoding.job.dto.userPage.UserPageBookmarkDto$RecruitmentPostListRespDto">
+         <id property="id" column="id"/>
+         <result property="enterpriseId" column="enterprise_id"/>
+         <result property="title" column="title"/>
+         <result property="career" column="career"/>
+         <result property="education" column="education"/>
+         <result property="pay" column="pay"/>
+         <result property="sector" column="sector"/>
+         <result property="position" column="position"/>
+         <result property="content" column="content"/>
+         <result property="address" column="address"/>
+         <result property="enterpriseLogo" column="enterprise_logo"/>
+         <result property="enterpriseName" column="enterprise_name"/>
+         <result property="deadline" column="deadline"/>
+         <result property="diffDays" column="diff_days"/>
+         <result property="createdAt" column="created_at"/>
+      </association>
+   </resultMap>
+   <select id="BookmarkJoinRecruitOfUserPage" resultMap="UserPageBookmark">
+      select *
+      from bookmark_tb b
+      join recruitment_post_tb r
+      on b.recruitment_id = r.id
+      left OUTER JOIN enterprise_tb e
+      on r.enterprise_id = e.id
+      where b.user_id = #{userId}
    </select>
 </mapper>
