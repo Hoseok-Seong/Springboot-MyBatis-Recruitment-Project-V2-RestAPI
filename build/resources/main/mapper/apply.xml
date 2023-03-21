@@ -34,8 +34,59 @@
       delete from apply_tb where user_id = #{userId} and recruitment_post_id = #{recruitmentPostId}  
    </delete>
 
-   <select id="findByUserId" resultType="shop.mtcoding.job.dto.apply.ApplyRespDto$ApplyListForUserRespDto">
-      select a.recruitment_post_id, a.result, e.enterprise_name, r.title, a.sector, a.apply_resume_id, a.created_at
+   <resultMap id="UserPageDto" type="shop.mtcoding.job.dto.userPage.UserPageDto">
+      <association property="userApply" javaType="shop.mtcoding.job.dto.userPage.UserPageDto$UserMyApplyReqDto">
+         <id property="id" column="id"/>
+         <result property="enterpriseId" column="enterprise_id"/>
+         <result property="recruitmentPostId" column="recruitment_post_id"/>
+         <result property="enterpriseName" column="enterprise_name"/>
+         <result property="title" column="title"/>
+         <result property="sector" column="sector"/>
+         <result property="applyResumeId" column="apply_resume_id"/>
+         <result property="result" column="result"/>
+         <result property="createdAt" column="created_at"/>
+      </association>
+
+      <association property="applyResume" javaType="shop.mtcoding.job.dto.userPage.UserPageDto$ApplyResumeDto">
+         <id property="id" column="id"/>
+         <result property="recruitmentPostId" column="recruitment_post_id"/>
+         <result property="userId" column="user_id"/>
+         <result property="enterpriseId" column="enterprise_id"/>
+         <result property="title" column="title"/>
+         <result property="content" column="content"/>
+         <result property="career" column="career"/>
+         <result property="education" column="education"/>
+         <result property="skill" column="skill"/>
+         <result property="award" column="award"/>
+         <result property="language" column="language"/>
+         <result property="link" column="link"/>
+         <result property="birthdate" column="birthdate"/>
+         <result property="address" column="address"/>
+         <result property="finish" column="finish"/>
+         <result property="createdAt" column="created_at"/>
+      </association>
+
+      <association property="recruitmentList" javaType="shop.mtcoding.job.dto.userPage.UserPageDto$RecruitmentPostListRespDto">
+         <id property="id" column="id"/>
+         <result property="enterpriseId" column="enterprise_id"/>
+         <result property="title" column="title"/>
+         <result property="career" column="career"/>
+         <result property="education" column="education"/>
+         <result property="pay" column="pay"/>
+         <result property="sector" column="sector"/>
+         <result property="position" column="position"/>
+         <result property="content" column="content"/>
+         <result property="address" column="address"/>
+         <result property="enterpriseLogo" column="enterprise_logo"/>
+         <result property="enterpriseName" column="enterprise_name"/>
+         <result property="deadline" column="deadline"/>
+         <result property="diffDays" column="diff_days"/>
+         <result property="createdAt" column="created_at"/>
+      </association>
+   </resultMap>
+
+   <select id="findAllApply" resultMap="UserPageDto">
+      select *
       from apply_tb a
       join recruitment_post_tb r
       on a.recruitment_post_id = r.id
@@ -43,6 +94,16 @@
       on a.enterprise_id = e.id
       where a.user_id = #{userId}
    </select>
+
+<!--   <select id="findByUserId" resultMap="shop.mtcoding.job.dto.apply.ApplyRespDto$ApplyListForUserRespDto">-->
+<!--      select a.recruitment_post_id, a.result, e.enterprise_name, r.title, a.sector, a.apply_resume_id, a.created_at-->
+<!--      from apply_tb a-->
+<!--      join recruitment_post_tb r-->
+<!--      on a.recruitment_post_id = r.id-->
+<!--      left OUTER JOIN enterprise_tb e-->
+<!--      on a.enterprise_id = e.id-->
+<!--      where a.user_id = #{userId}-->
+<!--   </select>-->
 
    <select id="findByEnterpriseId" resultType="shop.mtcoding.job.dto.apply.ApplyRespDto$ApplyListForEntRespDto">
       select a.id, a.result, a.user_id, u.username, u.name, a.recruitment_post_id, e.enterprise_name, r.title, a.apply_resume_id, a.created_at

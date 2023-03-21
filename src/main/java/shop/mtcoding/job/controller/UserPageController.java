@@ -6,69 +6,55 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import shop.mtcoding.job.dto.apply.ApplyRespDto.ApplyListForUserRespDto;
+import org.springframework.web.bind.annotation.RestController;
+import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.bookmark.BookmarkReqDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostListRespDto;
+import shop.mtcoding.job.dto.userPage.UserPageApplyDto;
 import shop.mtcoding.job.dto.userSkill.UserMatchingDto;
 import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.apply.ApplyRepository;
-import shop.mtcoding.job.model.applyResume.ApplyResume;
 import shop.mtcoding.job.model.applyResume.ApplyResumeRepository;
 import shop.mtcoding.job.model.bookmark.BookmarkRepository;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
 import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.model.userSkill.UserSkillRepository;
 
-@Controller
+@RequiredArgsConstructor
+@RestController
 public class UserPageController {
-    @Autowired
-    private HttpSession session;
+    private final HttpSession session;
 
-    @Autowired
-    private ApplyRepository applyRepository;
+    private final ApplyRepository applyRepository;
 
-    @Autowired
-    private ApplyResumeRepository applyResumeRepository;
+    private final ApplyResumeRepository applyResumeRepository;
 
-    @Autowired
-    private RecruitmentPostRepository recruitmentPostRepository;
+    private final RecruitmentPostRepository recruitmentPostRepository;
 
-    @Autowired
-    private UserSkillRepository userSkillRepository;
+    private final UserSkillRepository userSkillRepository;
 
-    @Autowired
-    private BookmarkRepository bookmarkRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @GetMapping("/myapply")
-    public String mypage(Model model) {
+    public ResponseEntity mypage(Model model) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
         }
 
-        List<ApplyListForUserRespDto> applyList = applyRepository.findByUserId(
-                principal.getId());
-        model.addAttribute("applyLists", applyList);
+        List<UserPageApplyDto> userPageDtos = applyRepository.findAllApply(principal.getId());
+//        // d-day 계산
+//        for (RecruitmentPostListRespDto post : posts) {
+//            post.calculateDiffDays(); // D-Day 계산
+//        }
 
-        List<ApplyResume> resumeList = applyResumeRepository.findByUserId(principal.getId());
-
-        model.addAttribute("resumeList", resumeList);
-
-        List<RecruitmentPostListRespDto> posts = recruitmentPostRepository.findByPost();
-        // d-day 계산
-        for (RecruitmentPostListRespDto post : posts) {
-            post.calculateDiffDays(); // D-Day 계산
-        }
-
-        model.addAttribute("Posts", posts);
-
-        return "userpage/myapply";
+        return new ResponseEntity<>(new ResponseDto<>(1, "UserPage" ,userPageDtos), HttpStatus.OK);
     }
 
     @GetMapping("/mymatching")
