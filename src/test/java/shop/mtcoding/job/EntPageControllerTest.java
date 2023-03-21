@@ -59,10 +59,37 @@ public class EntPageControllerTest {
         System.out.println("data_test : " + responseBody);
 
         // then
-
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(status().isOk());
-
     }
 
+    @Test
+    public void myrecommend_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/myrecommend").session(mockSession));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("data_test : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void mybookmark_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/mybookmarkEnt").session(mockSession));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("data_test : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(status().isOk());
+    }
 }
