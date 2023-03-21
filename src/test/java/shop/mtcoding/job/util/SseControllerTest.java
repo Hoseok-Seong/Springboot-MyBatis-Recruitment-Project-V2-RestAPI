@@ -1,4 +1,4 @@
-package shop.mtcoding.job;
+package shop.mtcoding.job.util;
 
 import java.util.List;
 
