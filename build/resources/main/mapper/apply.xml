@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shop.mtcoding.job.model.apply.ApplyRepository">
+   <insert id="insert">
+      insert into apply_tb(user_id, enterprise_id, recruitment_post_id, sector, apply_resume_id, created_at) 
+      values(#{userId}, #{enterpriseId}, #{recruitmentPostId}, #{sector}, #{applyResumeId}, now()) 
+   </insert>
+    
+   <update id="updateById">
+      update apply_tb set user_id = #{userId}, enterprise_id=#{enterprise_id}, field = #{field} where id = #{id}
+   </update>
+
+   <select id="findAll" resultType="shop.mtcoding.job.model.apply.Apply">
+      select * from apply_tb
+   </select>
+
+   <select id="findById" resultType="shop.mtcoding.job.model.apply.Apply">
+      select * from apply_tb where id = #{id}  
+   </select>
+
+   <delete id="deleteById">
+      delete from apply_tb where id = #{id}
+   </delete>
+
+   <select id="findByUserIdWithRecruitmentPostId" resultType="shop.mtcoding.job.model.apply.Apply">
+      select * from apply_tb where user_id = #{userId} and recruitment_post_id = #{recruitmentPostId}  
+   </select>
+
+   <select id="findByIdWithEnterpriseId" resultType="shop.mtcoding.job.model.apply.Apply">
+      select * from apply_tb where id = #{id} and enterprise_id = #{enterpriseId}  
+   </select>
+
+   <delete id="deleteByUserIdWithRecruitmentPostId">
+      delete from apply_tb where user_id = #{userId} and recruitment_post_id = #{recruitmentPostId}  
+   </delete>
+
+   <select id="findByUserId" resultType="shop.mtcoding.job.dto.apply.ApplyRespDto$ApplyListForUserRespDto">
+      select a.recruitment_post_id, a.result, e.enterprise_name, r.title, a.sector, a.apply_resume_id, a.created_at
+      from apply_tb a
+      join recruitment_post_tb r
+      on a.recruitment_post_id = r.id
+      left OUTER JOIN enterprise_tb e
+      on a.enterprise_id = e.id
+      where a.user_id = #{userId}
+   </select>
+
+   <select id="findByEnterpriseId" resultType="shop.mtcoding.job.dto.apply.ApplyRespDto$ApplyListForEntRespDto">
+      select a.id, a.result, a.user_id, u.username, u.name, a.recruitment_post_id, e.enterprise_name, r.title, a.apply_resume_id, a.created_at
+      from apply_tb a
+      join user_tb u
+      on a.user_id = u.id
+      left outer join enterprise_tb e
+      on a.enterprise_id = e.id
+      left outer join recruitment_post_tb r
+      on a.recruitment_post_id = r.id
+      where a.enterprise_id = #{enterpriseId}
+   </select>
+
+   <update id="updateResultById">
+      update apply_tb set result = #{result}, notify = #{notify} where id = #{id}
+   </update>
+
+   <select id="findNotifyByUserId" resultType="shop.mtcoding.job.dto.apply.ApplyRespDto$NotifyListRespDto">
+      select notify from apply_tb where user_id = #{userId}
+   </select>
+
+   <update id="updateNotifyById">
+      update apply_tb set notify = #{notify} where user_id = #{userId}
+   </update>
+</mapper>
