@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository">
+   <insert id="insert">
+      insert into recruitment_post_tb(enterprise_id, title, career, education, pay, sector, position, address, content,enterprise_logo,deadline, created_at) 
+      values(#{enterpriseId},#{title},#{career},#{education},#{pay},#{sector},#{position},#{address},#{content},#{enterpriseLogo},#{deadline},now());
+   </insert>
+
+   <update id="updateById">
+      update recruitment_post_tb 
+      set enterprise_id = #{enterpriseId}, title=#{title}, career = #{career}, education = #{education}, pay = #{pay}, sector = #{sector}, position = #{position}, address = #{address}, content = #{content} , enterprise_logo =#{enterpriseLogo}, deadline = #{deadline}
+      where id = #{id}
+   </update>
+
+   <select id="findAll" resultType="shop.mtcoding.job.model.recruitmentPost.RecruitmentPost">
+      select * from recruitment_post_tb
+   </select>
+
+   <select id="findById" resultType="shop.mtcoding.job.model.recruitmentPost.RecruitmentPost">
+      select * from recruitment_post_tb where id = #{id}  
+   </select>
+
+   <select id="findByEnterpriseLogo" resultType="shop.mtcoding.job.model.recruitmentPost.RecruitmentPost">
+      select * from recruitment_post_tb where enterprise_logo = #{enterpriseLogo}
+   </select>
+
+   <select id="findByIdWithEnterpriseId" resultType="shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto$RecruitmentPostDetailRespDto">
+      SELECT 
+         recruitment_post_tb.id, 
+         recruitment_post_tb.title, 
+         recruitment_post_tb.career, 
+         recruitment_post_tb.education, 
+         recruitment_post_tb.pay, 
+         recruitment_post_tb.sector, 
+         recruitment_post_tb.position, 
+         recruitment_post_tb.address, 
+         recruitment_post_tb.content, 
+         recruitment_post_tb.enterprise_id,
+         recruitment_post_tb.deadline,
+         enterprise_tb.enterprise_name
+      FROM 
+         recruitment_post_tb 
+      JOIN enterprise_tb 
+      ON recruitment_post_tb.enterprise_id = enterprise_tb.id
+      where recruitment_post_tb.id = #{id}
+   </select>
+
+   <delete id="deleteById">
+      delete from recruitment_post_tb where id = #{id}
+   </delete>
+
+   <select id="findByPost" resultType="shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto$RecruitmentPostListRespDto">
+      SELECT e.enterprise_name, r.title, r.address, r.position, r.id, r.enterprise_logo, r.deadline, r.created_at
+      FROM recruitment_post_tb r
+      JOIN enterprise_tb e
+      ON r.enterprise_id = e.id;
+   </select>
+
+   <select id="findByTitleOrContent" resultType="shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto$RecruitmentPostSearchRespDto">
+      select e.enterprise_name, r.id, r.address, r.position, r.title, r.enterprise_logo, r.deadline, r.created_at 
+      from recruitment_post_tb r
+      JOIN enterprise_tb e 
+      on r.enterprise_id = e.id 
+      where r.title like CONCAT('%',#{searchString},'%')
+      or r.content like CONCAT('%',#{searchString},'%');
+   </select>
+
+   <select id="findByCategory" resultType="shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto$RecruitmentPostCategoryRespDto">
+      SELECT distinct e.enterprise_name, r.id, r.address, r.position, r.title, r.enterprise_logo, r.deadline, r.created_at 
+      FROM recruitment_post_tb r
+      JOIN enterprise_tb e on r.enterprise_id = e.id 
+      Join RECRUITMENT_SKILL_TB rs on rs.recruitment_id = r.id
+      WHERE (r.career LIKE CONCAT('%', #{career},'%') OR r.career IS NULL)
+      AND (r.education LIKE CONCAT('%', #{education}, '%') OR r.education IS NULL)
+      AND (r.sector LIKE CONCAT('%', #{sector}, '%') OR r.sector IS NULL)
+      AND (r.position LIKE CONCAT('%', #{position}, '%') OR r.position IS NULL)
+      AND (rs.skill LIKE CONCAT('%', #{skill}, '%') OR rs.skill IS NULL);
+   </select>
+</mapper>

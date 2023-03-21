@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="shop.mtcoding.job.model.recruitmentSkill.RecruitmentSkillRepository">
+    <insert id="insert">
+      insert into recruitment_skill_tb(recruitment_id,skill) values(#{recruitmentId},#{skill}) 
+    </insert>
+    
+   <update id="updateById">
+      update recruitment_skill_tb set recruitment_id = #{recruitmentId},enterprise_name = #{enterpriseName}, skill = #{skill} where id = #{id}
+   </update>
+
+   <select id="findAll" resultType="shop.mtcoding.job.model.recruitmentSkill.RecruitmentSkill">
+      select * from recruitment_skill_tb
+   </select>
+
+   <select id="findById" resultType="shop.mtcoding.job.model.recruitmentSkill.RecruitmentSkill">
+      select * from recruitment_skill_tb where id = #{id}  
+   </select>
+
+   <select id="findByRecruitmentId" resultType="shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto$RecruitmentPostSkillRespDto">
+      select * from recruitment_skill_tb where recruitment_id  = #{recruitmentId}
+   </select>
+
+   <delete id="deleteById">
+      delete from recruitment_skill_tb where id = #{id}
+   </delete>
+
+   <delete id="deleteByRecruitmentId">
+      delete from recruitment_skill_tb where recruitment_id = #{recruitmentId}
+   </delete>
+
+   <select id="enterpriseMatching" resultType="shop.mtcoding.job.dto.recruitmentSkill.EnterpriseMatchingDto">
+      select distinct e.id as enterprise_id, u.username, u.email, u.contact, u.name
+      from enterprise_tb e
+      join recruitment_skill_tb rs on rs.recruitment_id = e.id
+      join user_skill_tb us on us.skill = rs.skill
+      join user_tb u on u.id = us.user_id
+      group by e.id, u.username
+      having e.id = #{id}
+    </select>
+</mapper>
