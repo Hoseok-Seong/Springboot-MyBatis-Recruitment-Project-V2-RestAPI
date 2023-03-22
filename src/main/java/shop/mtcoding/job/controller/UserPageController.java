@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Converter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -27,6 +28,7 @@ import shop.mtcoding.job.model.bookmark.BookmarkRepository;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
 import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.model.userSkill.UserSkillRepository;
+import shop.mtcoding.job.util.Convert;
 
 @RequiredArgsConstructor
 @RestController
@@ -60,24 +62,26 @@ public class UserPageController {
     }
 
     @GetMapping("/mymatching")
-    public ResponseEntity<?> mymatching(Model model) {
+    public ResponseEntity<?> mymatching(Model model) throws Exception {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
         }
 //        if (principal != null) {
-//            List<UserMatchingDto> userMatchingDto = userSkillRepository.userMatching(principal.getId());
+//            List<UserPageMatchingDto.UserSkillDto> userMatchingDto = userSkillRepository.findByUserSkill(principal.getId());
 //            model.addAttribute("userMatching", userMatchingDto);
 //        }
 
         List<UserPageMatchingDto> posts = userSkillRepository.userJoinRecruitmentWithMatching(principal.getId());
+        List<String> skills = Convert.ete_test(posts.get(0).getUserMatching().getUserSkillDto().getSkill());
+        posts.get(0).getUserMatching().getUserSkillDto().setSkillString(skills);
+
+
         // d-day 계산
 //        for (RecruitmentPostListRespDto post : posts) {
 //            post.calculateDiffDays(); // D-Day 계산
 //        }
-
 //        model.addAttribute("Posts", posts);
-
         Map<Integer, String> skillMap = new HashMap<>();
         skillMap.put(1, "Java");
         skillMap.put(2, "HTML");

@@ -1,12 +1,11 @@
 package shop.mtcoding.job.model.userSkill;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
 import shop.mtcoding.job.dto.userPage.UserPageMatchingDto;
 import shop.mtcoding.job.dto.userSkill.UserMatchingDto;
+
+import java.util.List;
 
 @Mapper
 public interface UserSkillRepository {
@@ -29,6 +28,8 @@ public interface UserSkillRepository {
 
     public List<UserPageMatchingDto> userJoinRecruitmentWithMatching(int id);
 
-    public List<UserPageMatchingDto.UserSkillDto> findByUserSkill(int id);
+    public List<UserPageMatchingDto> findByUserSkill(int id);
+
+//    public List<UserSkillDto> findByUserSkill1(int id);
 
 }
