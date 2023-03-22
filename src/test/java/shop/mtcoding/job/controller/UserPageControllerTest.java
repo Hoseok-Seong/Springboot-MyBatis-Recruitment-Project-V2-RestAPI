@@ -50,12 +50,27 @@ public class UserPageControllerTest {
     }
 
     @Test @Transactional
-    public void userPage_test() throws Exception {
+    public void apply_test() throws Exception {
         // given
 
         // when
         ResultActions resultActions = mvc.perform(
                 get("/myapply").session(mockSession));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+
+        System.out.println("테스트 : " + responseBody);
+        // then
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test @Transactional
+    public void matching_test() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(
+                get("/mymatching").session(mockSession));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
 
         System.out.println("테스트 : " + responseBody);

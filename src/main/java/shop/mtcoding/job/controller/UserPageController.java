@@ -18,6 +18,7 @@ import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostListRespDto;
 import shop.mtcoding.job.dto.userPage.UserPageApplyDto;
 import shop.mtcoding.job.dto.userPage.UserPageBookmarkDto;
+import shop.mtcoding.job.dto.userPage.UserPageMatchingDto;
 import shop.mtcoding.job.dto.userSkill.UserMatchingDto;
 import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.apply.ApplyRepository;
@@ -64,18 +65,18 @@ public class UserPageController {
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
         }
-        if (principal != null) {
-            List<UserMatchingDto> userMatchingDto = userSkillRepository.userMatching(principal.getId());
-            model.addAttribute("userMatching", userMatchingDto);
-        }
+//        if (principal != null) {
+//            List<UserMatchingDto> userMatchingDto = userSkillRepository.userMatching(principal.getId());
+//            model.addAttribute("userMatching", userMatchingDto);
+//        }
 
-        List<RecruitmentPostListRespDto> posts = recruitmentPostRepository.findByPost();
+        List<UserPageMatchingDto> posts = userSkillRepository.userJoinRecruitmentWithMatching(principal.getId());
         // d-day 계산
-        for (RecruitmentPostListRespDto post : posts) {
-            post.calculateDiffDays(); // D-Day 계산
-        }
+//        for (RecruitmentPostListRespDto post : posts) {
+//            post.calculateDiffDays(); // D-Day 계산
+//        }
 
-        model.addAttribute("Posts", posts);
+//        model.addAttribute("Posts", posts);
 
         Map<Integer, String> skillMap = new HashMap<>();
         skillMap.put(1, "Java");
@@ -89,10 +90,10 @@ public class UserPageController {
         skillMap.put(9, "Typescript");
         skillMap.put(10, "Zustand");
         skillMap.put(11, "AWS");
-        model.addAttribute("skillMap", skillMap);
-        model.addAttribute("userSkillDtos", userSkillRepository.findByUserId(principal.getId()));
+//        model.addAttribute("skillMap", skillMap);
+//        model.addAttribute("userSkillDtos", userSkillRepository.findByUserId(principal.getId()));
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "매칭서비스 완료", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "매칭서비스 완료", posts), HttpStatus.OK);
     }
 
     @GetMapping("/mybookmark")

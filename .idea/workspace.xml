@@ -5,10 +5,44 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="681ad2cc-b0dd-4283-804c-c1ad4bbbcd24" name="Changes" comment="Feat: Resume testControllerst 완료">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/7.6/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/7.6/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shop/mtcoding/job/dto/userPage/UserPageBookmarkDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shop/mtcoding/job/dto/userPage/UserPageBookmarkDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/controller/UserPageController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/controller/UserPageController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/dto/userPage/UserPageMatchingDto$RecruitmentPostListRespDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/dto/userPage/UserPageMatchingDto$RecruitmentPostListRespDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/dto/userPage/UserPageMatchingDto$UserMatchingDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/dto/userPage/UserPageMatchingDto$UserMatchingDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/dto/userPage/UserPageMatchingDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/dto/userPage/UserPageMatchingDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/dto/userSkill/UserMatchingDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/dto/userSkill/UserMatchingDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/model/userSkill/UserSkillRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/shop/mtcoding/job/model/userSkill/UserSkillRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/test/shop/mtcoding/job/controller/UserPageControllerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/test/shop/mtcoding/job/controller/UserPageControllerTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/shop.mtcoding.job.controller.UserPageControllerTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/shop.mtcoding.job.controller.UserPageControllerTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/shop.mtcoding.job.controller.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/shop.mtcoding.job.controller.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/main/mapper/user_skill.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/mapper/user_skill.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-shop.mtcoding.job.controller.UserPageControllerTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-shop.mtcoding.job.controller.UserPageControllerTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/BookmarkRepository.class.uniqueId2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/BookmarkService.class.uniqueId0" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/EntPageController.class.uniqueId4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/RecruitmentController.class.uniqueId7" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/UserPageBookmarkDto$BookmarkReqDto.class.uniqueId5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/UserPageBookmarkDto$RecruitmentPostListRespDto.class.uniqueId6" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/UserPageBookmarkDto.class.uniqueId3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/UserPageController.class.uniqueId1" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/compileTransaction/stash-dir/UserPageController.class.uniqueId1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/tmp/compileTestJava/previous-compilation-data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/tmp/compileTestJava/previous-compilation-data.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/shop/mtcoding/job/controller/UserPageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shop/mtcoding/job/controller/UserPageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/shop/mtcoding/job/dto/userPage/UserPageMatchingDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shop/mtcoding/job/dto/userPage/UserPageMatchingDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/shop/mtcoding/job/model/userSkill/UserSkillRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shop/mtcoding/job/model/userSkill/UserSkillRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/user_skill.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/user_skill.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/shop/mtcoding/job/controller/UserPageControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/shop/mtcoding/job/controller/UserPageControllerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +74,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/resources/mapper/user_skill.xml" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -61,7 +98,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;File.Encoding&quot;
   }
 }</component>
-  <component name="RunManager" selected="Gradle.UserPageControllerTest">
+  <component name="RunManager" selected="Gradle.UserPageControllerTest.matching_test">
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="shop.mtcoding.job.JobApplication" />
       <module name="job.main" />
@@ -83,29 +120,6 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;shop.mtcoding.job.controller.ResumeControllerTest&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="ResumeControllerTest.resumeUpdate_test" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;shop.mtcoding.job.controller.ResumeControllerTest.resumeUpdate_test&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -161,6 +175,29 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="UserPageControllerTest.matching_test" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;shop.mtcoding.job.controller.UserPageControllerTest.matching_test&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="UserPageControllerTest.userPage_test" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -187,18 +224,18 @@
     <list>
       <item itemvalue="Application.Unnamed" />
       <item itemvalue="Gradle.UserPageControllerTest" />
+      <item itemvalue="Gradle.UserPageControllerTest.matching_test" />
       <item itemvalue="Gradle.UserPageControllerTest.bookmark_test" />
       <item itemvalue="Gradle.ResumeControllerTest" />
-      <item itemvalue="Gradle.ResumeControllerTest.resumeUpdate_test" />
       <item itemvalue="Gradle.UserPageControllerTest.userPage_test" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.UserPageControllerTest.matching_test" />
         <item itemvalue="Gradle.UserPageControllerTest" />
         <item itemvalue="Gradle.UserPageControllerTest.bookmark_test" />
         <item itemvalue="Gradle.ResumeControllerTest" />
         <item itemvalue="Gradle.UserPageControllerTest.userPage_test" />
-        <item itemvalue="Gradle.ResumeControllerTest.resumeUpdate_test" />
       </list>
     </recent_temporary>
   </component>
