@@ -31,7 +31,7 @@ public class ResumeController {
     private final ResumeRepository resumeRepository;
 
     @GetMapping("/resumes")
-    public ResponseEntity<?> resumeList() {
+    public @ResponseBody ResponseEntity<?> resumeList() {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);

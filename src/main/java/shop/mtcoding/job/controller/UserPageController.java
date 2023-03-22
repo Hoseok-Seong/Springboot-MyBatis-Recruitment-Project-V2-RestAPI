@@ -37,16 +37,12 @@ public class UserPageController {
 
     private final ApplyRepository applyRepository;
 
-    private final ApplyResumeRepository applyResumeRepository;
-
-    private final RecruitmentPostRepository recruitmentPostRepository;
-
     private final UserSkillRepository userSkillRepository;
 
     private final BookmarkRepository bookmarkRepository;
 
     @GetMapping("/myapply")
-    public ResponseEntity<?> mypage() {
+    public @ResponseBody ResponseEntity<?> mypage() {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
@@ -62,15 +58,11 @@ public class UserPageController {
     }
 
     @GetMapping("/mymatching")
-    public ResponseEntity<?> mymatching(Model model) throws Exception {
+    public @ResponseBody ResponseEntity<?> mymatching(Model model) throws Exception {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
         }
-//        if (principal != null) {
-//            List<UserPageMatchingDto.UserSkillDto> userMatchingDto = userSkillRepository.findByUserSkill(principal.getId());
-//            model.addAttribute("userMatching", userMatchingDto);
-//        }
 
         List<UserPageMatchingDto> posts = userSkillRepository.userJoinRecruitmentWithMatching(principal.getId());
         List<String> skills = Convert.ete_test(posts.get(0).getUserMatching().getUserSkillDto().getSkill());
@@ -81,21 +73,6 @@ public class UserPageController {
 //        for (RecruitmentPostListRespDto post : posts) {
 //            post.calculateDiffDays(); // D-Day 계산
 //        }
-//        model.addAttribute("Posts", posts);
-        Map<Integer, String> skillMap = new HashMap<>();
-        skillMap.put(1, "Java");
-        skillMap.put(2, "HTML");
-        skillMap.put(3, "JavaScript");
-        skillMap.put(4, "VueJS");
-        skillMap.put(5, "CSS");
-        skillMap.put(6, "Node.js");
-        skillMap.put(7, "React");
-        skillMap.put(8, "ReactJS");
-        skillMap.put(9, "Typescript");
-        skillMap.put(10, "Zustand");
-        skillMap.put(11, "AWS");
-//        model.addAttribute("skillMap", skillMap);
-//        model.addAttribute("userSkillDtos", userSkillRepository.findByUserId(principal.getId()));
 
         return new ResponseEntity<>(new ResponseDto<>(1, "매칭서비스 완료", posts), HttpStatus.OK);
     }
@@ -106,16 +83,11 @@ public class UserPageController {
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
         }
-//            List<BookmarkReqDto> bookmarkDto = bookmarkRepository.findByUserId(principal.getId());
-//            model.addAttribute("bookmarkDto", bookmarkDto);
-
         List<UserPageBookmarkDto> posts = bookmarkRepository.BookmarkJoinRecruitOfUserPage(principal.getId());
         // d-day 계산
 //        for (RecruitmentPostListRespDto post : posts) {
 //            post.calculateDiffDays(); // D-Day 계산
 //        }
-
-//        model.addAttribute("Posts", posts);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "북마크 목록", posts), HttpStatus.OK);
     }

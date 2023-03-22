@@ -1,5 +1,6 @@
 package shop.mtcoding.job.dto.userPage;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import shop.mtcoding.job.util.DateUtil;
@@ -13,7 +14,6 @@ import java.util.Map;
 public class UserPageMatchingDto {
     private UserMatchingDto userMatching;
     private RecruitmentPostListRespDto recruitment;
-//    private List<UserSkillDto> userSkill;
 
     @Setter @Getter
     public static class UserMatchingDto{
@@ -29,27 +29,9 @@ public class UserPageMatchingDto {
         @Setter
         @Getter
         public static class UserSkillDto {
-            private Integer userId;
+            @JsonIgnore
             private List<Integer> skill;
             private List<String> skillString;
-
-
-//        public String getSkill() {
-//            Map<Integer, String> skillMap = new HashMap<>();
-//            skillMap.put(1, "Java");
-//            skillMap.put(2, "HTML");
-//            skillMap.put(3, "JavaScript");
-//            skillMap.put(4, "VueJS");
-//            skillMap.put(5, "CSS");
-//            skillMap.put(6, "Node.js");
-//            skillMap.put(7, "React");
-//            skillMap.put(8, "ReactJS");
-//            skillMap.put(9, "Typescript");
-//            skillMap.put(10, "Zustand");
-//            skillMap.put(11, "AWS");
-//
-//            return skillMap.get(skill);
-//        }
 
         }
     }
@@ -71,21 +53,16 @@ public class UserPageMatchingDto {
         private String enterpriseLogo;
         private String enterpriseName;
         private String deadline;
-        private List<RecruitmentSkillDto> skill;
         private Long diffDays;
         private Timestamp createdAt;
+
 
         public void calculateDiffDays() { // D-Day 계산하는 메서드 추가
             diffDays = DateUtil.deadline(deadline);
         }
     }
 
-    @Getter
-    @Setter
-    public static class RecruitmentSkillDto {
-        private Integer recruitmentId;
-        private Integer skill;
-    }
+
 
 
 }

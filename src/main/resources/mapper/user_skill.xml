@@ -52,25 +52,10 @@
          <result property="title" column="title"/>
          <result property="sector" column="sector"/>
          <result property="recruitmentId" column="recruitment_id"/>
-<!--         <result property="skill" column="skill"/>-->
           <association property="userSkillDto" javaType="shop.mtcoding.job.dto.userPage.UserPageMatchingDto$UserMatchingDto$UserSkillDto">
                 <collection property="skill" column="user_id" select="findByUserSkill"/>
           </association>
       </association>
-
-<!--         <collection property="userSkill" ofType="shop.mtcoding.job.dto.userPage.UserPageMatchingDto$UserSkillDto">-->
-<!--&lt;!&ndash;         <result property="userId" column="user_id"/>&ndash;&gt;-->
-<!--         <result property="skill" column="skill"/>-->
-<!--&lt;!&ndash;         <collection property="skill" column="user_id" select="findByUserSkill" />&ndash;&gt;-->
-<!--&lt;!&ndash;         <collection property="skillString" column="user_id" select="findByUserSkill1" />&ndash;&gt;-->
-<!--         </collection>-->
-
-<!--         <association property="userSkill" javaType="shop.mtcoding.job.dto.userPage.UserPageMatchingDto$UserSkillDto">-->
-<!--            <result property="userId" column="user_id"/>-->
-<!--            <result property="skill" column="skill"/>-->
-<!--            &lt;!&ndash;         <collection property="skill" column="user_id" select="findByUserSkill" />&ndash;&gt;-->
-<!--            &lt;!&ndash;         <collection property="skillString" column="user_id" select="findByUserSkill1" />&ndash;&gt;-->
-<!--         </association>-->
 
          <association property="recruitment" javaType="shop.mtcoding.job.dto.userPage.UserPageMatchingDto$RecruitmentPostListRespDto">
             <id property="id" column="id"/>
@@ -89,27 +74,12 @@
             <result property="deadline" column="deadline"/>
             <result property="diffDays" column="diff_days"/>
             <result property="createdAt" column="created_at"/>
-
-         <!--<collection property="skill" ofType="shop.mtcoding.job.dto.userPage.UserPageMatchingDto$RecruitmentSkillDto">
-            <result property="recruitmentId" column="recruitment_id"/>
-            <result property="skill" column="skill"/>
-         </collection>-->
-
-<!--            <result property="recruitmentId" column="recruitment_id"/>-->
-<!--            <result property="skill" column="skill"/>-->
-<!--         </collection>-->
-         <collection property="skill" column="recruitment_id" select="findByRecruitmentSkill" />
+<!--         <collection property="skill" column="recruitment_id" select="findByRecruitmentSkill" />-->
       </association>
    </resultMap>
 
    <select id="findByUserSkill" resultType="java.lang.Integer">
       select skill from user_skill_tb where user_id = #{userId}
-   </select>
-
-
-
-   <select id="findByRecruitmentSkill" resultType="java.lang.Integer">
-      select skill from recruitment_skill_tb where recruitment_id = #{recruitmentId}
    </select>
 
    <select id="userJoinRecruitmentWithMatching" resultMap="UserPageMatchingDto">
