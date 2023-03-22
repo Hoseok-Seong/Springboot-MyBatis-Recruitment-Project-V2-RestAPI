@@ -3,11 +3,11 @@ package shop.mtcoding.job.service;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.user.UserReqDto.JoinUserReqDto;
 import shop.mtcoding.job.dto.user.UserReqDto.LoginUserReqDto;
 import shop.mtcoding.job.dto.user.UserReqDto.UpdateUserReqDto;
@@ -19,12 +19,11 @@ import shop.mtcoding.job.model.userSkill.UserSkillRepository;
 import shop.mtcoding.job.util.SaltEncoder;
 import shop.mtcoding.job.util.Sha256Encoder;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserSkillRepository userSkillRepository;
+    private final UserRepository userRepository;
+    private final UserSkillRepository userSkillRepository;
 
     @Transactional(readOnly = true)
     public User 유저로그인하기(LoginUserReqDto loginUserReqDto) {
@@ -105,6 +104,20 @@ public class UserService {
             }
         } catch (Exception e) {
             throw new CustomException("skill insert 실패");
+        }
+    }
+
+    @Transactional
+    public void 유저스킬추가(int userId, List<Integer> skill) {
+        try {
+            for (Integer checkSkill : skill) {
+                int result = userSkillRepository.insert(userId, checkSkill);
+                if (result != 1) {
+                    throw new CustomException("실패");
+                }
+            }
+        } catch (Exception e) {
+            throw new CustomException("skill inset 실패");
         }
     }
 }

@@ -30,7 +30,7 @@ public class RecruitmentPostRespDto {
     @Getter
     public static class RecruitmentPostListRespDto {
         private Integer id;
-        private String enterpriseId;
+        private Integer enterpriseId;
         private String title;
         private String career;
         private String education;
@@ -40,13 +40,26 @@ public class RecruitmentPostRespDto {
         private String content;
         private String address;
         private String enterpriseLogo;
-        private String enterpriseName;
         private String deadline;
-        private long diffDays;
         private Timestamp createdAt;
 
-        public void calculateDiffDays() { // D-Day 계산하는 메서드 추가
-            diffDays = DateUtil.deadline(deadline);
+        private EnterpriseDto enterprise;
+
+        private long diffDays;
+
+        @Getter
+        @Setter
+        public static class EnterpriseDto {
+            private Integer id;
+            private String enterpriseName;
+            private String password;
+            private String salt;
+            private String address;
+            private String contact;
+            private String email;
+            private String sector;
+            private String size;
+            private Timestamp createdAt;
         }
     }
 
