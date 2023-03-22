@@ -108,7 +108,7 @@ public class UserService {
     }
 
     @Transactional
-    public void 유저스킬추가(int userId, List<Integer> skill) {
+    public void 유저스킬추가(Integer userId, List<Integer> skill) {
         try {
             for (Integer checkSkill : skill) {
                 int result = userSkillRepository.insert(userId, checkSkill);
