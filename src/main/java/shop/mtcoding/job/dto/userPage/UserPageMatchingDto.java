@@ -8,15 +8,17 @@ import java.sql.Timestamp;
 
 @Setter @Getter
 public class UserPageMatchingDto {
+    private UserMatchingDto userMatching;
+    private RecruitmentPostListRespDto recruitment;
 
     @Setter @Getter
     public static class UserMatchingDto{
-        private int userId;
+        private Integer userId;
         private String enterpriseName;
         private String enterpriseLogo;
         private String title;
         private String sector;
-        private int recruitmentId;
+        private Integer recruitmentId;
     }
 
     @Setter

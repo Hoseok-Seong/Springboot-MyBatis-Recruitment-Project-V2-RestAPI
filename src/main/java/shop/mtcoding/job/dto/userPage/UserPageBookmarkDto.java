@@ -6,6 +6,8 @@ import shop.mtcoding.job.util.DateUtil;
 
 import java.sql.Timestamp;
 
+@Setter
+@Getter
 public class UserPageBookmarkDto {
     private BookmarkReqDto bookmark;
     private RecruitmentPostListRespDto recruitmentList;
