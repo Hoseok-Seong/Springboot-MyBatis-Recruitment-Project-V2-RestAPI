@@ -2,7 +2,6 @@ package shop.mtcoding.job.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.InsertApplyReqDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.UpdateApplicantResultReqDto;
@@ -25,16 +25,14 @@ import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.service.ApplyService;
 import shop.mtcoding.job.util.DateUtil;
 
+@RequiredArgsConstructor
 @Controller
 public class ApplyController {
-    @Autowired
-    private HttpSession session;
+    private final HttpSession session;
 
-    @Autowired
-    private ApplyService applyService;
+    private final ApplyService applyService;
 
-    @Autowired
-    private RecruitmentPostRepository recruitmentPostRepository;
+    private final RecruitmentPostRepository recruitmentPostRepository;
 
     @PostMapping("/apply/{id}")
     public @ResponseBody ResponseEntity<?> insertApply(@RequestBody InsertApplyReqDto insertApplyReqDto,

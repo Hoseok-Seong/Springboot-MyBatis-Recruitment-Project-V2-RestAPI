@@ -1,11 +1,11 @@
 package shop.mtcoding.job.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.InsertApplyReqDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.UpdateApplicantResultReqDto;
 import shop.mtcoding.job.handler.exception.CustomApiException;
@@ -16,15 +16,13 @@ import shop.mtcoding.job.model.resume.Resume;
 import shop.mtcoding.job.model.resume.ResumeRepository;
 
 @Service
+@RequiredArgsConstructor
 public class ApplyService {
-    @Autowired
-    private ApplyRepository applyRepository;
+    private final ApplyRepository applyRepository;
 
-    @Autowired
-    private ResumeRepository resumeRepository;
+    private final ResumeRepository resumeRepository;
 
-    @Autowired
-    private ApplyResumeRepository applyResumeRepository;
+    private final ApplyResumeRepository applyResumeRepository;
 
     @Transactional
     public void 이력서제출(InsertApplyReqDto insertApplyReqDto, int userId) {

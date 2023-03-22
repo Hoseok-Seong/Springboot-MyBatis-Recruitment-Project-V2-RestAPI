@@ -1,7 +1,6 @@
 package shop.mtcoding.job.dto.entPage;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;

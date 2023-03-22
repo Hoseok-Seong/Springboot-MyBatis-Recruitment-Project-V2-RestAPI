@@ -1,4 +1,4 @@
-package shop.mtcoding.job;
+package shop.mtcoding.job.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -132,5 +132,21 @@ public class RecruitmentControllerTest {
                 // then
                 resultActions.andExpect(jsonPath("$..[0].title").value("프론트엔드 개발자"));
                 resultActions.andExpect(jsonPath("$..[0].id").value(1));
+        }
+
+        @Test
+        public void update_test() throws Exception {
+                // given
+                int id = 1;
+
+                // when
+                ResultActions resultActions = mvc.perform(
+                                get("/recruitment/" + id + "/updateForm").session(mockSession));
+                String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                System.out.println("data_test : " + responseBody);
+
+                // then
+                resultActions.andExpect(jsonPath("$.code").value(1));
+                resultActions.andExpect(status().isOk());
         }
 }
