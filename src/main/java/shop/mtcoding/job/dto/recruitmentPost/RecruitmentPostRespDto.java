@@ -52,8 +52,6 @@ public class RecruitmentPostRespDto {
         public static class EnterpriseDto {
             private Integer id;
             private String enterpriseName;
-            private String password;
-            private String salt;
             private String address;
             private String contact;
             private String email;

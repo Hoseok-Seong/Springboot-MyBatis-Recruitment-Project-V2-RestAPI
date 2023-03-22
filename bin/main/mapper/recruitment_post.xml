@@ -66,8 +66,6 @@
       <association property="enterprise" javaType="shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto$RecruitmentPostListRespDto$EnterpriseDto">
          <id property="id" column="id"/>
          <result property="enterpriseName" column="enterprise_name"/>
-         <result property="password" column="password"/>
-         <result property="salt" column="salt"/>
          <result property="address" column="address"/>
          <result property="contact" column="contact"/>
          <result property="email" column="email"/>
