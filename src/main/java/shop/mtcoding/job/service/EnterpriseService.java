@@ -2,10 +2,10 @@ package shop.mtcoding.job.service;
 
 import java.security.NoSuchAlgorithmException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.JoinEnterpriseReqDto;
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.LoginEnterpriseReqDto;
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.UpdateEnterpriseReqDto;
@@ -16,11 +16,11 @@ import shop.mtcoding.job.model.enterprise.EnterpriseRepository;
 import shop.mtcoding.job.util.SaltEncoder;
 import shop.mtcoding.job.util.Sha256Encoder;
 
+@RequiredArgsConstructor
 @Service
 public class EnterpriseService {
 
-    @Autowired
-    private EnterpriseRepository enterpriseRepository;
+    private final EnterpriseRepository enterpriseRepository;
 
     @Transactional(readOnly = true)
     public Enterprise 기업로그인하기(LoginEnterpriseReqDto loginEnterpriseReqDto) {

@@ -79,7 +79,7 @@ public class UserService {
     }
 
     @Transactional
-    public void 유저회원정보수정하기(UpdateUserReqDto updateUserReqDto, int id, @RequestParam List<Integer> skill) {
+    public void 유저회원정보수정하기(UpdateUserReqDto updateUserReqDto, int id, @RequestParam("skill") List<Integer> skill) {
 
         try {
             String salt = SaltEncoder.salt();
@@ -95,15 +95,17 @@ public class UserService {
             System.err.println("알고리즘을 찾을 수 없습니다: " + e.getMessage());
         }
         userSkillRepository.deleteByUserId(id);
-        try {
-            for (Integer checkSkill : skill) {
-                int result = userSkillRepository.insert(id, checkSkill);
-                if (result != 1) {
-                    throw new CustomException("실패");
+        if (skill != null) {
+            try {
+                for (Integer checkSkill : skill) {
+                    int result = userSkillRepository.insert(id, checkSkill);
+                    if (result != 1) {
+                        throw new CustomException("실패");
+                    }
                 }
+            } catch (Exception e) {
+                throw new CustomException("skill insert 실패");
             }
-        } catch (Exception e) {
-            throw new CustomException("skill insert 실패");
         }
     }
 

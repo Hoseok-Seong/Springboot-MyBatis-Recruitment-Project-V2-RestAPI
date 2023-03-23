@@ -1,6 +1,5 @@
 package shop.mtcoding.job.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +12,7 @@ import shop.mtcoding.job.model.bookmark.BookmarkRepository;
 @Service
 @RequiredArgsConstructor
 public class BookmarkService {
-    @Autowired
-    private BookmarkRepository bookmarkRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @Transactional
     public int 북마크하기(int recruitmentId, int userId) {
