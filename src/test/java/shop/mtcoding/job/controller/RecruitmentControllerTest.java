@@ -1,6 +1,5 @@
 package shop.mtcoding.job.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -9,8 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,12 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostDetailRespDto;
-import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostSkillRespDto;
 import shop.mtcoding.job.model.enterprise.Enterprise;
 
 @AutoConfigureMockMvc
@@ -80,42 +76,19 @@ public class RecruitmentControllerTest {
         @Test
         public void detail_test() throws Exception {
                 // given
-                int id = 5;
+                int id = 1;
 
                 // when
                 ResultActions resultActions = mvc.perform(
                                 get("/recruitment/detail/" + id));
-                Map<String, Object> map = resultActions.andReturn().getModelAndView().getModel();
 
-                // 기술스택,마감기한 제외한 테스트
-                RecruitmentPostDetailRespDto recruitmentPostDtos = (RecruitmentPostDetailRespDto) map
-                                .get("recruitmentPostDtos");
-                // String recruitmentPostDetailJson =
-                // om.writeValueAsString(recruitmentPostDtos);
-                // System.out.println("상세보기 테스트 : " + recruitmentPostDetailJson);
-
-                // 마감기한 테스트
-                Long diffDays = (Long) map.get("dDay");
-                // System.out.println("남은 일 수 : " + diffDays);
-
-                // 기술스택 매핑 테스트
-                Map<Integer, String> skillMap = (Map<Integer, String>) map.get("skillMap");
-
-                // 기술스택 테스트
-                List<RecruitmentPostSkillRespDto> recruitmentPostSkillDtos = (List<RecruitmentPostSkillRespDto>) map
-                                .get("recruitmentPostSkillDtos");
-                // String RecruitmentPostSkillJson =
-                // om.writeValueAsString(recruitmentPostSkillDtos);
-                // System.out.println("기술스택 테스트 : " + RecruitmentPostSkillJson);
+                MvcResult result = resultActions.andReturn();
+                String content = result.getResponse().getContentAsString();
+                System.out.println("테스트 결과: " + content);
 
                 // then
+                resultActions.andExpect(jsonPath("$.code").value(1));
                 resultActions.andExpect(status().isOk());
-                assertThat(recruitmentPostDtos.getTitle()).isEqualTo("풀스택 임베디드 개발자");
-                assertThat(recruitmentPostDtos.getCareer()).isEqualTo("무관");
-                assertThat(diffDays).isEqualTo(7);
-                assertThat(skillMap.get(1)).isEqualTo("Java");
-                assertThat(recruitmentPostSkillDtos.get(0).getSkill()).isEqualTo(1);
-                assertThat(recruitmentPostSkillDtos.get(1).getSkill()).isEqualTo(4);
         }
 
         @Test

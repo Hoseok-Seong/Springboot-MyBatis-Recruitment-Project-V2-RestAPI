@@ -217,13 +217,13 @@ public class RecruitmentController {
         }
 
         RecruitmentPostUpdateRespDto recruitmentPostRespDto = recruitmentPostRepository
-                .findPostById(principalEnt.getId());
+                .findPostById(id);
         List<RecruitmentPostSkillUpdateRespDto> recruitmentPostSkillRespDto = recruitmentPostRepository
-                .findSkillById(principalEnt.getId());
+                .findSkillById(id);
 
         RecruitmentPostAndSkillUpdateRespDto recruitmentPostAndSkillUpdateRespDto = new RecruitmentPostAndSkillUpdateRespDto(
                 recruitmentPostRespDto, recruitmentPostSkillRespDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 수정 성공", recruitmentPostAndSkillUpdateRespDto),
+        return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 수정 화면", recruitmentPostAndSkillUpdateRespDto),
                 HttpStatus.OK);
     }
 
