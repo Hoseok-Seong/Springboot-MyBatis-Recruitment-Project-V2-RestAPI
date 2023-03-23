@@ -42,10 +42,12 @@ public class RecruitmentPostRespDto {
         private String enterpriseLogo;
         private String deadline;
         private Timestamp createdAt;
-
         private EnterpriseDto enterprise;
-
         private long diffDays;
+
+        public void calculateDiffDays() { // D-Day 계산하는 메서드 추가
+            diffDays = DateUtil.deadline(deadline);
+        }
 
         @Getter
         @Setter

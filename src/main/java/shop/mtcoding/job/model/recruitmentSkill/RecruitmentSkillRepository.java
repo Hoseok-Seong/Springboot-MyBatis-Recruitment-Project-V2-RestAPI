@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import shop.mtcoding.job.dto.entPage.EntPageMyRecommendRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostSkillRespDto;
-import shop.mtcoding.job.dto.recruitmentSkill.EnterpriseMatchingDto;
 
 @Mapper
 public interface RecruitmentSkillRepository {
@@ -25,5 +25,5 @@ public interface RecruitmentSkillRepository {
 
     public int deleteByRecruitmentId(int recruitmentId);
 
-    public List<EnterpriseMatchingDto> enterpriseMatching(int id);
+    public List<EntPageMyRecommendRespDto> enterpriseMatching(int id);
 }

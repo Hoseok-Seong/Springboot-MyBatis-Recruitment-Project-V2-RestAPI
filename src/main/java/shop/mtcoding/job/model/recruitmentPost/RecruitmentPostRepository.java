@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Mapper;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostCategoryRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostDetailRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostListRespDto;
-import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostSearchRespDto;;
+import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostSearchRespDto;
+import shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto.RecruitmentPostSkillUpdateRespDto;
+import shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto.RecruitmentPostUpdateRespDto;
 
 @Mapper
 public interface RecruitmentPostRepository {
@@ -24,6 +26,10 @@ public interface RecruitmentPostRepository {
         public int updateById(RecruitmentPost recruitmentPost);
 
         public int deleteById(int id);
+
+        public RecruitmentPostUpdateRespDto findPostById(int id);
+
+        public List<RecruitmentPostSkillUpdateRespDto> findSkillById(int id);
 
         public List<RecruitmentPostListRespDto> findByPost();
 

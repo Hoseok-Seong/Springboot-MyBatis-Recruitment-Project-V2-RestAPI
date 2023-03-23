@@ -103,4 +103,39 @@
       AND (r.position LIKE CONCAT('%', #{position}, '%') OR r.position IS NULL)
       AND (rs.skill LIKE CONCAT('%', #{skill}, '%') OR rs.skill IS NULL);
    </select>
+
+   <resultMap id="post" type="shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto$RecruitmentPostUpdateRespDto">
+      <id property="id" column="id"/>
+      <result property="enterpriseId" column="enterprise_id"/>
+      <result property="title" column="title"/>
+      <result property="career" column="career"/>
+      <result property="education" column="education"/>
+      <result property="pay" column="pay"/>
+      <result property="sector" column="sector"/>
+      <result property="position" column="position"/>
+      <result property="address" column="address"/>
+      <result property="content" column="content"/>
+      <result property="enterpriseLogo" column="enterprise_logo"/>
+      <result property="deadline" column="deadline"/>
+      <result property="createdAt" column="created_at"/>
+   </resultMap>
+
+   <resultMap id="skill" type="shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto$RecruitmentPostSkillUpdateRespDto">
+      <id property="id" column="id"/>
+      <result property="recruitmentId" column="recruitment_id"/>
+      <result property="skill" column="skill"/>
+   </resultMap>
+
+   <select id="findPostById" resultMap="post">
+      SELECT *
+      FROM recruitment_post_tb
+      WHERE id = #{id}
+   </select>
+
+   <select id="findSkillById" resultMap="skill">
+      SELECT rs.skill, rs.id, rs.recruitment_id
+      FROM recruitment_post_tb r
+      JOIN recruitment_skill_tb rs ON r.id = rs.recruitment_id
+      WHERE r.id = #{id}
+   </select>
 </mapper>

@@ -4,85 +4,70 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import shop.mtcoding.job.dto.apply.ApplyRespDto.ApplyListForEntRespDto;
-import shop.mtcoding.job.dto.bookmark.BookmarkEntReqDto;
-import shop.mtcoding.job.dto.recruitmentSkill.EnterpriseMatchingDto;
+import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.dto.ResponseDto;
+import shop.mtcoding.job.dto.entPage.EntPageMyApplicantRespDto;
+import shop.mtcoding.job.dto.entPage.EntPageMyBookmarkRespDto;
+import shop.mtcoding.job.dto.entPage.EntPageMyRecommendRespDto;
 import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.apply.ApplyRepository;
-import shop.mtcoding.job.model.applyResume.ApplyResume;
-import shop.mtcoding.job.model.applyResume.ApplyResumeRepository;
 import shop.mtcoding.job.model.bookmark.BookmarkRepository;
 import shop.mtcoding.job.model.enterprise.Enterprise;
 import shop.mtcoding.job.model.recruitmentSkill.RecruitmentSkillRepository;
 
+@RequiredArgsConstructor
 @Controller
 public class EntPageController {
-    @Autowired
-    private HttpSession session;
+    private final HttpSession session;
 
-    @Autowired
-    private ApplyRepository applyRepository;
+    private final ApplyRepository applyRepository;
 
-    @Autowired
-    private ApplyResumeRepository applyResumeRepository;
+    private final RecruitmentSkillRepository recruitmentSkillRepository;
 
-    @Autowired
-    private RecruitmentSkillRepository recruitmentSkillRepository;
-
-    @Autowired
-    private BookmarkRepository bookmarkRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     @GetMapping("/myapplicant")
-    public String mypage(Model model) {
+    public @ResponseBody ResponseEntity<?> myapplicant() {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
         }
 
-        List<ApplyListForEntRespDto> applyList = applyRepository.findByEnterpriseId(principalEnt.getId());
-        model.addAttribute("applyLists", applyList);
+        List<EntPageMyApplicantRespDto> myApplicantRespDtos = applyRepository
+                .findByEnterpriseIdJoinApplyResume(principalEnt.getId());
 
-        List<ApplyResume> resumeList = applyResumeRepository.findByEnterpriseId(principalEnt.getId());
-
-        model.addAttribute("resumeList", resumeList);
-
-        return "entpage/myapplicant";
+        return new ResponseEntity<>(new ResponseDto<>(1, "인증 성공", myApplicantRespDtos), HttpStatus.OK);
     }
 
     @GetMapping("/myrecommend")
-    public String mymatching(Model model) {
+    public @ResponseBody ResponseEntity<?> myrecommend() {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
         }
 
-        if (principalEnt != null) {
-            List<EnterpriseMatchingDto> enterpriseMatchingDto = recruitmentSkillRepository
-                    .enterpriseMatching(principalEnt.getId());
+        List<EntPageMyRecommendRespDto> myrecommendRespDto = recruitmentSkillRepository
+                .enterpriseMatching(principalEnt.getId());
 
-            model.addAttribute("enterpriseMatching", enterpriseMatchingDto);
-        }
-
-        return "entpage/myrecommend";
+        return new ResponseEntity<>(new ResponseDto<>(1, "인증 성공", myrecommendRespDto), HttpStatus.OK);
     }
 
     @GetMapping("/mybookmarkEnt")
-    public String mybookmark(Model model) {
+    public @ResponseBody ResponseEntity<?> mybookmark() {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
         }
-        if (principalEnt != null) {
-            List<BookmarkEntReqDto> bookmarkEntReqDto = bookmarkRepository.findByEnterpriseId(principalEnt.getId());
-            model.addAttribute("bookmarkDto", bookmarkEntReqDto);
-        }
 
-        return "entpage/mybookmarkEnt";
+        List<EntPageMyBookmarkRespDto> mybookmarkEntRespDto = bookmarkRepository
+                .findByEnterpriseId(principalEnt.getId());
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "인증 성공", mybookmarkEntRespDto), HttpStatus.OK);
     }
 }

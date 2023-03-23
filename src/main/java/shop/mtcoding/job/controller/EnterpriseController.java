@@ -4,7 +4,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.JoinEnterpriseReqDto;
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.LoginEnterpriseReqDto;
@@ -23,17 +23,14 @@ import shop.mtcoding.job.model.enterprise.Enterprise;
 import shop.mtcoding.job.model.enterprise.EnterpriseRepository;
 import shop.mtcoding.job.service.EnterpriseService;
 
+@RequiredArgsConstructor
 @Controller
 public class EnterpriseController {
+    private final EnterpriseService enterpriseService;
 
-    @Autowired
-    private EnterpriseService enterpriseService;
+    private final EnterpriseRepository enterpriseRepository;
 
-    @Autowired
-    private EnterpriseRepository enterpriseRepository;
-
-    @Autowired
-    private HttpSession session;
+    private final HttpSession session;
 
     @PostMapping("/enterprise/login")
     public @ResponseBody ResponseEntity<?> enterpriseLogin(@RequestBody LoginEnterpriseReqDto loginEnterpriseReqDto,
@@ -42,6 +39,7 @@ public class EnterpriseController {
         if (loginEnterpriseReqDto.getEnterpriseName() == null || loginEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             throw new CustomApiException("아이디를 작성해주세요");
         }
+
         if (loginEnterpriseReqDto.getPassword() == null || loginEnterpriseReqDto.getPassword().isEmpty()) {
             throw new CustomApiException("비밀번호를 작성해주세요");
         }
@@ -55,6 +53,7 @@ public class EnterpriseController {
         if (session.getAttribute("principalEnt") == null) {
             throw new CustomApiException("존재하지 않는 아이디거나 비밀번호를 다시 확인해주시기 바랍니다");
         }
+
         // 4. 아이디 기억
         if (loginEnterpriseReqDto.getRememberEnt().equals("true")) {
             Cookie cookie = new Cookie("rememberEnt", loginEnterpriseReqDto.getEnterpriseName());
@@ -62,6 +61,7 @@ public class EnterpriseController {
             cookie.setMaxAge(600);
             response.addCookie(cookie);
         }
+
         if (loginEnterpriseReqDto.getRememberEnt().equals("false")) {
             Cookie cookie = new Cookie("rememberEnt", "");
             cookie.setMaxAge(0);

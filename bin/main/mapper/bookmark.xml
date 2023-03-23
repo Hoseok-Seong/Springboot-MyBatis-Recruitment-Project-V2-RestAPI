@@ -31,8 +31,44 @@
       where b.user_id = #{userId} 
    </select>
 
-   <select id="findByEnterpriseId" resultType="shop.mtcoding.job.dto.bookmark.BookmarkEntReqDto">
-      select distinct b.recruitment_id, u.username, u.name, u.email, u.contact, rp.title
+   <resultMap id="mybookmarkEnt" type="shop.mtcoding.job.dto.entPage.EntPageMyBookmarkRespDto">
+         <association property="bookmark" javaType="shop.mtcoding.job.dto.entPage.EntPageMyBookmarkRespDto$BookmarkDto">
+            <id property="id" column="id"/>
+            <result property="userId" column="user_id"/>
+            <result property="recruitmentId" column="recruitment_id"/>
+            <result property="createdAt" column="created_at"/>
+         </association>
+
+         <association property="user" javaType="shop.mtcoding.job.dto.entPage.EntPageMyBookmarkRespDto$UserDto">
+            <id property="id" column="id"/>
+            <result property="username" column="username"/>
+            <result property="password" column="password"/>
+            <result property="salt" column="salt"/>
+            <result property="name" column="name"/>
+            <result property="email" column="email"/>
+            <result property="contact" column="contact"/>
+            <result property="createdAt" column="created_at"/>
+         </association>
+
+         <association property="recruitmentPost" javaType="shop.mtcoding.job.dto.entPage.EntPageMyBookmarkRespDto$RecruitmentPostDto">
+            <id property="id" column="id"/>
+            <result property="enterpriseId" column="enterprise_id"/>
+            <result property="title" column="title"/>
+            <result property="career" column="career"/>
+            <result property="education" column="education"/>
+            <result property="pay" column="pay"/>
+            <result property="sector" column="sector"/>
+            <result property="position" column="position"/>
+            <result property="address" column="address"/>
+            <result property="content" column="content"/>
+            <result property="enterpriseLogo" column="enterprise_logo"/>
+            <result property="deadline" column="deadline"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+   </resultMap>
+
+   <select id="findByEnterpriseId" resultMap="mybookmarkEnt">
+      select *
       from bookmark_tb b
       join user_tb u
       on b.user_id = u.id

@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,13 +20,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.ResponseDto;
+import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostAndSkillRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostReqDto.SaveRecruitmentPostReqDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostReqDto.UpdateRecruitmentPostReqDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostCategoryRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostDetailRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostListRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostSearchRespDto;
+import shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto.RecruitmentPostSkillUpdateRespDto;
+import shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto.RecruitmentPostUpdateRespDto;
 import shop.mtcoding.job.handler.exception.CustomApiException;
 import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.bookmark.BookmarkRepository;
@@ -40,26 +43,20 @@ import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.service.RecruitmentService;
 import shop.mtcoding.job.util.DateUtil;
 
+@RequiredArgsConstructor
 @Controller
 public class RecruitmentController {
+    private final BookmarkRepository bookmarkRepository;
 
-    @Autowired
-    private BookmarkRepository bookmarkRepository;
+    private final RecruitmentPostRepository recruitmentPostRepository;
 
-    @Autowired
-    private RecruitmentPostRepository recruitmentPostRepository;
+    private final RecruitmentSkillRepository recruitmentSkillRepository;
 
-    @Autowired
-    private RecruitmentSkillRepository recruitmentSkillRepository;
+    private final RecruitmentService recruitmentService;
 
-    @Autowired
-    private RecruitmentService recruitmentService;
+    private final HttpSession session;
 
-    @Autowired
-    private HttpSession session;
-
-    @Autowired
-    private ResumeRepository resumeRepository;
+    private final ResumeRepository resumeRepository;
 
     @DeleteMapping("/recruitment/{id}")
     public @ResponseBody ResponseEntity<?> delete(@PathVariable int id) {
@@ -67,10 +64,8 @@ public class RecruitmentController {
         if (principalEnt == null) {
             throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
         }
-
         recruitmentService.채용공고삭제(id, principalEnt.getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 삭제 성공", null), HttpStatus.OK);
-
     }
 
     @PutMapping("/recruitment/{id}")
@@ -207,12 +202,12 @@ public class RecruitmentController {
     }
 
     @GetMapping("/recruitment/{id}/updateForm")
-    public String recruitmentUpdateForm(@PathVariable int id, Model model) {
+    public ResponseEntity<?> recruitmentUpdateForm(@PathVariable int id) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
         }
-        RecruitmentPost recruitmentPS = recruitmentPostRepository.findById(id);
+        RecruitmentPost recruitmentPS = recruitmentPostRepository.findById(principalEnt.getId());
         if (recruitmentPS == null) {
             throw new CustomException("없는 채용공고를 수정할 수 없습니다");
         }
@@ -220,25 +215,14 @@ public class RecruitmentController {
             throw new CustomException("채용공고를 수정할 권한이 없습니다", HttpStatus.FORBIDDEN);
         }
 
-        model.addAttribute("recruitment", recruitmentPS);
+        RecruitmentPostUpdateRespDto recruitmentPostRespDto = recruitmentPostRepository
+                .findPostById(principalEnt.getId());
+        List<RecruitmentPostSkillUpdateRespDto> recruitmentPostSkillRespDto = recruitmentPostRepository
+                .findSkillById(principalEnt.getId());
 
-        // 스킬 매핑 정보를 저장한 Map 객체를 만들어서 Model 객체에 추가
-        Map<Integer, String> skillMap = new HashMap<>();
-        skillMap.put(1, "Java");
-        skillMap.put(2, "HTML");
-        skillMap.put(3, "JavaScript");
-        skillMap.put(4, "VueJS");
-        skillMap.put(5, "CSS");
-        skillMap.put(6, "Node.js");
-        skillMap.put(7, "React");
-        skillMap.put(8, "ReactJS");
-        skillMap.put(9, "Typescript");
-        skillMap.put(10, "Zustand");
-        skillMap.put(11, "AWS");
-        model.addAttribute("skillMap", skillMap);
-        model.addAttribute("recruitmentPostSkillDtos", recruitmentSkillRepository.findByRecruitmentId(id));
-
-        return "recruitment/updateForm";
+        RecruitmentPostAndSkillRespDto recruitmentPostAndSkillRespDto = new RecruitmentPostAndSkillRespDto(
+                recruitmentPostRespDto, recruitmentPostSkillRespDto);
+        return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 수정 성공", recruitmentPostAndSkillRespDto), HttpStatus.OK);
     }
 
     @GetMapping("/recruitment/detail/{id}")
@@ -294,8 +278,7 @@ public class RecruitmentController {
     }
 
     @PostMapping("/recruitment/search")
-    public ResponseEntity<?> searchList(@RequestBody RecruitmentPostSearchRespDto recruitmentPostSearchRespDto,
-            Model model) {
+    public ResponseEntity<?> searchList(@RequestBody RecruitmentPostSearchRespDto recruitmentPostSearchRespDto) {
         List<RecruitmentPostSearchRespDto> postPSList = recruitmentService.채용정보검색(recruitmentPostSearchRespDto);
 
         // d-day 계산
@@ -307,8 +290,7 @@ public class RecruitmentController {
     }
 
     @PostMapping("/recruitment/category")
-    public ResponseEntity<?> category(@RequestBody RecruitmentPostCategoryRespDto recruitmentPostCategoryRespDto,
-            Model model) {
+    public ResponseEntity<?> category(@RequestBody RecruitmentPostCategoryRespDto recruitmentPostCategoryRespDto) {
         List<RecruitmentPostCategoryRespDto> postPSList = recruitmentService.카테고리검색(recruitmentPostCategoryRespDto);
 
         // d-day 계산
