@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -260,7 +259,7 @@ public class RecruitmentController {
     }
 
     @GetMapping("/recruitment/list")
-    public ResponseEntity<?> recruitmentPostList(Model model) {
+    public ResponseEntity<?> recruitmentPostList() {
         List<RecruitmentPostListRespDto> posts = recruitmentPostRepository.findByPost();
         // d-day 계산
         for (RecruitmentPostListRespDto post : posts) {

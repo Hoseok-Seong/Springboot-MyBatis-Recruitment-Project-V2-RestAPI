@@ -42,7 +42,7 @@ public class ApplyControllerTest {
     private MockHttpSession mockSession;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         User principal = new User();
         principal.setId(1);
         principal.setUsername("ssar");
