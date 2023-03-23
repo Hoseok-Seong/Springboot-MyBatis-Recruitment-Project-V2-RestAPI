@@ -1,6 +1,7 @@
 package shop.mtcoding.job.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.auth.JwtProvider;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.user.UserReqDto.JoinUserReqDto;
 import shop.mtcoding.job.dto.user.UserReqDto.LoginUserReqDto;
@@ -34,6 +36,19 @@ public class UserController {
     private final HttpSession session;
 
     private final UserRepository userRepository;
+
+    @PostMapping("/login")
+    public @ResponseBody ResponseEntity<?> login(User user) {
+        Optional<User> userOp = userRepository.findByUsernameAndPasswordByJwt(user.getUsername(), user.getPassword());
+        System.out.println("테스트 : " + userOp);
+        if (userOp.isPresent()) { // 값이 있다면
+            String jwt = JwtProvider.create(userOp.get());
+
+            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
+        } else {
+            return ResponseEntity.badRequest().body("로그인 실패");
+        }
+    }
 
     @GetMapping("/loginForm")
     public String loginForm() {
