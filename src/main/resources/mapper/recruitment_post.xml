@@ -58,7 +58,6 @@
       <result property="pay" column="pay"/>
       <result property="sector" column="sector"/>
       <result property="position" column="position"/>
-      <result property="content" column="content"/>
       <result property="address" column="address"/>
       <result property="enterpriseLogo" column="enterprise_logo"/>
       <result property="deadline" column="deadline"/>
@@ -66,16 +65,9 @@
       <association property="enterprise" javaType="shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto$RecruitmentPostListRespDto$EnterpriseDto">
          <id property="id" column="id"/>
          <result property="enterpriseName" column="enterprise_name"/>
-         <result property="address" column="address"/>
-         <result property="contact" column="contact"/>
-         <result property="email" column="email"/>
-         <result property="sector" column="sector"/>
-         <result property="size" column="size"/>
-         <result property="createdAt" column="created_at"/>
       </association>
    </resultMap>
 
-   
    <select id="findByPost" resultMap="RecruitmentPostListRespDto">
       SELECT *
       FROM recruitment_post_tb r
