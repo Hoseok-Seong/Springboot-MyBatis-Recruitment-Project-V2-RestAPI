@@ -132,9 +132,6 @@ public class UserController {
     @PostMapping("/user/update")
     public String userUpdate(UpdateUserReqDto updateUserReqDto, @RequestParam("skill") List<Integer> skill) {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        }
 
         if (updateUserReqDto.getPassword() == null || updateUserReqDto.getPassword().isEmpty()) {
             throw new CustomException("비밀번호를 작성해주세요");

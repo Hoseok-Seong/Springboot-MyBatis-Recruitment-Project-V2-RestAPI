@@ -18,7 +18,6 @@ import shop.mtcoding.job.dto.apply.ApplyReqDto.InsertApplyReqDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.UpdateApplicantResultReqDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostDetailRespDto;
 import shop.mtcoding.job.handler.exception.CustomApiException;
-import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.enterprise.Enterprise;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
 import shop.mtcoding.job.model.user.User;
@@ -38,9 +37,6 @@ public class ApplyController {
     public @ResponseBody ResponseEntity<?> insertApply(@RequestBody InsertApplyReqDto insertApplyReqDto,
             @PathVariable int id) {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
-        }
 
         RecruitmentPostDetailRespDto recruitmentPostDto = recruitmentPostRepository.findByIdWithEnterpriseId(id);
 
@@ -58,22 +54,16 @@ public class ApplyController {
     @DeleteMapping("/apply/{id}")
     public @ResponseBody ResponseEntity<?> deleteApply(@PathVariable int id) {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
-        }
 
         applyService.이력서제출취소(id, principal.getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "지원서 삭제 성공", null), HttpStatus.OK);
 
     }
 
-    @PutMapping("/apply/{id}")
+    @PutMapping("/apply/result/{id}")
     public @ResponseBody ResponseEntity<?> updateResult(
             @RequestBody UpdateApplicantResultReqDto updateApplicantResultReqDto, @PathVariable int id) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
-        }
 
         applyService.합격불합격(id, updateApplicantResultReqDto, principalEnt.getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "처리 성공", null), HttpStatus.OK);

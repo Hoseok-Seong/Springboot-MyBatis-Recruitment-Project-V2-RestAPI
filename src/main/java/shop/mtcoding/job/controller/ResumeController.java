@@ -41,9 +41,7 @@ public class ResumeController {
     @GetMapping("/resumeList")
     public String resumeList(Model model) {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        }
+
         List<Resume> resumeList = resumeRepository.findByUserId(principal.getId());
         model.addAttribute("resumeList", resumeList);
         return "resume/resumeList";
@@ -51,19 +49,13 @@ public class ResumeController {
 
     @GetMapping("/resumeForm")
     public String resumeForm() {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        }
+
         return "resume/resumeForm";
     }
 
     @PostMapping("/resume")
     public @ResponseBody ResponseEntity<?> save(@RequestBody SaveResumeReqDto saveResumeReqDto) {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
-        }
 
         resumeService.이력서쓰기(saveResumeReqDto, principal.getId());
 
@@ -73,9 +65,6 @@ public class ResumeController {
     @DeleteMapping("/resume/{id}")
     public @ResponseBody ResponseEntity<?> delete(@PathVariable int id) {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
-        }
 
         resumeService.이력서삭제(id, principal.getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 삭제 성공", null), HttpStatus.OK);
@@ -91,9 +80,6 @@ public class ResumeController {
     public @ResponseBody ResponseEntity<?> update(@PathVariable int id,
             @RequestBody UpdateResumeReqDto updateResumeReqDto) throws Exception {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
-        }
 
         resumeService.이력서수정(id, updateResumeReqDto, principal.getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 수정 성공", null), HttpStatus.OK);

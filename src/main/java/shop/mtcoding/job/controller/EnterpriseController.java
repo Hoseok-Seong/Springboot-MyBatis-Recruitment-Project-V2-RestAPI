@@ -118,9 +118,6 @@ public class EnterpriseController {
     public String enterpriseUpdate(UpdateEnterpriseReqDto updateEnterpriseReqDto) {
 
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
-        }
 
         if (updateEnterpriseReqDto.getPassword() == null || updateEnterpriseReqDto.getPassword().isEmpty()) {
             throw new CustomException("비밀번호를 작성해주세요");

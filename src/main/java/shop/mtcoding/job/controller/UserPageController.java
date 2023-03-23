@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ import shop.mtcoding.job.dto.apply.ApplyRespDto.ApplyListForUserRespDto;
 import shop.mtcoding.job.dto.bookmark.BookmarkReqDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostListRespDto;
 import shop.mtcoding.job.dto.userSkill.UserMatchingDto;
-import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.apply.ApplyRepository;
 import shop.mtcoding.job.model.applyResume.ApplyResume;
 import shop.mtcoding.job.model.applyResume.ApplyResumeRepository;
@@ -48,9 +46,6 @@ public class UserPageController {
     @GetMapping("/myapply")
     public String mypage(Model model) {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        }
 
         List<ApplyListForUserRespDto> applyList = applyRepository.findByUserId(
                 principal.getId());
@@ -74,9 +69,7 @@ public class UserPageController {
     @GetMapping("/mymatching")
     public String mymatching(Model model) {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        }
+
         if (principal != null) {
             List<UserMatchingDto> userMatchingDto = userSkillRepository.userMatching(principal.getId());
             model.addAttribute("userMatching", userMatchingDto);
@@ -111,9 +104,6 @@ public class UserPageController {
     @GetMapping("/mybookmark")
     public String mybookmark(Model model, BookmarkReqDto bookmarkReqDto) {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        }
 
         if (principal != null) {
             List<BookmarkReqDto> bookmarkDto = bookmarkRepository.findByUserId(principal.getId());

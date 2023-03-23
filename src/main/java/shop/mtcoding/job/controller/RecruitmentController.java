@@ -72,9 +72,7 @@ public class RecruitmentController {
     public @ResponseBody ResponseEntity<?> updateRecruitmentPost(@PathVariable int id,
             @ModelAttribute UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
-        }
+
         if (updateRecruitmentPostReqDto.getTitle() == null || updateRecruitmentPostReqDto.getTitle().isEmpty()) {
             throw new CustomApiException("제목을 작성해주세요");
         }
@@ -134,9 +132,7 @@ public class RecruitmentController {
     public @ResponseBody ResponseEntity<?> saveRecruitmentPost(
             @ModelAttribute SaveRecruitmentPostReqDto saveRecruitmentPostReqDto) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
-        }
+
         if (saveRecruitmentPostReqDto.getTitle() == null || saveRecruitmentPostReqDto.getTitle().isEmpty()) {
             throw new CustomApiException("제목을 작성해주세요");
         }
@@ -194,10 +190,7 @@ public class RecruitmentController {
 
     @GetMapping("/recruitment/saveForm")
     public String recruitmentSaveForm() {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
-        }
+
         return "recruitment/saveForm";
     }
 

@@ -35,9 +35,6 @@ public class EntPageController {
     @GetMapping("/myapplicant")
     public @ResponseBody ResponseEntity<?> myapplicant() {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
-        }
 
         List<EntPageMyApplicantRespDto> myApplicantRespDtos = applyRepository
                 .findByEnterpriseIdJoinApplyResume(principalEnt.getId());
@@ -48,9 +45,6 @@ public class EntPageController {
     @GetMapping("/myrecommend")
     public @ResponseBody ResponseEntity<?> myrecommend() {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
-        }
 
         List<EntPageMyRecommendRespDto> myrecommendRespDto = recruitmentSkillRepository
                 .enterpriseMatching(principalEnt.getId());
@@ -61,9 +55,6 @@ public class EntPageController {
     @GetMapping("/mybookmarkEnt")
     public @ResponseBody ResponseEntity<?> mybookmark() {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
-        }
 
         List<EntPageMyBookmarkRespDto> mybookmarkEntRespDto = bookmarkRepository
                 .findByEnterpriseId(principalEnt.getId());
