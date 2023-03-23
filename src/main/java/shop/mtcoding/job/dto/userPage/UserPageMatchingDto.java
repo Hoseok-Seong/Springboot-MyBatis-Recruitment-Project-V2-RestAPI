@@ -53,7 +53,7 @@ public class UserPageMatchingDto {
         private String enterpriseLogo;
         private String enterpriseName;
         private String deadline;
-        private Long diffDays;
+        private long diffDays;
         private Timestamp createdAt;
 
 

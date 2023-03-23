@@ -72,7 +72,7 @@
             <result property="enterpriseLogo" column="enterprise_logo"/>
             <result property="enterpriseName" column="enterprise_name"/>
             <result property="deadline" column="deadline"/>
-            <result property="diffDays" column="diff_days"/>
+<!--            <result property="diffDays" column="diff_days"/>-->
             <result property="createdAt" column="created_at"/>
 <!--         <collection property="skill" column="recruitment_id" select="findByRecruitmentSkill" />-->
       </association>
