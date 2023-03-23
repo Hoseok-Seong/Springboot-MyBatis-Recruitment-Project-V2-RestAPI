@@ -75,6 +75,7 @@ public class UserController {
             cookie.setMaxAge(0);
             response.addCookie(cookie);
         }
+
         if (principal.isPresent()) { // 값이 있다면
             String jwt = JwtProvider.create(principal.get());
 
