@@ -1,9 +1,8 @@
 package shop.mtcoding.job.controller;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -22,13 +21,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.ResponseDto;
-import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostAndSkillRespDto;
+import shop.mtcoding.job.dto.bookmark.BookmartRespDto;
+import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostAndSkillUpdateRespDto;
+import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostDetailDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostReqDto.SaveRecruitmentPostReqDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostReqDto.UpdateRecruitmentPostReqDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostCategoryRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostDetailRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostListRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostSearchRespDto;
+import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostSkillRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto.RecruitmentPostSkillUpdateRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto.RecruitmentPostUpdateRespDto;
 import shop.mtcoding.job.handler.exception.CustomApiException;
@@ -38,10 +40,10 @@ import shop.mtcoding.job.model.enterprise.Enterprise;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPost;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
 import shop.mtcoding.job.model.recruitmentSkill.RecruitmentSkillRepository;
+import shop.mtcoding.job.model.resume.Resume;
 import shop.mtcoding.job.model.resume.ResumeRepository;
 import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.service.RecruitmentService;
-import shop.mtcoding.job.util.DateUtil;
 
 @RequiredArgsConstructor
 @Controller
@@ -220,61 +222,52 @@ public class RecruitmentController {
         List<RecruitmentPostSkillUpdateRespDto> recruitmentPostSkillRespDto = recruitmentPostRepository
                 .findSkillById(principalEnt.getId());
 
-        RecruitmentPostAndSkillRespDto recruitmentPostAndSkillRespDto = new RecruitmentPostAndSkillRespDto(
+        RecruitmentPostAndSkillUpdateRespDto recruitmentPostAndSkillUpdateRespDto = new RecruitmentPostAndSkillUpdateRespDto(
                 recruitmentPostRespDto, recruitmentPostSkillRespDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 수정 성공", recruitmentPostAndSkillRespDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 수정 성공", recruitmentPostAndSkillUpdateRespDto),
+                HttpStatus.OK);
     }
 
     @GetMapping("/recruitment/detail/{id}")
-    public String recruitmentPostDetail(@PathVariable int id, Model model) {
+    public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id) {
         User principal = (User) session.getAttribute("principal");
+        BookmartRespDto bookmartRespDto = new BookmartRespDto();
         if (principal != null) {
-            model.addAttribute("bookmarkDto",
-                    bookmarkRepository.findByRecruitmentIdAndUserId(id, principal.getId()));
+            bookmartRespDto = bookmarkRepository.findByRecruitmentIdAndUserId(id, principal.getId());
+        } else {
+            bookmartRespDto = null;
         }
+
         RecruitmentPostDetailRespDto recruitmentPostDto = recruitmentPostRepository.findByIdWithEnterpriseId(id);
 
         // d-day 계산
-        long diffDays = DateUtil.deadline(recruitmentPostDto.getDeadline());
+        recruitmentPostDto.calculateDiffDays();
 
-        // view에 상세보기 넘겨주기
-        model.addAttribute("recruitmentPostDtos", recruitmentPostDto);
-        model.addAttribute("dDay", diffDays); // deadline
+        List<RecruitmentPostSkillRespDto> recruitmentPostSkillRespDtos = recruitmentSkillRepository
+                .findByRecruitmentId(id);
 
-        // 스킬 매핑 정보를 저장한 Map 객체를 만들어서 Model 객체에 추가
-        Map<Integer, String> skillMap = new HashMap<>();
-        skillMap.put(1, "Java");
-        skillMap.put(2, "HTML");
-        skillMap.put(3, "JavaScript");
-        skillMap.put(4, "VueJS");
-        skillMap.put(5, "CSS");
-        skillMap.put(6, "Node.js");
-        skillMap.put(7, "React");
-        skillMap.put(8, "ReactJS");
-        skillMap.put(9, "Typescript");
-        skillMap.put(10, "Zustand");
-        skillMap.put(11, "AWS");
-        model.addAttribute("skillMap", skillMap);
-        model.addAttribute("recruitmentPostSkillDtos", recruitmentSkillRepository.findByRecruitmentId(id));
-
+        List<Resume> resumeDtos = new ArrayList<>();
         if (principal != null) {
-            model.addAttribute("resumes", resumeRepository.findByUserId(principal.getId()));
+            resumeDtos = resumeRepository.findByUserId(principal.getId());
+        } else {
+            resumeDtos = null;
         }
 
-        return "recruitment/detail";
+        RecruitmentPostDetailDto recruitmentDetailPageDto = new RecruitmentPostDetailDto(bookmartRespDto,
+                recruitmentPostDto, recruitmentPostSkillRespDtos, resumeDtos);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "상세보기 페이지 성공", recruitmentDetailPageDto), HttpStatus.OK);
     }
 
     @GetMapping("/recruitment/list")
-    public String recruitmentPostList(Model model) {
+    public ResponseEntity<?> recruitmentPostList(Model model) {
         List<RecruitmentPostListRespDto> posts = recruitmentPostRepository.findByPost();
         // d-day 계산
         for (RecruitmentPostListRespDto post : posts) {
             post.calculateDiffDays(); // D-Day 계산
         }
 
-        model.addAttribute("Posts", posts);
-
-        return "recruitment/list";
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 목록", posts), HttpStatus.OK);
     }
 
     @PostMapping("/recruitment/search")

@@ -1,6 +1,10 @@
 package shop.mtcoding.job.dto.recruitmentPost;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +27,14 @@ public class RecruitmentPostRespDto {
         private String address;
         private String enterpriseName;
         private String deadline;
+        @JsonIgnore
         private Timestamp createdAt;
+
+        private long diffDays;
+
+        public void calculateDiffDays() { // D-Day 계산하는 메서드 추가
+            diffDays = DateUtil.deadline(deadline);
+        }
     }
 
     @Setter
@@ -37,7 +48,6 @@ public class RecruitmentPostRespDto {
         private String pay;
         private String sector;
         private String position;
-        private String content;
         private String address;
         private String enterpriseLogo;
         private String deadline;
@@ -54,12 +64,6 @@ public class RecruitmentPostRespDto {
         public static class EnterpriseDto {
             private Integer id;
             private String enterpriseName;
-            private String address;
-            private String contact;
-            private String email;
-            private String sector;
-            private String size;
-            private Timestamp createdAt;
         }
     }
 
@@ -88,6 +92,22 @@ public class RecruitmentPostRespDto {
         private int id;
         private int recruitmentId;
         private int skill;
+
+        public String getSkill() {
+            Map<Integer, String> skillMap = new HashMap<>();
+            skillMap.put(1, "Java");
+            skillMap.put(2, "HTML");
+            skillMap.put(3, "JavaScript");
+            skillMap.put(4, "VueJS");
+            skillMap.put(5, "CSS");
+            skillMap.put(6, "Node.js");
+            skillMap.put(7, "React");
+            skillMap.put(8, "ReactJS");
+            skillMap.put(9, "Typescript");
+            skillMap.put(10, "Zustand");
+            skillMap.put(11, "AWS");
+            return skillMap.get(skill);
+        }
     }
 
     @Getter
