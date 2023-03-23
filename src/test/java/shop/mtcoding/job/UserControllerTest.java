@@ -18,23 +18,26 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import shop.mtcoding.job.dto.user.UserReqDto.JoinUserReqDto;
+import shop.mtcoding.job.dto.user.UserReqDto.LoginUserReqDto;
 import shop.mtcoding.job.model.user.User;
 
-/*
- * SpringBootTest는 통합테스트 (실제 환경과 동일하게 Bean이 생성됨)
- * AutoConfigureMockMvc는 Mock 환경의 IoC컨테이너에 MockMvc Bean이 생성됨
- */
-@Transactional // 메서드 실행 직후 롤백! // auto_increment 초기화 안 됨.
+@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-public class LoginControllerTest {
+public class UserControllerTest {
     @Autowired
     private MockMvc mvc;
 
     @Autowired
     private HttpSession session;
 
-    String requestBody = "username=ssar&password=03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4&email=ssar@nate.com";
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    String requestBody = "username=ssar&password=1";
 
     @Test
     public void testNotNullOrEmptyString() {
@@ -45,23 +48,46 @@ public class LoginControllerTest {
     @Test
     public void login_test() throws Exception {
         // given
+        LoginUserReqDto loginUserReqDto = new LoginUserReqDto();
+        loginUserReqDto.setUsername("ssar");
+        loginUserReqDto.setPassword("1");
+        loginUserReqDto.setRemember("true");
 
-        String requestBody = "username=ssar&password=1234";
-
-        assertNotNull(requestBody);
-        assertFalse(requestBody.isEmpty());
+        String requestBody = objectMapper.writeValueAsString(loginUserReqDto);
+        System.out.println(requestBody);
 
         // when
-        ResultActions resultActions = mvc.perform(post("/login").content(requestBody)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+        ResultActions resultActions = mvc.perform(post("/user/login").content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         HttpSession session = resultActions.andReturn().getRequest().getSession();
         User principal = (User) session.getAttribute("principal");
         System.out.println("테스트 : " + principal.getUsername());
-        System.out.println("테스트 : " + principal.getId());
+        System.out.println("테스트 : " + principal.getEmail());
 
         // then
         assertThat(principal.getUsername()).isEqualTo("ssar");
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void join_test() throws Exception {
+        // given
+        JoinUserReqDto joinUserReqDto = new JoinUserReqDto();
+        joinUserReqDto.setUsername("test");
+        joinUserReqDto.setPassword("test");
+        joinUserReqDto.setName("test");
+        joinUserReqDto.setEmail("test");
+        joinUserReqDto.setContact("test");
+
+        String requestBody = objectMapper.writeValueAsString(joinUserReqDto);
+        System.out.println(requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/user/join").content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+        // then
         resultActions.andExpect(status().is3xxRedirection());
     }
+
 }

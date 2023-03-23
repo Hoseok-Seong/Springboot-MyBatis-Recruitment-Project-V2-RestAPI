@@ -74,7 +74,7 @@ public class UserController {
             response.addCookie(cookie);
         }
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null), HttpStatus.OK);
     }
 
     @GetMapping("/logout")
@@ -89,7 +89,8 @@ public class UserController {
     }
 
     @PostMapping("/user/join")
-    public String userJoin(JoinUserReqDto joinUserReqDto, @RequestParam(required = false) List<Integer> skill) {
+    public String userJoin(@RequestBody JoinUserReqDto joinUserReqDto,
+            @RequestParam(required = false) List<Integer> skill) {
         if (joinUserReqDto.getUsername() == null || joinUserReqDto.getUsername().isEmpty()) {
             throw new CustomException("아이디를 작성해주세요");
         }

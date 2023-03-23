@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import javax.servlet.http.HttpSession;
 
 import org.junit.jupiter.api.Test;
@@ -14,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.JoinEnterpriseReqDto;
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.LoginEnterpriseReqDto;
+import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.UpdateEnterpriseReqDto;
 import shop.mtcoding.job.model.enterprise.Enterprise;
 
 @Transactional
@@ -37,7 +42,10 @@ public class EnterpriseControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    String requestBody = "username=긴트&password=356067e7d02ead0e9086e3f9e9cef88e8f6ca59222cd180bbf1a6205b7b40631";
+    @Autowired
+    private MockHttpSession mockSession;
+
+    String requestBody = "username=긴트&password=1";
 
     @Test
     public void testNotNullOrEmptyString() {
@@ -61,16 +69,13 @@ public class EnterpriseControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         HttpSession session = resultActions.andReturn().getRequest().getSession();
-        if (session == null) {
-            System.out.println("테스트 : 세션이없어!");
-        }
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         System.out.println("테스트 : " + principalEnt.getEnterpriseName());
         System.out.println("테스트 : " + principalEnt.getId());
 
         // then
         assertThat(principalEnt.getEnterpriseName()).isEqualTo("긴트");
-        resultActions.andExpect(status().isCreated());
+        resultActions.andExpect(status().isOk());
     }
 
     @Test
@@ -85,9 +90,50 @@ public class EnterpriseControllerTest {
         joinEnterpriseReqDto.setSector("test");
         joinEnterpriseReqDto.setSize("test");
 
+        String requestBody = objectMapper.writeValueAsString(joinEnterpriseReqDto);
+        System.out.println(requestBody);
+
         // when
-        ResultActions resultActions = mvc.perform(post("/join").content(requestBody)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+        ResultActions resultActions = mvc.perform(post("/enterprise/join").content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+        // then
+        resultActions.andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void update_test() throws Exception {
+        // given
+        Enterprise principalEnt = new Enterprise();
+        principalEnt.setId(1);
+        principalEnt.setEnterpriseName("긴트");
+        principalEnt.setPassword(
+                "356067e7d02ead0e9086e3f9e9cef88e8f6ca59222cd180bbf1a6205b7b40631");
+        principalEnt.setSalt("{bcrypt}$2a$10$4h5bhPEcnLEsQ7fe.1Rx5OfeEH0VLV9LE0kDb1WqwWMRsjsCptRmy");
+        principalEnt.setAddress("강남구 삼성동 75-6 수당빌딩 4층");
+        principalEnt.setContact("010-7763-4370");
+        principalEnt.setEmail("company@nate.com");
+        principalEnt.setSector("스타트업");
+        principalEnt.setSize("스타트업");
+        principalEnt.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+
+        mockSession = new MockHttpSession();
+        mockSession.setAttribute("principalEnt", principalEnt);
+
+        UpdateEnterpriseReqDto updateEnterpriseReqDto = new UpdateEnterpriseReqDto();
+        updateEnterpriseReqDto.setPassword("test");
+        updateEnterpriseReqDto.setAddress("test");
+        updateEnterpriseReqDto.setEmail("test");
+        updateEnterpriseReqDto.setContact("test");
+        updateEnterpriseReqDto.setSector("test");
+        updateEnterpriseReqDto.setSize("test");
+
+        String requestBody = objectMapper.writeValueAsString(updateEnterpriseReqDto);
+        System.out.println(requestBody);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/enterprise/update").session(mockSession).content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE));
         // then
         resultActions.andExpect(status().is3xxRedirection());
     }

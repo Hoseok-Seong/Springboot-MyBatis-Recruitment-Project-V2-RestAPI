@@ -68,11 +68,11 @@ public class EnterpriseController {
             response.addCookie(cookie);
         }
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null), HttpStatus.CREATED);
+        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null), HttpStatus.OK);
     }
 
     @PostMapping("/enterprise/join")
-    public String enterpriseJoin(JoinEnterpriseReqDto joinEnterpriseReqDto) {
+    public String enterpriseJoin(@RequestBody JoinEnterpriseReqDto joinEnterpriseReqDto) {
 
         if (joinEnterpriseReqDto.getEnterpriseName() == null || joinEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             throw new CustomException("아이디를 작성해주세요");
@@ -115,8 +115,7 @@ public class EnterpriseController {
     }
 
     @PostMapping("/enterprise/update")
-    public String enterpriseUpdate(UpdateEnterpriseReqDto updateEnterpriseReqDto) {
-
+    public String enterpriseUpdate(@RequestBody UpdateEnterpriseReqDto updateEnterpriseReqDto) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
