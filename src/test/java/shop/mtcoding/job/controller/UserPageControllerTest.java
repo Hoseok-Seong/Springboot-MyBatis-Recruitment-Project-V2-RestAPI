@@ -1,6 +1,12 @@
 package shop.mtcoding.job.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +16,10 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-import shop.mtcoding.job.model.resume.ResumeRepository;
+
 import shop.mtcoding.job.model.user.User;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class UserPageControllerTest {
@@ -28,12 +28,6 @@ public class UserPageControllerTest {
     private MockMvc mvc;
 
     private MockHttpSession mockSession;
-
-    @Autowired
-    private ObjectMapper om;
-
-    @Autowired
-    private ResumeRepository resumeRepository;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -50,7 +44,6 @@ public class UserPageControllerTest {
     }
 
     @Test
-    @Transactional
     public void apply_test() throws Exception {
         // given
 
@@ -66,7 +59,6 @@ public class UserPageControllerTest {
     }
 
     @Test
-    @Transactional
     public void matching_test() throws Exception {
         // given
 
@@ -82,7 +74,6 @@ public class UserPageControllerTest {
     }
 
     @Test
-    @Transactional
     public void bookmark_test() throws Exception {
         ResultActions resultActions = mvc.perform(
                 get("/mybookmark").session(mockSession));

@@ -4,16 +4,16 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.service.UserService;
 
 @RequiredArgsConstructor
-@RestController
+@Controller
 public class UserSkillController {
 
     private final UserService userService;
