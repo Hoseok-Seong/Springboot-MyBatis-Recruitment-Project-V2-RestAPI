@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostListRespDto;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
-import shop.mtcoding.job.util.DateUtil;
 
 @RequiredArgsConstructor
 @Service
@@ -21,11 +20,10 @@ public class MainService {
 
         List<RecruitmentPostListRespDto> posts = recruitmentPostRepository.findByPost();
 
+        // d-day 계산
         for (RecruitmentPostListRespDto post : posts) {
-            long diffDays = DateUtil.deadline(post.getDeadline());
-            post.setDiffDays(diffDays);
+            post.calculateDiffDays(); // D-Day 계산
         }
-
         return posts;
     }
 }

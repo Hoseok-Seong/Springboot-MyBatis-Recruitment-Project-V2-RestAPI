@@ -17,7 +17,7 @@
       delete from bookmark_tb where id = #{id}
    </delete>
 
-   <select id="findByRecruitmentIdAndUserId" resultType="shop.mtcoding.job.model.bookmark.Bookmark">
+   <select id="findByRecruitmentIdAndUserId" resultType="shop.mtcoding.job.dto.bookmark.BookmartRespDto">
       select * from bookmark_tb where recruitment_id = #{recruitmentId} and user_id = #{userId}
    </select>
 

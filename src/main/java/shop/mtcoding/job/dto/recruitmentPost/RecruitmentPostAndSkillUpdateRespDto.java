@@ -9,11 +9,11 @@ import shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto.Recruitmen
 
 @Getter
 @Setter
-public class RecruitmentPostAndSkillRespDto {
+public class RecruitmentPostAndSkillUpdateRespDto {
     private RecruitmentPostUpdateRespDto recruitmentPost;
     private List<RecruitmentPostSkillUpdateRespDto> recruitmentPostSkill;
 
-    public RecruitmentPostAndSkillRespDto(RecruitmentPostUpdateRespDto recruitmentPost,
+    public RecruitmentPostAndSkillUpdateRespDto(RecruitmentPostUpdateRespDto recruitmentPost,
             List<RecruitmentPostSkillUpdateRespDto> recruitmentPostSkill) {
         this.recruitmentPost = recruitmentPost;
         this.recruitmentPostSkill = recruitmentPostSkill;

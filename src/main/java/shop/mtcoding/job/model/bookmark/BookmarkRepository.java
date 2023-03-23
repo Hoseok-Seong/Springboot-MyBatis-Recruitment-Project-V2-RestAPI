@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import shop.mtcoding.job.dto.bookmark.BookmarkReqDto;
+import shop.mtcoding.job.dto.bookmark.BookmartRespDto;
 import shop.mtcoding.job.dto.entPage.EntPageMyBookmarkRespDto;
 import shop.mtcoding.job.dto.userPage.UserPageBookmarkDto;
 
@@ -21,7 +22,7 @@ public interface BookmarkRepository {
 
         public int deleteById(int id);
 
-        public Bookmark findByRecruitmentIdAndUserId(@Param("recruitmentId") int recruitmentId,
+        public BookmartRespDto findByRecruitmentIdAndUserId(@Param("recruitmentId") int recruitmentId,
                         @Param("userId") int userId);
 
         public List<BookmarkReqDto> findByUserId(@Param("userId") int userId);
