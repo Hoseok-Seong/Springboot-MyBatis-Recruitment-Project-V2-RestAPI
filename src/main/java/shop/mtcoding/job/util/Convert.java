@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class Convert {
 
-    public static List<String> ete_test(List<Integer> list) throws Exception {
+    public static List<String> skillMapping(List<Integer> list) throws Exception {
 
         List<String> result = list.stream().map(number -> {
             switch (number) {
@@ -34,7 +34,6 @@ public class Convert {
             }
         }).collect(Collectors.toList());
 
-        // System.out.println(result);
         return result;
     }
 }

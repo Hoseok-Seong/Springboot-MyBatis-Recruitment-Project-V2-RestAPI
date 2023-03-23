@@ -42,7 +42,7 @@ public class UserController {
 
     @PostMapping("/user/login")
     public @ResponseBody ResponseEntity<?> userLogin(
-            @RequestBody LoginUserReqDto loginUserReqDto, String remember, HttpServletResponse response) {
+            @RequestBody LoginUserReqDto loginUserReqDto, HttpServletResponse response) {
         if (loginUserReqDto.getUsername() == null || loginUserReqDto.getUsername().isEmpty()) {
             throw new CustomApiException("아이디를 작성해주세요");
         }
@@ -113,8 +113,8 @@ public class UserController {
     }
 
     @GetMapping("/user/usernameSameCheck")
-    public @ResponseBody ResponseDto<?> check(String username, JoinUserReqDto joinUserReqDto) {
-        if (username == null || username.isEmpty()) {
+    public @ResponseBody ResponseDto<?> check(@RequestBody JoinUserReqDto joinUserReqDto) {
+        if (joinUserReqDto.getUsername() == null || joinUserReqDto.getUsername().isEmpty()) {
             return new ResponseDto<>(-1, "아이디가 입력되지 않았습니다.", null);
         }
         User sameuser = userRepository.findByName(joinUserReqDto.getUsername());

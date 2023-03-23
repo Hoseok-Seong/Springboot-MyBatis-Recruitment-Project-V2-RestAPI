@@ -6,9 +6,9 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.ResponseDto;
@@ -23,7 +23,7 @@ import shop.mtcoding.job.model.userSkill.UserSkillRepository;
 import shop.mtcoding.job.util.Convert;
 
 @RequiredArgsConstructor
-@RestController
+@Controller
 public class UserPageController {
     private final HttpSession session;
 
@@ -45,7 +45,7 @@ public class UserPageController {
             post.getRecruitmentList().calculateDiffDays(); // D-Day 계산
         }
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "UserPage", userPageDtos), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "성공", userPageDtos), HttpStatus.OK);
     }
 
     @GetMapping("/mymatching")
@@ -58,12 +58,12 @@ public class UserPageController {
         List<UserPageMatchingDto> posts = userSkillRepository.userJoinRecruitmentWithMatching(principal.getId());
 
         for (UserPageMatchingDto post : posts) {
-            List<String> skills = Convert.ete_test(post.getUserMatching().getUserSkillDto().getSkill());
+            List<String> skills = Convert.skillMapping(post.getUserMatching().getUserSkillDto().getSkill());
             post.getUserMatching().getUserSkillDto().setSkillString(skills);
             post.getRecruitment().calculateDiffDays();
         }
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "매칭서비스 완료", posts), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "성공", posts), HttpStatus.OK);
     }
 
     @GetMapping("/mybookmark")
@@ -75,8 +75,8 @@ public class UserPageController {
         List<UserPageBookmarkDto> posts = bookmarkRepository.BookmarkJoinRecruitOfUserPage(principal.getId());
         // d-day 계산
         for (UserPageBookmarkDto post : posts) {
-            post.getRecruitmentList().calculateDiffDays(); // D-Day 계산
+            post.getRecruitmentList().calculateDiffDays();
         }
-        return new ResponseEntity<>(new ResponseDto<>(1, "북마크 목록", posts), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "성공", posts), HttpStatus.OK);
     }
 }

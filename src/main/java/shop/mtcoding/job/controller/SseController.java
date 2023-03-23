@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class SseController {
     private final HttpSession session;
 
     @GetMapping(value = "/notify", produces = "text/event-stream")
-    public ResponseEntity<?> notify(HttpServletRequest request, HttpServletResponse response)
+    public @ResponseBody ResponseEntity<?> notify(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {

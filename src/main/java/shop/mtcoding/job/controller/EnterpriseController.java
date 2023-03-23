@@ -34,7 +34,6 @@ public class EnterpriseController {
 
     @PostMapping("/enterprise/login")
     public @ResponseBody ResponseEntity<?> enterpriseLogin(@RequestBody LoginEnterpriseReqDto loginEnterpriseReqDto,
-            String rememberEnt,
             HttpServletResponse response) {
         if (loginEnterpriseReqDto.getEnterpriseName() == null || loginEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             throw new CustomApiException("아이디를 작성해주세요");
@@ -73,7 +72,6 @@ public class EnterpriseController {
 
     @PostMapping("/enterprise/join")
     public String enterpriseJoin(@RequestBody JoinEnterpriseReqDto joinEnterpriseReqDto) {
-
         if (joinEnterpriseReqDto.getEnterpriseName() == null || joinEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             throw new CustomException("아이디를 작성해주세요");
         }
@@ -102,8 +100,8 @@ public class EnterpriseController {
     }
 
     @GetMapping("/enterprise/enterpriseNameSameCheckEnt")
-    public @ResponseBody ResponseDto<?> check(String enterpriseName, LoginEnterpriseReqDto loginEnterpriseReqDto) {
-        if (enterpriseName == null || enterpriseName.isEmpty()) {
+    public @ResponseBody ResponseDto<?> check(@RequestBody LoginEnterpriseReqDto loginEnterpriseReqDto) {
+        if (loginEnterpriseReqDto.getEnterpriseName() == null || loginEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             return new ResponseDto<>(-1, "아이디가 입력되지 않았습니다.", null);
         }
         Enterprise sameeEnterprise = enterpriseRepository.findByName(loginEnterpriseReqDto.getEnterpriseName());
