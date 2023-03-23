@@ -18,11 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import shop.mtcoding.job.model.resume.ResumeRepository;
 import shop.mtcoding.job.model.user.User;
 
+@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class BookmarkControllerTest {
@@ -31,12 +29,6 @@ public class BookmarkControllerTest {
     private MockMvc mvc;
 
     private MockHttpSession mockSession;
-
-    @Autowired
-    private ObjectMapper om;
-
-    @Autowired
-    private ResumeRepository resumeRepository;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -53,7 +45,6 @@ public class BookmarkControllerTest {
     }
 
     @Test
-    @Transactional
     public void bookmarkOn_test() throws Exception {
         // given
         int id = 1;
@@ -69,7 +60,6 @@ public class BookmarkControllerTest {
     }
 
     @Test
-    @Transactional
     public void bookmarkOff_test() throws Exception {
         // given
         int id = 1;

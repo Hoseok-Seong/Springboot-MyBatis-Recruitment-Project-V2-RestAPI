@@ -48,7 +48,7 @@ public class ApplyController {
         long diffDays = DateUtil.deadline(recruitmentPostDto.getDeadline());
 
         if (diffDays < 0) {
-            throw new CustomApiException("이력서 제출기간이 지났습니다", HttpStatus.UNAUTHORIZED);
+            throw new CustomApiException("이력서 제출기간이 지났습니다", HttpStatus.BAD_REQUEST);
         }
 
         applyService.이력서제출(insertApplyReqDto, principal.getId());
@@ -67,7 +67,7 @@ public class ApplyController {
 
     }
 
-    @PutMapping("/apply/{id}")
+    @PutMapping("/apply/result/{id}")
     public @ResponseBody ResponseEntity<?> updateResult(
             @RequestBody UpdateApplicantResultReqDto updateApplicantResultReqDto, @PathVariable int id) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
