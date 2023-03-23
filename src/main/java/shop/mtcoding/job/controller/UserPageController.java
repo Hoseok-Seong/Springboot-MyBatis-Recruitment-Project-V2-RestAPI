@@ -1,6 +1,7 @@
 package shop.mtcoding.job.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -35,12 +36,13 @@ public class UserPageController {
 
     @GetMapping("/myapply")
     public @ResponseBody ResponseEntity<?> mypage() {
-        User principal = (User) session.getAttribute("principal");
+        Optional<User> principal = (Optional<User>) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
+            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.",
+                    HttpStatus.UNAUTHORIZED);
         }
 
-        List<UserPageApplyDto> userPageDtos = applyRepository.findAllApply(principal.getId());
+        List<UserPageApplyDto> userPageDtos = applyRepository.findAllApply(principal.get().getId());
         for (UserPageApplyDto post : userPageDtos) {
             post.getRecruitmentList().calculateDiffDays(); // D-Day 계산
         }

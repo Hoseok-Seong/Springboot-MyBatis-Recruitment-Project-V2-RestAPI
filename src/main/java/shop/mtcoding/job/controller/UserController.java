@@ -37,19 +37,6 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    @PostMapping("/login")
-    public @ResponseBody ResponseEntity<?> login(User user) {
-        Optional<User> userOp = userRepository.findByUsernameAndPasswordByJwt(user.getUsername(), user.getPassword());
-        System.out.println("테스트 : " + userOp);
-        if (userOp.isPresent()) { // 값이 있다면
-            String jwt = JwtProvider.create(userOp.get());
-
-            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
-        } else {
-            return ResponseEntity.badRequest().body("로그인 실패");
-        }
-    }
-
     @GetMapping("/loginForm")
     public String loginForm() {
         return "login/loginForm";
@@ -65,7 +52,7 @@ public class UserController {
             throw new CustomApiException("비밀번호를 작성해주세요");
         }
         // 1. 로그인하기 service
-        User principal = userService.유저로그인하기(loginUserReqDto);
+        Optional<User> principal = userService.유저로그인하기(loginUserReqDto);
 
         // 2. session에 저장
         session.setAttribute("principal", principal);
@@ -88,8 +75,16 @@ public class UserController {
             cookie.setMaxAge(0);
             response.addCookie(cookie);
         }
+        if (principal.isPresent()) { // 값이 있다면
+            String jwt = JwtProvider.create(principal.get());
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null), HttpStatus.OK);
+            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
+        } else {
+            return ResponseEntity.badRequest().body("로그인 실패");
+        }
+
+        // return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null),
+        // HttpStatus.OK);
     }
 
     @GetMapping("/logout")
