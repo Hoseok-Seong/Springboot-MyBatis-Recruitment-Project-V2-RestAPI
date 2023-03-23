@@ -14,7 +14,7 @@ import shop.mtcoding.job.model.resume.ResumeRepository;
 @RequiredArgsConstructor
 @Service
 public class ResumeService {
-    private ResumeRepository resumeRepository;
+    private final ResumeRepository resumeRepository;
 
     @Transactional
     public void 이력서쓰기(SaveResumeDto saveResumeReqDto, int userId) {
