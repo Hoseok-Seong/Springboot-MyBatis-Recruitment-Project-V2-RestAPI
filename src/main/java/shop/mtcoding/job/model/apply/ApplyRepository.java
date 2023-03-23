@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import shop.mtcoding.job.dto.apply.ApplyRespDto.ApplyListForEntRespDto;
 import shop.mtcoding.job.dto.apply.ApplyRespDto.ApplyListForUserRespDto;
 import shop.mtcoding.job.dto.apply.ApplyRespDto.NotifyListRespDto;
+import shop.mtcoding.job.dto.entPage.EntPageMyApplicantRespDto;
 
 @Mapper
 public interface ApplyRepository {
@@ -44,4 +45,6 @@ public interface ApplyRepository {
         public List<NotifyListRespDto> findNotifyByUserId(@Param("userId") int userId);
 
         public void updateNotifyById(@Param("userId") int userId, @Param("notify") Boolean notify);
+
+        public List<EntPageMyApplicantRespDto> findByEnterpriseIdJoinApplyResume(int id);
 }

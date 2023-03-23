@@ -44,9 +44,82 @@
       where a.user_id = #{userId}
    </select>
 
-   <select id="findByEnterpriseId" resultType="shop.mtcoding.job.dto.apply.ApplyRespDto$ApplyListForEntRespDto">
-      select a.id, a.result, a.user_id, u.username, u.name, a.recruitment_post_id, e.enterprise_name, r.title, a.apply_resume_id, a.created_at
-      from apply_tb a
+   <resultMap id="myapplicant" type="shop.mtcoding.job.dto.entPage.EntPageMyApplicantRespDto">
+        <association property="apply" javaType="shop.mtcoding.job.dto.entPage.EntPageMyApplicantRespDto$ApplyDto">
+            <id property="id" column="id"/>
+            <result property="userId" column="user_id"/>
+            <result property="enterpriseId" column="enterprise_id"/>
+            <result property="recruitmentPostId" column="recruitment_post_id"/>
+            <result property="sector" column="sector"/>
+            <result property="applyResumeId" column="apply_resume_id"/>
+            <result property="result" column="result"/>
+            <result property="notify" column="notify"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+
+        <association property="recruitmentPost" javaType="shop.mtcoding.job.dto.entPage.EntPageMyApplicantRespDto$RecruitmentPostDto">
+            <id property="id" column="id"/>
+            <result property="enterpriseId" column="enterprise_id"/>
+            <result property="title" column="title"/>
+            <result property="career" column="career"/>
+            <result property="education" column="education"/>
+            <result property="pay" column="pay"/>
+            <result property="sector" column="sector"/>
+            <result property="position" column="position"/>
+            <result property="address" column="address"/>
+            <result property="content" column="content"/>
+            <result property="enterpriseLogo" column="enterprise_logo"/>
+            <result property="deadline" column="deadline"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+
+        <association property="user" javaType="shop.mtcoding.job.dto.entPage.EntPageMyApplicantRespDto$UserDto">
+            <id property="id" column="id"/>
+            <result property="username" column="username"/>
+            <result property="password" column="password"/>
+            <result property="salt" column="salt"/>
+            <result property="name" column="name"/>
+            <result property="email" column="email"/>
+            <result property="contact" column="contact"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+
+        <association property="enterprise" javaType="shop.mtcoding.job.dto.entPage.EntPageMyApplicantRespDto$EnterpriseDto">
+            <id property="id" column="id"/>
+            <result property="enterpriseName" column="enterprise_name"/>
+            <result property="password" column="password"/>
+            <result property="salt" column="salt"/>
+            <result property="address" column="address"/>
+            <result property="contact" column="contact"/>
+            <result property="email" column="email"/>
+            <result property="sector" column="sector"/>
+            <result property="size" column="size"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+
+        <association property="applyResume" javaType="shop.mtcoding.job.dto.entPage.EntPageMyApplicantRespDto$ApplyResumeDto">
+            <id property="id" column="id"/>
+            <result property="recruitmentPostId" column="recruitment_post_id"/>
+            <result property="userId" column="user_id"/>
+            <result property="enterpriseId" column="enterprise_id"/>
+            <result property="title" column="title"/>
+            <result property="content" column="content"/>
+            <result property="career" column="career"/>
+            <result property="education" column="education"/>
+            <result property="skill" column="skill"/>
+            <result property="award" column="award"/>
+            <result property="language" column="language"/>
+            <result property="link" column="link"/>
+            <result property="birthdate" column="birthdate"/>
+            <result property="address" column="address"/>
+            <result property="finish" column="finish"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+   </resultMap>
+
+   <select id="findByEnterpriseIdJoinApplyResume" resultMap="myapplicant">
+      select *
+      from apply_tb a 
       join user_tb u
       on a.user_id = u.id
       left outer join enterprise_tb e

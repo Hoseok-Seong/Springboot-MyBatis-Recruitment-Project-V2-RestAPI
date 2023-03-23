@@ -45,6 +45,7 @@ public class LoginControllerTest {
     @Test
     public void login_test() throws Exception {
         // given
+
         String requestBody = "username=ssar&password=1234";
 
         assertNotNull(requestBody);

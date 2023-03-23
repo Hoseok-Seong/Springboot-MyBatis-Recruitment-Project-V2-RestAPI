@@ -2,7 +2,6 @@ package shop.mtcoding.job.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,19 +10,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.handler.exception.CustomApiException;
 import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.service.BookmarkService;
 
+@RequiredArgsConstructor
 @Controller
 public class BookmarkController {
+    private final HttpSession session;
 
-    @Autowired
-    private HttpSession session;
-
-    @Autowired
-    private BookmarkService bookmarkService;
+    private final BookmarkService bookmarkService;
 
     @PostMapping("/bookmark/{id}")
     public ResponseEntity<?> bookmark(@PathVariable int id) {

@@ -29,13 +29,52 @@
       delete from recruitment_skill_tb where recruitment_id = #{recruitmentId}
    </delete>
 
-   <select id="enterpriseMatching" resultType="shop.mtcoding.job.dto.recruitmentSkill.EnterpriseMatchingDto">
-      select distinct e.id as enterprise_id, u.username, u.email, u.contact, u.name
+   <resultMap id="myrecommend" type="shop.mtcoding.job.dto.entPage.EntPageMyRecommendRespDto">
+         <association property="enterprise" javaType="shop.mtcoding.job.dto.entPage.EntPageMyRecommendRespDto$EnterpriseDto">
+            <id property="id" column="id"/>
+            <result property="enterpriseName" column="enterprise_name"/>
+            <result property="password" column="password"/>
+            <result property="salt" column="salt"/>
+            <result property="address" column="address"/>
+            <result property="contact" column="contact"/>
+            <result property="email" column="email"/>
+            <result property="sector" column="sector"/>
+            <result property="size" column="size"/>
+            <result property="createdAt" column="created_at"/>
+         </association>
+
+         <association property="recruitmentSkill" javaType="shop.mtcoding.job.dto.entPage.EntPageMyRecommendRespDto$RecruitmentSkillDto">
+            <id property="id" column="id"/>
+            <result property="recruitmentId" column="recruitment_id"/>
+            <collection property="skill" ofType="java.lang.Integer">
+               <result column="skill" />
+            </collection>
+         </association>
+
+         <association property="userSkill" javaType="shop.mtcoding.job.dto.entPage.EntPageMyRecommendRespDto$UserSkillDto">
+            <id property="id" column="id"/>
+            <result property="userId" column="user_id"/>
+            <result property="skill" column="skill"/>
+         </association>
+
+         <association property="user" javaType="shop.mtcoding.job.dto.entPage.EntPageMyRecommendRespDto$UserDto">
+            <id property="id" column="id"/>
+            <result property="username" column="username"/>
+            <result property="password" column="password"/>
+            <result property="salt" column="salt"/>
+            <result property="name" column="name"/>
+            <result property="email" column="email"/>
+            <result property="contact" column="contact"/>
+            <result property="createdAt" column="created_at"/>
+         </association>
+   </resultMap>
+
+   <select id="enterpriseMatching" resultMap="myrecommend">
+      select *
       from enterprise_tb e
       join recruitment_skill_tb rs on rs.recruitment_id = e.id
       join user_skill_tb us on us.skill = rs.skill
       join user_tb u on u.id = us.user_id
-      group by e.id, u.username
-      having e.id = #{id}
-    </select>
+      where e.id = #{id}
+   </select>
 </mapper>

@@ -2,19 +2,18 @@ package shop.mtcoding.job.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.userSkill.UserSkillRepository;
 
+@RequiredArgsConstructor
 @Controller
 public class UserSkillController {
-
-    @Autowired
-    private UserSkillRepository userSkillRepository;
+    private final UserSkillRepository userSkillRepository;
 
     @PostMapping("/user/skill")
     public String skill(int userId, @RequestParam("skill") List<Integer> skill) {

@@ -1,4 +1,4 @@
-package shop.mtcoding.job;
+package shop.mtcoding.job.util;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
