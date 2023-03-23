@@ -1,36 +1,38 @@
 package shop.mtcoding.job;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import javax.servlet.http.HttpSession;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class UserSkillControllerTest {
+public class MainControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @Test
-    public void user_skill_test() throws Exception {
+    public void Main_test() throws Exception {
         // given
-        String requestBody = "userId=1&skill=1&skill=2&skill=3";
 
         // when
-        System.out.println("테스트: " + requestBody);
-        ResultActions resultActions = mvc.perform(post("/user/skill").content(requestBody)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+        ResultActions resultActions = mvc.perform(
+                get("/"));
+
+        MvcResult result = resultActions.andReturn();
+        String content = result.getResponse().getContentAsString();
+        System.out.println("테스트 결과: " + content);
 
         // then
+        resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(status().isOk());
     }
 }

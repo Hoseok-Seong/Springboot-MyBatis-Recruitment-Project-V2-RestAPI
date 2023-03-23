@@ -2,28 +2,27 @@ package shop.mtcoding.job.controller;
 
 import java.util.List;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostListRespDto;
-import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
+import shop.mtcoding.job.service.MainService;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class MainController {
 
-    private final RecruitmentPostRepository recruitmentPostRepository;
+    private final MainService mainService;
 
     @GetMapping({ "/", "/main" })
-    public String main(Model model) {
-        List<RecruitmentPostListRespDto> posts = recruitmentPostRepository.findByPost();
-        // d-day 계산
-        for (RecruitmentPostListRespDto post : posts) {
-            post.calculateDiffDays(); // D-Day 계산
-        }
-        model.addAttribute("Posts", posts);
-        return "/main/main";
+    public ResponseEntity<?> main() {
+
+        List<RecruitmentPostListRespDto> posts = mainService.게시글목록보기();
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 목록", posts), HttpStatus.OK);
     }
 }

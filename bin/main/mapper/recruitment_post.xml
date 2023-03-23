@@ -49,8 +49,35 @@
       delete from recruitment_post_tb where id = #{id}
    </delete>
 
-   <select id="findByPost" resultType="shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto$RecruitmentPostListRespDto">
-      SELECT e.enterprise_name, r.title, r.address, r.position, r.id, r.enterprise_logo, r.deadline, r.created_at
+   <resultMap id="RecruitmentPostListRespDto" type="shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto$RecruitmentPostListRespDto">
+      <id property="id" column="id"/>
+      <result property="enterpriseId" column="enterprise_id"/>
+      <result property="title" column="title"/>
+      <result property="career" column="career"/>
+      <result property="education" column="education"/>
+      <result property="pay" column="pay"/>
+      <result property="sector" column="sector"/>
+      <result property="position" column="position"/>
+      <result property="content" column="content"/>
+      <result property="address" column="address"/>
+      <result property="enterpriseLogo" column="enterprise_logo"/>
+      <result property="deadline" column="deadline"/>
+      <result property="createdAt" column="created_at"/>
+      <association property="enterprise" javaType="shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto$RecruitmentPostListRespDto$EnterpriseDto">
+         <id property="id" column="id"/>
+         <result property="enterpriseName" column="enterprise_name"/>
+         <result property="address" column="address"/>
+         <result property="contact" column="contact"/>
+         <result property="email" column="email"/>
+         <result property="sector" column="sector"/>
+         <result property="size" column="size"/>
+         <result property="createdAt" column="created_at"/>
+      </association>
+   </resultMap>
+
+   
+   <select id="findByPost" resultMap="RecruitmentPostListRespDto">
+      SELECT *
       FROM recruitment_post_tb r
       JOIN enterprise_tb e
       ON r.enterprise_id = e.id;
