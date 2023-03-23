@@ -24,7 +24,7 @@ public class BookmarkController {
     private final BookmarkService bookmarkService;
 
     @PostMapping("/bookmark/{id}")
-    public ResponseEntity<?> bookmark(@PathVariable int id) {
+    public @ResponseBody ResponseEntity<?> bookmark(@PathVariable int id) {
         User principal = (User) session.getAttribute("principal");
 
         if (principal == null) {

@@ -1,4 +1,4 @@
-package shop.mtcoding.job;
+package shop.mtcoding.job.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;

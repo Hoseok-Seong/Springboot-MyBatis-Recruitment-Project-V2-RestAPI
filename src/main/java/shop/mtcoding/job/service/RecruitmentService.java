@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostReqDto.SaveRecruitmentPostReqDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostReqDto.UpdateRecruitmentPostReqDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostRespDto.RecruitmentPostCategoryRespDto;
@@ -18,14 +19,12 @@ import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
 import shop.mtcoding.job.model.recruitmentSkill.RecruitmentSkillRepository;
 import shop.mtcoding.job.util.PathUtil;
 
+@RequiredArgsConstructor
 @Service
 public class RecruitmentService {
+    private final RecruitmentPostRepository recruitmentPostRepository;
 
-    @Autowired
-    private RecruitmentPostRepository recruitmentPostRepository;
-
-    @Autowired
-    private RecruitmentSkillRepository recruitmentSkillRepository;
+    private final RecruitmentSkillRepository recruitmentSkillRepository;
 
     @Transactional
     public void 채용공고쓰기(SaveRecruitmentPostReqDto saveRecruitmentPostReqDto, int enterpriseId) {
@@ -94,6 +93,7 @@ public class RecruitmentService {
 
     }
 
+    @Transactional
     public void 채용공고삭제(int id, int enterpriseId) {
         RecruitmentPost recruitmentPS = recruitmentPostRepository.findById(id);
         if (recruitmentPS == null) {
