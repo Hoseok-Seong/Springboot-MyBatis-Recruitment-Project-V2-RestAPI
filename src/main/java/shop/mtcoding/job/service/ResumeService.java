@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import shop.mtcoding.job.dto.resume.ResumeReqDto.SaveResumeReqDto;
-import shop.mtcoding.job.dto.resume.ResumeReqDto.UpdateResumeReqDto;
+import shop.mtcoding.job.dto.resume.SaveResumeDto;
+import shop.mtcoding.job.dto.resume.UpdateResumeDto;
 import shop.mtcoding.job.handler.exception.CustomApiException;
 import shop.mtcoding.job.model.resume.Resume;
 import shop.mtcoding.job.model.resume.ResumeRepository;
@@ -17,7 +17,7 @@ public class ResumeService {
     private ResumeRepository resumeRepository;
 
     @Transactional
-    public void 이력서쓰기(SaveResumeReqDto saveResumeReqDto, int userId) {
+    public void 이력서쓰기(SaveResumeDto saveResumeReqDto, int userId) {
 
         int result = resumeRepository.insert(userId, saveResumeReqDto.getTitle(), saveResumeReqDto.getContent(),
                 saveResumeReqDto.getCareer(), saveResumeReqDto.getEducation(), saveResumeReqDto.getSkill(),
@@ -49,7 +49,7 @@ public class ResumeService {
     }
 
     @Transactional
-    public void 이력서수정(int id, UpdateResumeReqDto updateResumeReqDto, int principalId) {
+    public void 이력서수정(int id, UpdateResumeDto updateResumeReqDto, int principalId) {
         Resume resumePS = resumeRepository.findById(id);
         if (resumePS == null) {
             throw new CustomApiException("존재하지 않는 이력서입니다");

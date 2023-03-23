@@ -43,4 +43,57 @@
       where u.id = #{id};
    </select>
 
+      <resultMap id="UserPageMatchingDto" type="shop.mtcoding.job.dto.userPage.UserPageMatchingDto">
+      <association property="userMatching" javaType="shop.mtcoding.job.dto.userPage.UserPageMatchingDto$UserMatchingDto">
+         <id property="id" column="id"/>
+         <result property="userId" column="user_id"/>
+         <result property="enterpriseName" column="enterprise_name"/>
+         <result property="enterpriseLogo" column="enterprise_logo"/>
+         <result property="title" column="title"/>
+         <result property="sector" column="sector"/>
+         <result property="recruitmentId" column="recruitment_id"/>
+          <association property="userSkillDto" javaType="shop.mtcoding.job.dto.userPage.UserPageMatchingDto$UserMatchingDto$UserSkillDto">
+                <collection property="skill" column="user_id" select="findByUserSkill"/>
+          </association>
+      </association>
+
+         <association property="recruitment" javaType="shop.mtcoding.job.dto.userPage.UserPageMatchingDto$RecruitmentPostListRespDto">
+            <id property="id" column="id"/>
+            <result property="enterpriseId" column="enterprise_id"/>
+            <result property="recruitmentId" column="recruitment_id"/>
+            <result property="title" column="title"/>
+            <result property="career" column="career"/>
+            <result property="education" column="education"/>
+            <result property="pay" column="pay"/>
+            <result property="sector" column="sector"/>
+            <result property="position" column="position"/>
+            <result property="content" column="content"/>
+            <result property="address" column="address"/>
+            <result property="enterpriseLogo" column="enterprise_logo"/>
+            <result property="enterpriseName" column="enterprise_name"/>
+            <result property="deadline" column="deadline"/>
+<!--            <result property="diffDays" column="diff_days"/>-->
+            <result property="createdAt" column="created_at"/>
+<!--         <collection property="skill" column="recruitment_id" select="findByRecruitmentSkill" />-->
+      </association>
+   </resultMap>
+
+   <select id="findByUserSkill" resultType="java.lang.Integer">
+      select skill from user_skill_tb where user_id = #{userId}
+   </select>
+
+   <select id="userJoinRecruitmentWithMatching" resultMap="UserPageMatchingDto">
+      select *
+      from user_tb u
+      left join user_skill_tb us
+      on u.id = us.user_id
+      left join recruitment_skill_tb rs
+      on us.skill=rs.skill
+      join recruitment_post_tb r
+      on r.id=rs.recruitment_id
+      left join enterprise_tb e
+      on e.id = r.enterprise_id
+      where u.id = #{id};
+   </select>
+
 </mapper>

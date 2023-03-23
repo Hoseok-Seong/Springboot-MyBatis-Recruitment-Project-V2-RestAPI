@@ -10,6 +10,7 @@ import shop.mtcoding.job.dto.apply.ApplyRespDto.ApplyListForEntRespDto;
 import shop.mtcoding.job.dto.apply.ApplyRespDto.ApplyListForUserRespDto;
 import shop.mtcoding.job.dto.apply.ApplyRespDto.NotifyListRespDto;
 import shop.mtcoding.job.dto.entPage.EntPageMyApplicantRespDto;
+import shop.mtcoding.job.dto.userPage.UserPageApplyDto;
 
 @Mapper
 public interface ApplyRepository {
@@ -47,4 +48,6 @@ public interface ApplyRepository {
         public void updateNotifyById(@Param("userId") int userId, @Param("notify") Boolean notify);
 
         public List<EntPageMyApplicantRespDto> findByEnterpriseIdJoinApplyResume(int id);
+
+        public List<UserPageApplyDto> findAllApply(int id);
 }
