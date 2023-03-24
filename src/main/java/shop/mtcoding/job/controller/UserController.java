@@ -38,7 +38,6 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-
     @PostMapping("/ns/user/login")
     public @ResponseBody ResponseEntity<?> userLogin(
             @RequestBody LoginUserReqDto loginUserReqDto, HttpServletResponse response) {
@@ -77,10 +76,10 @@ public class UserController {
         } else {
             return ResponseEntity.badRequest().body("로그인 실패");
         }
-    
+
     }
 
-    @GetMapping("/ns/logout")
+    @GetMapping("/logout")
     public String logout() {
         session.invalidate();
         return "redirect:/";
@@ -110,7 +109,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/user/usernameSameCheck")
+    @GetMapping("/ns/user/usernameSameCheck")
     public @ResponseBody ResponseDto<?> check(@RequestBody JoinUserReqDto joinUserReqDto) {
         if (joinUserReqDto.getUsername() == null || joinUserReqDto.getUsername().isEmpty()) {
             return new ResponseDto<>(-1, "아이디가 입력되지 않았습니다.", null);
@@ -126,11 +125,6 @@ public class UserController {
     @PostMapping("/user/update")
     public String userUpdate(@RequestBody UpdateUserReqDto updateUserReqDto,
             @RequestParam(required = false) List<Integer> skill, @UserId int principalId) {
-        // LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
-        // if (loginUser == null) {
-        //     throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        // }
-
         if (updateUserReqDto.getPassword() == null || updateUserReqDto.getPassword().isEmpty()) {
             throw new CustomException("비밀번호를 작성해주세요");
         }

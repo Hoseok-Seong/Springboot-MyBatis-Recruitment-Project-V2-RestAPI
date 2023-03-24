@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,120 +21,109 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import shop.mtcoding.job.config.auth.LoginEnt;
+import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.InsertApplyReqDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.UpdateApplicantResultReqDto;
-import shop.mtcoding.job.model.enterprise.Enterprise;
-import shop.mtcoding.job.model.user.User;
 
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class ApplyControllerTest {
 
-    @Autowired
-    private MockMvc mvc;
+        @Autowired
+        private MockMvc mvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Autowired
+        private ObjectMapper objectMapper;
 
-    @Autowired
-    private MockHttpSession mockSession;
+        @Autowired
+        private MockHttpSession mockSession;
 
-    @BeforeEach
-    public void setUp() {
-        User principal = new User();
-        principal.setId(1);
-        principal.setUsername("ssar");
-        principal.setPassword(
-                "356067e7d02ead0e9086e3f9e9cef88e8f6ca59222cd180bbf1a6205b7b40631");
-        principal.setSalt("{bcrypt}$2a$10$4h5bhPEcnLEsQ7fe.1Rx5OfeEH0VLV9LE0kDb1WqwWMRsjsCptRmy");
-        principal.setName("김동석");
-        principal.setEmail("ssar@nate.com");
-        principal.setContact("010-1111-2222");
-        principal.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        String jwt = JWT.create()
+                        .withSubject("토큰제목")
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+                        .withClaim("id", 1)
+                        .withClaim("role", "test")
+                        .sign(Algorithm.HMAC512("Highre"));
 
-        mockSession = new MockHttpSession();
-        mockSession.setAttribute("principal", principal);
-    }
+        @BeforeEach
+        public void setUp() {
+                LoginUser loginUser = new LoginUser(1, "test");
+                mockSession = new MockHttpSession();
+                mockSession.setAttribute("loginUser", loginUser);
+        }
 
-    @Test
-    public void insertApply_test() throws Exception {
-        // given
-        int id = 8;
+        @Test
+        public void insertApply_test() throws Exception {
+                // given
+                int id = 8;
 
-        InsertApplyReqDto insertApplyReqDto = new InsertApplyReqDto();
-        insertApplyReqDto.setEnterpriseId(8);
-        insertApplyReqDto.setRecruitmentPostId(8);
-        insertApplyReqDto.setSector("test");
-        insertApplyReqDto.setApplyResumeId(1);
-        insertApplyReqDto.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+                InsertApplyReqDto insertApplyReqDto = new InsertApplyReqDto();
+                insertApplyReqDto.setEnterpriseId(8);
+                insertApplyReqDto.setRecruitmentPostId(8);
+                insertApplyReqDto.setSector("test");
+                insertApplyReqDto.setApplyResumeId(1);
+                insertApplyReqDto.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
-        String requestBody = objectMapper.writeValueAsString(insertApplyReqDto);
-        System.out.println(requestBody);
+                String requestBody = objectMapper.writeValueAsString(insertApplyReqDto);
+                System.out.println(requestBody);
 
-        // when
-        ResultActions resultActions = mvc.perform(
-                post("/apply/" + id).session(mockSession).content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE));
+                // when
+                ResultActions resultActions = mvc.perform(
+                                post("/apply/" + id).content(requestBody)
+                                                .header("Authorization", jwt)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE));
 
-        // then
-        resultActions.andExpect(jsonPath("$.code").value(1));
-        resultActions.andExpect(status().isCreated());
-    }
+                // then
+                resultActions.andExpect(jsonPath("$.code").value(1));
+                resultActions.andExpect(status().isCreated());
+        }
 
-    @Test
-    public void deleteApply_test() throws Exception {
-        // given
-        int id = 1;
+        @Test
+        public void deleteApply_test() throws Exception {
+                // given
+                int id = 1;
 
-        // when
-        ResultActions resultActions = mvc.perform(
-                delete("/apply/" + id).session(mockSession));
+                // when
+                ResultActions resultActions = mvc.perform(
+                                delete("/apply/" + id).session(mockSession).header("Authorization", jwt));
 
-        // then
-        resultActions.andExpect(jsonPath("$.code").value(1));
-        resultActions.andExpect(status().isOk());
+                // then
+                resultActions.andExpect(jsonPath("$.code").value(1));
+                resultActions.andExpect(status().isOk());
 
-    }
+        }
 
-    @Test
-    public void updateResult_test() throws Exception {
-        // given
-        Enterprise principalEnt = new Enterprise();
-        principalEnt.setId(1);
-        principalEnt.setEnterpriseName("긴트");
-        principalEnt.setPassword(
-                "356067e7d02ead0e9086e3f9e9cef88e8f6ca59222cd180bbf1a6205b7b40631");
-        principalEnt.setSalt("{bcrypt}$2a$10$4h5bhPEcnLEsQ7fe.1Rx5OfeEH0VLV9LE0kDb1WqwWMRsjsCptRmy");
-        principalEnt.setAddress("강남구 삼성동 75-6 수당빌딩 4층");
-        principalEnt.setContact("010-7763-4370");
-        principalEnt.setEmail("company@nate.com");
-        principalEnt.setSector("스타트업");
-        principalEnt.setSize("스타트업");
-        principalEnt.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        @Test
+        public void updateResult_test() throws Exception {
+                // given
+                LoginEnt loginEnt = new LoginEnt(1, "test");
+                mockSession = new MockHttpSession();
+                mockSession.setAttribute("loginEnt", loginEnt);
 
-        mockSession = new MockHttpSession();
-        mockSession.setAttribute("principalEnt", principalEnt);
+                int id = 1;
 
-        int id = 1;
+                UpdateApplicantResultReqDto updateApplicantResultReqDto = new UpdateApplicantResultReqDto();
+                updateApplicantResultReqDto.setResult(true);
+                updateApplicantResultReqDto.setNotify(true);
 
-        UpdateApplicantResultReqDto updateApplicantResultReqDto = new UpdateApplicantResultReqDto();
-        updateApplicantResultReqDto.setResult(true);
-        updateApplicantResultReqDto.setNotify(true);
+                String requestBody = objectMapper.writeValueAsString(updateApplicantResultReqDto);
+                System.out.println(requestBody);
 
-        String requestBody = objectMapper.writeValueAsString(updateApplicantResultReqDto);
-        System.out.println(requestBody);
+                // when
+                ResultActions resultActions = mvc.perform(
+                                put("/apply/result/" + id).content(requestBody).session(mockSession)
+                                                .header("Authorization", jwt)
+                                                .contentType(MediaType.APPLICATION_JSON_VALUE));
 
-        // when
-        ResultActions resultActions = mvc.perform(
-                put("/apply/result/" + id).session(mockSession).content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE));
+                // then
+                resultActions.andExpect(jsonPath("$.code").value(1));
+                resultActions.andExpect(status().isOk());
 
-        // then
-        resultActions.andExpect(jsonPath("$.code").value(1));
-        resultActions.andExpect(status().isOk());
-
-    }
+        }
 }

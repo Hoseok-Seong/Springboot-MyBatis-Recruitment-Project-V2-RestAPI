@@ -6,7 +6,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +38,7 @@ public class EnterpriseController {
 
     @PostMapping("/ns/enterprise/login")
     public @ResponseBody ResponseEntity<?> enterpriseLogin(@RequestBody LoginEnterpriseReqDto loginEnterpriseReqDto,
-            HttpServletResponse response ) {
+            HttpServletResponse response) {
         if (loginEnterpriseReqDto.getEnterpriseName() == null || loginEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             throw new CustomApiException("아이디를 작성해주세요");
         }
@@ -49,8 +48,9 @@ public class EnterpriseController {
         }
         // 1. 로그인하기 service
         Optional<Enterprise> principalEnt = enterpriseService.기업로그인하기(loginEnterpriseReqDto);
-        
-        LoginEnt loginEnt = LoginEnt.builder().id(principalEnt.get().getId()).role(principalEnt.get().getRole()).build();
+
+        LoginEnt loginEnt = LoginEnt.builder().id(principalEnt.get().getId()).role(principalEnt.get().getRole())
+                .build();
         session.setAttribute("loginEnt", loginEnt);
 
         // 2. 아이디 기억
@@ -107,7 +107,7 @@ public class EnterpriseController {
         return "redirect:/";
     }
 
-    @GetMapping("/enterprise/enterpriseNameSameCheckEnt")
+    @GetMapping("/ns/enterprise/enterpriseNameSameCheckEnt")
     public @ResponseBody ResponseDto<?> check(@RequestBody LoginEnterpriseReqDto loginEnterpriseReqDto) {
         if (loginEnterpriseReqDto.getEnterpriseName() == null || loginEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             return new ResponseDto<>(-1, "아이디가 입력되지 않았습니다.", null);
@@ -122,11 +122,6 @@ public class EnterpriseController {
 
     @PostMapping("/enterprise/update")
     public String enterpriseUpdate(@RequestBody UpdateEnterpriseReqDto updateEnterpriseReqDto, @EntId int principalId) {
-        // Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        // if (principalEnt == null) {
-        //     throw new CustomException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
-        // }
-
         if (updateEnterpriseReqDto.getPassword() == null || updateEnterpriseReqDto.getPassword().isEmpty()) {
             throw new CustomException("비밀번호를 작성해주세요");
         }

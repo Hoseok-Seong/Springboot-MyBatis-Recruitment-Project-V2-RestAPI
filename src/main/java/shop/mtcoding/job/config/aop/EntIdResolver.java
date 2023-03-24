@@ -11,7 +11,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import lombok.RequiredArgsConstructor;
-import shop.mtcoding.job.model.enterprise.Enterprise;
+import shop.mtcoding.job.config.auth.LoginEnt;
 
 @Component
 @RequiredArgsConstructor
@@ -22,8 +22,8 @@ public class EntIdResolver implements HandlerMethodArgumentResolver {
     @Nullable
     public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        return principalEnt.getId();
+        LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
+        return loginEnt.getId();
     }
 
     @Override
