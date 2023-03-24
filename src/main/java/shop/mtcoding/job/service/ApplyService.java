@@ -60,8 +60,10 @@ public class ApplyService {
 
     @Transactional
     public void 이력서제출취소(int recruitmentPostId, int userId) {
+        System.out.println("테스트 : 3" + " " + recruitmentPostId + " " + userId);
         Apply applyPS = applyRepository.findByUserIdWithRecruitmentPostId(userId,
                 recruitmentPostId);
+        System.out.println("테스트 : 4" + " " + recruitmentPostId + " " + userId);
         if (applyPS == null) {
             throw new CustomApiException("존재하지 않는 지원서입니다");
         }

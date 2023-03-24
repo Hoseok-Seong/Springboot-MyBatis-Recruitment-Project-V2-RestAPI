@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.aop.CurrentId;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.InsertApplyReqDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.UpdateApplicantResultReqDto;
@@ -56,13 +57,12 @@ public class ApplyController {
     }
 
     @DeleteMapping("/apply/{id}")
-    public @ResponseBody ResponseEntity<?> deleteApply(@PathVariable int id) {
+    public @ResponseBody ResponseEntity<?> deleteApply(@PathVariable int id, @CurrentId int principalId) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
         }
-
-        applyService.이력서제출취소(id, principal.getId());
+        applyService.이력서제출취소(id, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "지원서 삭제 성공", null), HttpStatus.OK);
 
     }
