@@ -18,7 +18,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,8 +45,30 @@ public class ResumeControllerTest {
     @Autowired
     private ResumeRepository resumeRepository;
 
+    String employeeJwtToken;
+    String companyJwtToken;
+
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
+
+        // employee test용
+        MockHttpServletRequestBuilder employeeLoginRequest = post("/user/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\":\"ssar\", \"password\":\"1\"}");
+        MvcResult employeeLoginResult = mvc.perform(employeeLoginRequest).andReturn();
+
+        // 로그인 응답에서 토큰 추출하기
+        employeeJwtToken = employeeLoginResult.getResponse().getHeader("Authorization");
+
+        // Company test용
+        MockHttpServletRequestBuilder companyLoginRequest = post("/user/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"enterpriseName\":\"긴트\", \"password\":\"1\"}");
+        MvcResult companyLoginResult = mvc.perform(companyLoginRequest).andReturn();
+
+        // 로그인 응답에서 토큰 추출하기
+        companyJwtToken = companyLoginResult.getResponse().getHeader("Authorization");
+    
         // 데이터 인서트
         User user = new User();
         user.setId(1);
@@ -71,10 +95,9 @@ public class ResumeControllerTest {
     }
 
     @Test
-    @Transactional
     public void resume_test() throws Exception {
         // given
-
+        
         // when
         ResultActions resultActions = mvc.perform(
                 get("/resumes").session(mockSession));

@@ -57,7 +57,7 @@ public class EnterpriseService {
                     salt,
                     joinEnterpriseReqDto.getAddress(), joinEnterpriseReqDto.getContact(),
                     joinEnterpriseReqDto.getEmail(), joinEnterpriseReqDto.getSize(),
-                    joinEnterpriseReqDto.getSector()
+                    joinEnterpriseReqDto.getSector(), joinEnterpriseReqDto.getRole()
 
             );
             if (result != 1) {

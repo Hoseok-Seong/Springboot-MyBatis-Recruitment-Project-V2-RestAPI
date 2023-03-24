@@ -17,7 +17,8 @@ public interface EnterpriseRepository {
                         @Param("address") String address,
                         @Param("contact") String contact,
                         @Param("email") String email, @Param("size") String size,
-                        @Param("sector") String sector);
+                        @Param("sector") String sector,
+                        @Param("role") String role);
 
         public int updateById(@Param("id") int id,
                         @Param("password") String password,
