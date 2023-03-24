@@ -1,5 +1,9 @@
 package shop.mtcoding.job.service;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -16,7 +20,6 @@ import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPost;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
 import shop.mtcoding.job.model.recruitmentSkill.RecruitmentSkillRepository;
-import shop.mtcoding.job.util.PathUtil;
 
 @RequiredArgsConstructor
 @Service
@@ -28,10 +31,25 @@ public class RecruitmentService {
     @Transactional
     public void 채용공고쓰기(SaveRecruitmentPostReqDto saveRecruitmentPostReqDto, int enterpriseId) {
 
-        // 사진을 /static/image에 UUID로 변경해서 저장
-        String uuidLogoName = PathUtil.writeImageFile(saveRecruitmentPostReqDto.getEnterpriseLogo());
+        // Base64로 인코딩된 이미지 데이터를 디코딩합니다.
+        String base64Data = saveRecruitmentPostReqDto.getEnterpriseLogo();
+        String encodedData = base64Data.replaceAll("^data\\:[^;]*;base64,", "");
+        byte[] imageData = Base64.getDecoder().decode(encodedData);
 
-        RecruitmentPost recruitmentPost = saveRecruitmentPostReqDto.toModel(enterpriseId, uuidLogoName);
+        // 저장할 파일 경로와 파일 이름을 결합합니다.
+        String fileName = "prefix_" + System.currentTimeMillis() + ".png";
+        String filePath = "src/main/resources/static/images/" + fileName;
+
+        // 이미지 데이터를 파일로 저장합니다.
+        try (OutputStream outputStream = new FileOutputStream(filePath)) {
+            outputStream.write(imageData);
+        } catch (IOException e) {
+            // 에러 처리
+        }
+
+        filePath = "/images/" + fileName;
+
+        RecruitmentPost recruitmentPost = saveRecruitmentPostReqDto.toModel(enterpriseId, filePath);
 
         // 저장된 파일의 경로를 DB에 저장
         int result = recruitmentPostRepository.insert(recruitmentPost);
@@ -39,7 +57,7 @@ public class RecruitmentService {
             throw new CustomException("채용공고 작성 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        RecruitmentPost savedPost = recruitmentPostRepository.findByEnterpriseLogo(uuidLogoName);
+        RecruitmentPost savedPost = recruitmentPostRepository.findByEnterpriseLogo(filePath);
         if (savedPost == null) {
             throw new CustomException("파일 경로를 찾을 수 없습니다.");
         }
@@ -63,17 +81,32 @@ public class RecruitmentService {
             throw new CustomApiException("채용공고를 수정할 권한이 없습니다", HttpStatus.FORBIDDEN);
         }
 
-        // 사진을 /static/image에 UUID로 변경해서 저장
-        String uuidLogoName = PathUtil.writeImageFile(updateRecruitmentPostReqDto.getEnterpriseLogo());
+        // Base64로 인코딩된 이미지 데이터를 디코딩합니다.
+        String base64Data = updateRecruitmentPostReqDto.getEnterpriseLogo();
+        String encodedData = base64Data.replaceAll("^data\\:[^;]*;base64,", "");
+        byte[] imageData = Base64.getDecoder().decode(encodedData);
 
-        RecruitmentPost recruitmentPost = updateRecruitmentPostReqDto.toModel(id, enterpriseId, uuidLogoName);
+        // 저장할 파일 경로와 파일 이름을 결합합니다.
+        String fileName = "prefix_" + System.currentTimeMillis() + ".png";
+        String filePath = "src/main/resources/static/images/" + fileName;
+
+        // 이미지 데이터를 파일로 저장합니다.
+        try (OutputStream outputStream = new FileOutputStream(filePath)) {
+            outputStream.write(imageData);
+        } catch (IOException e) {
+            // 에러 처리
+        }
+
+        filePath = "/images/" + fileName;
+
+        RecruitmentPost recruitmentPost = updateRecruitmentPostReqDto.toModel(id, enterpriseId, filePath);
 
         int result = recruitmentPostRepository.updateById(recruitmentPost);
         if (result != 1) {
             throw new CustomApiException("채용공고 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        RecruitmentPost updatedPost = recruitmentPostRepository.findByEnterpriseLogo(uuidLogoName);
+        RecruitmentPost updatedPost = recruitmentPostRepository.findByEnterpriseLogo(filePath);
         if (updatedPost == null) {
             throw new CustomException("파일 경로를 찾을 수 없습니다.");
         }

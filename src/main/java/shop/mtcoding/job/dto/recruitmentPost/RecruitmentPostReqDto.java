@@ -2,8 +2,6 @@ package shop.mtcoding.job.dto.recruitmentPost;
 
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.Getter;
 import lombok.Setter;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPost;
@@ -24,7 +22,7 @@ public class RecruitmentPostReqDto {
         private String content;
         private List<Integer> skill;
         private String deadline;
-        private MultipartFile enterpriseLogo;
+        private String enterpriseLogo;
 
         public RecruitmentPost toModel(int enterpriseId, String enterpriseLogo) {
             RecruitmentPost recruitmentPost = new RecruitmentPost();
@@ -57,7 +55,7 @@ public class RecruitmentPostReqDto {
         private String content;
         private List<Integer> skill;
         private String deadline;
-        private MultipartFile enterpriseLogo;
+        private String enterpriseLogo;
 
         public RecruitmentPost toModel(int id, int enterpriseId, String enterpriseLogo) {
             RecruitmentPost recruitmentPost = new RecruitmentPost();

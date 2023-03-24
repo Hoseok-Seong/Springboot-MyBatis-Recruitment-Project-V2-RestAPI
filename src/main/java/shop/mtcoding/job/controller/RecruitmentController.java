@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.config.aop.EntId;
 import shop.mtcoding.job.config.aop.UserId;
+import shop.mtcoding.job.config.auth.LoginEnt;
 import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.bookmark.BookmartRespDto;
@@ -38,7 +38,6 @@ import shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto.Recruitmen
 import shop.mtcoding.job.handler.exception.CustomApiException;
 import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.bookmark.BookmarkRepository;
-import shop.mtcoding.job.model.enterprise.Enterprise;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPost;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
 import shop.mtcoding.job.model.recruitmentSkill.RecruitmentSkillRepository;
@@ -69,9 +68,9 @@ public class RecruitmentController {
 
     @PutMapping("/recruitment/{id}")
     public @ResponseBody ResponseEntity<?> updateRecruitmentPost(@PathVariable int id,
-            @ModelAttribute UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto, @EntId int principalId) {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
+            @RequestBody UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto, @EntId int principalId) {
+        LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
+        if (loginEnt == null) {
             throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
         }
         if (updateRecruitmentPostReqDto.getTitle() == null || updateRecruitmentPostReqDto.getTitle().isEmpty()) {
@@ -131,9 +130,9 @@ public class RecruitmentController {
 
     @PostMapping("/recruitment")
     public @ResponseBody ResponseEntity<?> saveRecruitmentPost(
-            @ModelAttribute SaveRecruitmentPostReqDto saveRecruitmentPostReqDto, @EntId int principalId) {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
+            @RequestBody SaveRecruitmentPostReqDto saveRecruitmentPostReqDto, @EntId int principalId) {
+        LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
+        if (loginEnt == null) {
             throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
         }
         if (saveRecruitmentPostReqDto.getTitle() == null || saveRecruitmentPostReqDto.getTitle().isEmpty()) {
@@ -193,8 +192,8 @@ public class RecruitmentController {
 
     @GetMapping("/recruitment/saveForm")
     public String recruitmentSaveForm() {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
+        LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
+        if (loginEnt == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
         }
         return "recruitment/saveForm";
@@ -227,6 +226,7 @@ public class RecruitmentController {
     @GetMapping("/ns/recruitment/detail/{id}")
     public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id, @UserId int principalId) {
         LoginUser principal = (LoginUser) session.getAttribute("loginUser");
+
         BookmartRespDto bookmartRespDto = new BookmartRespDto();
         if (principal != null) {
             bookmartRespDto = bookmarkRepository.findByRecruitmentIdAndUserId(id, principalId);
