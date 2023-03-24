@@ -41,6 +41,7 @@ public class ResumeController {
         if (principal == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
         }
+
         List<Resume> resumeList = resumeRepository.findByUserId(principal.getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 목록 보기 완료", resumeList), HttpStatus.OK);
     }
