@@ -12,10 +12,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final CurrentIdResolver currentIdResolver;
+    private final UserIdResolver userIdResolver;
+    private final EntIdResolver entIdResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(currentIdResolver);
+        resolvers.add(userIdResolver);
+        resolvers.add(entIdResolver);
     }
 }

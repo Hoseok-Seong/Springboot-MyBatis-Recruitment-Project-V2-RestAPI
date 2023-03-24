@@ -15,8 +15,7 @@ import shop.mtcoding.job.model.user.User;
 
 @Component
 @RequiredArgsConstructor
-public class CurrentIdResolver implements HandlerMethodArgumentResolver {
-
+public class UserIdResolver implements HandlerMethodArgumentResolver {
     private final HttpSession session;
 
     @Override
@@ -29,6 +28,6 @@ public class CurrentIdResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(CurrentId.class);
+        return parameter.hasParameterAnnotation(UserId.class);
     }
 }

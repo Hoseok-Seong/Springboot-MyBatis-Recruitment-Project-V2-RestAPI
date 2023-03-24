@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
-import shop.mtcoding.job.config.aop.CurrentId;
+import shop.mtcoding.job.config.aop.EntId;
+import shop.mtcoding.job.config.aop.UserId;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.InsertApplyReqDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.UpdateApplicantResultReqDto;
@@ -57,7 +58,7 @@ public class ApplyController {
     }
 
     @DeleteMapping("/apply/{id}")
-    public @ResponseBody ResponseEntity<?> deleteApply(@PathVariable int id, @CurrentId int principalId) {
+    public @ResponseBody ResponseEntity<?> deleteApply(@PathVariable int id, @UserId int principalId) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
@@ -69,13 +70,14 @@ public class ApplyController {
 
     @PutMapping("/apply/result/{id}")
     public @ResponseBody ResponseEntity<?> updateResult(
-            @RequestBody UpdateApplicantResultReqDto updateApplicantResultReqDto, @PathVariable int id) {
+            @RequestBody UpdateApplicantResultReqDto updateApplicantResultReqDto, @PathVariable int id,
+            @EntId int principalId) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
         }
 
-        applyService.합격불합격(id, updateApplicantResultReqDto, principalEnt.getId());
+        applyService.합격불합격(id, updateApplicantResultReqDto, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "처리 성공", null), HttpStatus.OK);
     }
 
