@@ -17,5 +17,6 @@ public class Enterprise {
     private String email;
     private String sector;
     private String size;
+    private String role;
     private Timestamp createdAt;
 }

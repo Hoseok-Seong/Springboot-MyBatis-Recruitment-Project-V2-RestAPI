@@ -1,7 +1,6 @@
 package shop.mtcoding.job.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,7 +19,6 @@ import shop.mtcoding.job.dto.userPage.UserPageMatchingDto;
 import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.apply.ApplyRepository;
 import shop.mtcoding.job.model.bookmark.BookmarkRepository;
-import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.model.userSkill.UserSkillRepository;
 import shop.mtcoding.job.util.Convert;
 
@@ -38,6 +36,7 @@ public class UserPageController {
     @GetMapping("/myapply")
     public @ResponseBody ResponseEntity<?> mypage() {
         LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        System.out.println("테스트 : " + loginUser);
         if (loginUser == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.",
                     HttpStatus.UNAUTHORIZED);
@@ -72,15 +71,16 @@ public class UserPageController {
 
     @GetMapping("/mybookmark")
     public @ResponseBody ResponseEntity<?> mybookmark() {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        }
-        List<UserPageBookmarkDto> posts = bookmarkRepository.BookmarkJoinRecruitOfUserPage(principal.getId());
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        // if (principal == null) {
+        //     throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
+        // }
+        List<UserPageBookmarkDto> posts = bookmarkRepository.BookmarkJoinRecruitOfUserPage(loginUser.getId());
         // d-day 계산
         for (UserPageBookmarkDto post : posts) {
             post.getRecruitmentList().calculateDiffDays();
         }
         return new ResponseEntity<>(new ResponseDto<>(1, "성공", posts), HttpStatus.OK);
     }
+
 }

@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.handler.exception.CustomApiException;
-import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.service.BookmarkService;
 
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class BookmarkController {
 
     @PostMapping("/bookmark/{id}")
     public @ResponseBody ResponseEntity<?> bookmark(@PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
+        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
 
         if (principal == null) {
             throw new CustomApiException("개인회원으로 로그인이 필요합니다", HttpStatus.UNAUTHORIZED);
@@ -39,7 +39,7 @@ public class BookmarkController {
 
     @DeleteMapping("/bookmark/{id}")
     public @ResponseBody ResponseEntity<?> delete(@PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
+        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
 
         if (principal == null) {
             throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
