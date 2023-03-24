@@ -1,6 +1,7 @@
 package shop.mtcoding.job.model.user;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -23,6 +24,9 @@ public interface UserRepository {
         public int deleteById(int id);
 
         public User findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
+
+        public Optional<User> findByUsernameAndPasswordByJwt(@Param("username") String username,
+                        @Param("password") String password);
 
         public String findSaltByUsername(String username);
 
