@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.aop.EntId;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.JoinEnterpriseReqDto;
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.LoginEnterpriseReqDto;
@@ -34,7 +35,7 @@ public class EnterpriseController {
 
     @PostMapping("/ns/enterprise/login")
     public @ResponseBody ResponseEntity<?> enterpriseLogin(@RequestBody LoginEnterpriseReqDto loginEnterpriseReqDto,
-            HttpServletResponse response) {
+            HttpServletResponse response ) {
         if (loginEnterpriseReqDto.getEnterpriseName() == null || loginEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             throw new CustomApiException("아이디를 작성해주세요");
         }
@@ -113,11 +114,11 @@ public class EnterpriseController {
     }
 
     @PostMapping("/enterprise/update")
-    public String enterpriseUpdate(@RequestBody UpdateEnterpriseReqDto updateEnterpriseReqDto) {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
-        }
+    public String enterpriseUpdate(@RequestBody UpdateEnterpriseReqDto updateEnterpriseReqDto, @EntId int principalId) {
+        // Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
+        // if (principalEnt == null) {
+        //     throw new CustomException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
+        // }
 
         if (updateEnterpriseReqDto.getPassword() == null || updateEnterpriseReqDto.getPassword().isEmpty()) {
             throw new CustomException("비밀번호를 작성해주세요");
@@ -138,7 +139,7 @@ public class EnterpriseController {
             throw new CustomException("기업규모를 작성해주세요");
         }
 
-        enterpriseService.기업정보수정하기(updateEnterpriseReqDto, principalEnt.getId());
+        enterpriseService.기업정보수정하기(updateEnterpriseReqDto, principalId);
         session.invalidate();
 
         return "redirect:/";
