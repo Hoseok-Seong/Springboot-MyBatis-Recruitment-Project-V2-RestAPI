@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -72,7 +71,7 @@ public class RecruitmentController {
 
     @PutMapping("/recruitment/{id}")
     public @ResponseBody ResponseEntity<?> updateRecruitmentPost(@PathVariable int id,
-            @ModelAttribute UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto) {
+            @RequestBody UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
@@ -134,7 +133,7 @@ public class RecruitmentController {
 
     @PostMapping("/recruitment")
     public @ResponseBody ResponseEntity<?> saveRecruitmentPost(
-            @ModelAttribute SaveRecruitmentPostReqDto saveRecruitmentPostReqDto) {
+            @RequestBody SaveRecruitmentPostReqDto saveRecruitmentPostReqDto) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
