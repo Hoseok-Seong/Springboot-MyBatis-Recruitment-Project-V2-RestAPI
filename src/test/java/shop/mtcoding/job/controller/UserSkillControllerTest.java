@@ -28,7 +28,7 @@ public class UserSkillControllerTest {
 
         // when
         System.out.println("테스트: " + requestBody);
-        ResultActions resultActions = mvc.perform(post("/user/skill").content(requestBody)
+        ResultActions resultActions = mvc.perform(post("/ns/user/skill").content(requestBody)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
 
         // then

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class JwtVerifyFilter implements Filter {
-                
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -22,8 +22,6 @@ public class JwtVerifyFilter implements Filter {
 
         // 요청 URL 가져오기
         String requestUri = req.getRequestURI();
-        
-        // /user/login URL 패턴이 아닐 경우에만 필터링
         if (!requestUri.startsWith("/ns/")) {
             String prefixJwt = req.getHeader(JwtProvider.HEADER);
             String jwt = prefixJwt.replace(JwtProvider.TOKEN_PREFIX, "");
@@ -40,42 +38,14 @@ public class JwtVerifyFilter implements Filter {
             } catch (SignatureVerificationException sve) {
                 resp.setStatus(401);
                 resp.setContentType("text/plain; charset=utf-8");
-                resp.getWriter().println("검증 실패 : 로그인 다시해");
+                resp.getWriter().println("검증 실패 : 로그인 재요청");
             } catch (TokenExpiredException tee) {
                 resp.setStatus(401);
                 resp.setContentType("text/plain; charset=utf-8");
-                resp.getWriter().println("기간 만료 : 로그인 다시해");
+                resp.getWriter().println("기간 만료 : 로그인 재요청");
             }
         } else {
-            // /user/login URL 패턴일 경우 필터링하지 않음
             chain.doFilter(req, resp);
         }
     }
-
-    //     HttpServletRequest req = (HttpServletRequest) request;
-    //     HttpServletResponse resp = (HttpServletResponse) response;
-    //     String prefixJwt = req.getHeader(JwtProvider.HEADER);
-    //     String jwt = prefixJwt.replace(JwtProvider.TOKEN_PREFIX, "");
-    //     try {
-    //         DecodedJWT decodedJWT = JwtProvider.verify(jwt);
-    //         int id = decodedJWT.getClaim("id").asInt();
-    //         String role = decodedJWT.getClaim("role").asString();
-
-    //         // 내부적으로 권한처리
-    //         HttpSession session = req.getSession();
-    //         LoginUser loginUser = LoginUser.builder().id(id).role(role).build();
-    //         System.out.println("테스트 : 필터에 들어옴 " + loginUser);
-    //         session.setAttribute("loginUser", loginUser);
-    //         chain.doFilter(req, resp);
-    //     } catch (SignatureVerificationException sve) {
-    //         resp.setStatus(401);
-    //         resp.setContentType("text/plain; charset=utf-8");
-    //         resp.getWriter().println("검증 실패 : 로그인 다시해");
-    //     } catch (TokenExpiredException tee) {
-    //         resp.setStatus(401);
-    //         resp.setContentType("text/plain; charset=utf-8");
-    //         resp.getWriter().println("기간 만료 : 로그인 다시해");
-    //     }
-    // }
-
 }

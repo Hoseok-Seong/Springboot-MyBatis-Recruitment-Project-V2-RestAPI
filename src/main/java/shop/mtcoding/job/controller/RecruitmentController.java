@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.config.aop.EntId;
+import shop.mtcoding.job.config.aop.UserId;
 import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.bookmark.BookmartRespDto;
@@ -224,8 +225,8 @@ public class RecruitmentController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/recruitment/detail/{id}")
-    public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id, @EntId int principalId) {
+    @GetMapping("/ns/recruitment/detail/{id}")
+    public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id, @UserId int principalId) {
         LoginUser principal = (LoginUser) session.getAttribute("loginUser");
         BookmartRespDto bookmartRespDto = new BookmartRespDto();
         if (principal != null) {

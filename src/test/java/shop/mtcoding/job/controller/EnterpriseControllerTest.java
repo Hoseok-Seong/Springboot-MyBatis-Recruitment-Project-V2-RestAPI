@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
@@ -22,6 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.JoinEnterpriseReqDto;
@@ -37,15 +40,19 @@ public class EnterpriseControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    private HttpSession session;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
     private MockHttpSession mockSession;
 
     String requestBody = "username=긴트&password=1";
+
+    String jwt = JWT.create()
+            .withSubject("토큰제목")
+            .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+            .withClaim("id", 1)
+            .withClaim("role", "guest")
+            .sign(Algorithm.HMAC512("Highre"));
 
     @Test
     public void testNotNullOrEmptyString() {
@@ -65,16 +72,10 @@ public class EnterpriseControllerTest {
         System.out.println(requestBody);
 
         // when
-        ResultActions resultActions = mvc.perform(post("/enterprise/login").content(requestBody)
+        ResultActions resultActions = mvc.perform(post("/ns/enterprise/login").content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
-        HttpSession session = resultActions.andReturn().getRequest().getSession();
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        System.out.println("테스트 : " + principalEnt.getEnterpriseName());
-        System.out.println("테스트 : " + principalEnt.getId());
-
         // then
-        assertThat(principalEnt.getEnterpriseName()).isEqualTo("긴트");
         resultActions.andExpect(status().isOk());
     }
 
@@ -94,7 +95,7 @@ public class EnterpriseControllerTest {
         System.out.println(requestBody);
 
         // when
-        ResultActions resultActions = mvc.perform(post("/enterprise/join").content(requestBody)
+        ResultActions resultActions = mvc.perform(post("/ns/enterprise/join").content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
         // then
         resultActions.andExpect(status().is3xxRedirection());
@@ -133,6 +134,7 @@ public class EnterpriseControllerTest {
         // when
         ResultActions resultActions = mvc
                 .perform(post("/enterprise/update").session(mockSession).content(requestBody)
+                        .header("Authorization", jwt)
                         .contentType(MediaType.APPLICATION_JSON_VALUE));
         // then
         resultActions.andExpect(status().is3xxRedirection());

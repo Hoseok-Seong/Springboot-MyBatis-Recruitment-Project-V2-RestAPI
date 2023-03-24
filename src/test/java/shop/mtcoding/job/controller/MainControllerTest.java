@@ -25,7 +25,7 @@ public class MainControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/"));
+                get("/ns/main"));
 
         MvcResult result = resultActions.andReturn();
         String content = result.getResponse().getContentAsString();

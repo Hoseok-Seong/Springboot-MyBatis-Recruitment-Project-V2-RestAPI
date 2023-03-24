@@ -34,7 +34,7 @@ public class ApplyController {
             @PathVariable int id, @UserId int principalId) {
 
         RecruitmentPostDetailRespDto recruitmentPostDto = recruitmentPostRepository.findByIdWithEnterpriseId(
-                principalId);
+                id);
 
         // d-day 계산
         long diffDays = DateUtil.deadline(recruitmentPostDto.getDeadline());
