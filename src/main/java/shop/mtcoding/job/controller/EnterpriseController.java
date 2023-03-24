@@ -32,7 +32,7 @@ public class EnterpriseController {
 
     private final HttpSession session;
 
-    @PostMapping("/enterprise/login")
+    @PostMapping("/ns/enterprise/login")
     public @ResponseBody ResponseEntity<?> enterpriseLogin(@RequestBody LoginEnterpriseReqDto loginEnterpriseReqDto,
             HttpServletResponse response) {
         if (loginEnterpriseReqDto.getEnterpriseName() == null || loginEnterpriseReqDto.getEnterpriseName().isEmpty()) {
@@ -70,7 +70,7 @@ public class EnterpriseController {
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null), HttpStatus.OK);
     }
 
-    @PostMapping("/enterprise/join")
+    @PostMapping("/ns/enterprise/join")
     public String enterpriseJoin(@RequestBody JoinEnterpriseReqDto joinEnterpriseReqDto) {
         if (joinEnterpriseReqDto.getEnterpriseName() == null || joinEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             throw new CustomException("아이디를 작성해주세요");

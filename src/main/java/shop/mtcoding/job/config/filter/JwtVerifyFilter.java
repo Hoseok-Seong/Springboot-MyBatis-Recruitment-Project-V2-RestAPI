@@ -35,7 +35,6 @@ public class JwtVerifyFilter implements Filter {
                 // 내부적으로 권한처리
                 HttpSession session = req.getSession();
                 LoginUser loginUser = LoginUser.builder().id(id).role(role).build();
-                System.out.println("테스트 : 필터에 들어옴 " + loginUser);
                 session.setAttribute("loginUser", loginUser);
                 chain.doFilter(req, resp);
             } catch (SignatureVerificationException sve) {

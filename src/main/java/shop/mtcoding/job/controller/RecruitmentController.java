@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.bookmark.BookmartRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostAndSkillUpdateRespDto;
@@ -41,7 +42,6 @@ import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
 import shop.mtcoding.job.model.recruitmentSkill.RecruitmentSkillRepository;
 import shop.mtcoding.job.model.resume.Resume;
 import shop.mtcoding.job.model.resume.ResumeRepository;
-import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.service.RecruitmentService;
 
 @RequiredArgsConstructor
@@ -229,7 +229,7 @@ public class RecruitmentController {
 
     @GetMapping("/recruitment/detail/{id}")
     public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
+        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
         BookmartRespDto bookmartRespDto = new BookmartRespDto();
         if (principal != null) {
             bookmartRespDto = bookmarkRepository.findByRecruitmentIdAndUserId(id, principal.getId());
@@ -258,7 +258,7 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "상세보기 페이지 성공", recruitmentDetailPageDto), HttpStatus.OK);
     }
 
-    @GetMapping("/recruitment/list")
+    @GetMapping("/ns/recruitment/list")
     public ResponseEntity<?> recruitmentPostList() {
         List<RecruitmentPostListRespDto> posts = recruitmentPostRepository.findByPost();
         // d-day 계산
@@ -269,7 +269,7 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 목록", posts), HttpStatus.OK);
     }
 
-    @PostMapping("/recruitment/search")
+    @PostMapping("/ns/recruitment/search")
     public ResponseEntity<?> searchList(@RequestBody RecruitmentPostSearchRespDto recruitmentPostSearchRespDto) {
         List<RecruitmentPostSearchRespDto> postPSList = recruitmentService.채용정보검색(recruitmentPostSearchRespDto);
 
@@ -281,7 +281,7 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "검색 성공", postPSList), HttpStatus.OK);
     }
 
-    @PostMapping("/recruitment/category")
+    @PostMapping("/ns/recruitment/category")
     public ResponseEntity<?> category(@RequestBody RecruitmentPostCategoryRespDto recruitmentPostCategoryRespDto) {
         List<RecruitmentPostCategoryRespDto> postPSList = recruitmentService.카테고리검색(recruitmentPostCategoryRespDto);
 

@@ -39,7 +39,7 @@ public class UserController {
     private final UserRepository userRepository;
 
 
-    @PostMapping("/s/user/login")
+    @PostMapping("/ns/user/login")
     public @ResponseBody ResponseEntity<?> userLogin(
             @RequestBody LoginUserReqDto loginUserReqDto, HttpServletResponse response) {
         if (loginUserReqDto.getUsername() == null || loginUserReqDto.getUsername().isEmpty()) {
@@ -87,7 +87,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @PostMapping("/user/join")
+    @PostMapping("/ns/user/join")
     public String userJoin(@RequestBody JoinUserReqDto joinUserReqDto,
             @RequestParam(required = false) List<Integer> skill) {
         if (joinUserReqDto.getUsername() == null || joinUserReqDto.getUsername().isEmpty()) {
@@ -127,8 +127,8 @@ public class UserController {
     @PostMapping("/user/update")
     public String userUpdate(@RequestBody UpdateUserReqDto updateUserReqDto,
             @RequestParam(required = false) List<Integer> skill) {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if (loginUser == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
         }
 
@@ -142,7 +142,7 @@ public class UserController {
             throw new CustomException("전화번호를 입력해주세요");
         }
 
-        userService.유저회원정보수정하기(updateUserReqDto, principal.getId(), skill);
+        userService.유저회원정보수정하기(updateUserReqDto, loginUser.getId(), skill);
         session.invalidate();
 
         return "redirect:/";

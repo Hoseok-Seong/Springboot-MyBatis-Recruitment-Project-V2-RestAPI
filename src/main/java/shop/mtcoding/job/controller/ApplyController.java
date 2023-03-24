@@ -22,7 +22,6 @@ import shop.mtcoding.job.handler.exception.CustomApiException;
 import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.enterprise.Enterprise;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
-import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.service.ApplyService;
 import shop.mtcoding.job.util.DateUtil;
 

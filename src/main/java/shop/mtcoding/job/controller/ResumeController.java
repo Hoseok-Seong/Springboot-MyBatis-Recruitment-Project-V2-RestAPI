@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.resume.SaveResumeDto;
 import shop.mtcoding.job.dto.resume.UpdateResumeDto;
@@ -34,9 +35,9 @@ public class ResumeController {
 
     private final ResumeRepository resumeRepository;
 
-    @GetMapping("/s/resumes")
+    @GetMapping("/resumes")
     public @ResponseBody ResponseEntity<?> resumeList() {
-        User principal = (User) session.getAttribute("principal");
+        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
         // if (principal == null) {
         //     throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
         // }
@@ -44,9 +45,9 @@ public class ResumeController {
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 목록 보기 완료", resumeList), HttpStatus.OK);
     }
 
-    @PostMapping("/s/resume")
+    @PostMapping("/resume")
     public @ResponseBody ResponseEntity<?> save(@RequestBody SaveResumeDto saveResumeDto) {
-        User principal = (User) session.getAttribute("principal");
+        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
         if (principal == null) {
             throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
         }
@@ -58,7 +59,7 @@ public class ResumeController {
 
     @DeleteMapping("/resume/{id}")
     public @ResponseBody ResponseEntity<?> delete(@PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
+        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
         if (principal == null) {
             throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
         }
@@ -71,7 +72,7 @@ public class ResumeController {
     @PutMapping("/resume/{id}")
     public @ResponseBody ResponseEntity<?> update(@PathVariable int id,
             @RequestBody UpdateResumeDto updateResumeDto) throws Exception {
-        User principal = (User) session.getAttribute("principal");
+        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
         if (principal == null) {
             throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
         }

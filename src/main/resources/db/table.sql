@@ -20,6 +20,7 @@ create table enterprise_tb(
     email varchar(100) not null,
     sector varchar(100) not null,
     size varchar(100) not null,
+    role varchar(100) not null,
     created_at timestamp not null
 );
 
