@@ -8,6 +8,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
+import shop.mtcoding.job.model.enterprise.Enterprise;
 import shop.mtcoding.job.model.user.User;
 
 public class JwtProvider {
@@ -29,6 +30,22 @@ public class JwtProvider {
     }
 
     public static DecodedJWT verify(String jwt) throws SignatureVerificationException, TokenExpiredException {
+        DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512("Highre"))
+                .build().verify(jwt);
+        return decodedJWT;
+    }
+
+    public static String createEnt(Enterprise enterprise) {
+        String jwt = JWT.create()
+                .withSubject(SUBJECT)
+                .withExpiresAt(new Date(System.currentTimeMillis() + EXP))
+                .withClaim("id", enterprise.getId())
+                .withClaim("role", enterprise.getRole())
+                .sign(Algorithm.HMAC512(SECRET));
+        return TOKEN_PREFIX + jwt;
+    }
+
+    public static DecodedJWT verifyEnt(String jwt) throws SignatureVerificationException, TokenExpiredException {
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512("Highre"))
                 .build().verify(jwt);
         return decodedJWT;

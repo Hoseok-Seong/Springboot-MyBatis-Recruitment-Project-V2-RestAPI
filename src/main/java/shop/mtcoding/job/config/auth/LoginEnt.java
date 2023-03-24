@@ -6,12 +6,12 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class LoginUser {
+public class LoginEnt {
     private Integer id;
     private String role;
 
     @Builder
-    public LoginUser(Integer id, String role) {
+    public LoginEnt(Integer id, String role) {
         this.id = id;
         this.role = role;
     }

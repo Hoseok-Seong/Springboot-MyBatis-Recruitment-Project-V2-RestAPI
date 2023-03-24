@@ -4,13 +4,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
-import shop.mtcoding.job.config.auth.JwtProvider;
 import shop.mtcoding.job.dto.user.UserReqDto.JoinUserReqDto;
 import shop.mtcoding.job.dto.user.UserReqDto.LoginUserReqDto;
 import shop.mtcoding.job.dto.user.UserReqDto.UpdateUserReqDto;
