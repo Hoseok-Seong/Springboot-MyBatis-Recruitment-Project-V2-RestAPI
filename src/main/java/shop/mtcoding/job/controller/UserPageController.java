@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.userPage.UserPageApplyDto;
 import shop.mtcoding.job.dto.userPage.UserPageBookmarkDto;
@@ -36,13 +37,13 @@ public class UserPageController {
 
     @GetMapping("/myapply")
     public @ResponseBody ResponseEntity<?> mypage() {
-        Optional<User> principal = (Optional<User>) session.getAttribute("principal");
-        if (principal == null) {
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if (loginUser == null) {
             throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.",
                     HttpStatus.UNAUTHORIZED);
         }
 
-        List<UserPageApplyDto> userPageDtos = applyRepository.findAllApply(principal.get().getId());
+        List<UserPageApplyDto> userPageDtos = applyRepository.findAllApply(loginUser.getId());
         for (UserPageApplyDto post : userPageDtos) {
             post.getRecruitmentList().calculateDiffDays(); // D-Day 계산
         }
@@ -52,12 +53,13 @@ public class UserPageController {
 
     @GetMapping("/mymatching")
     public @ResponseBody ResponseEntity<?> mymatching() throws Exception {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.",
+                    HttpStatus.UNAUTHORIZED);
         }
 
-        List<UserPageMatchingDto> posts = userSkillRepository.userJoinRecruitmentWithMatching(principal.getId());
+        List<UserPageMatchingDto> posts = userSkillRepository.userJoinRecruitmentWithMatching(loginUser.getId());
 
         for (UserPageMatchingDto post : posts) {
             List<String> skills = Convert.skillMapping(post.getUserMatching().getUserSkillDto().getSkill());

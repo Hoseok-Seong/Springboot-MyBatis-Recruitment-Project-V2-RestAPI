@@ -37,10 +37,10 @@ public class UserService {
                 throw new CustomApiException("아이디가 존재하지 않습니다");
             }
             String sha256Hash = Sha256Encoder.sha256(loginUserReqDto.getPassword() + salt);
-            Optional<User> principal = userRepository.findByUsernameAndPasswordByJwt(loginUserReqDto.getUsername(),
+            Optional<User> loginUser = userRepository.findByUsernameAndPasswordByJwt(loginUserReqDto.getUsername(),
                     sha256Hash);
-            System.out.println("테스트 : " + principal);
-            return principal;
+            System.out.println("테스트 : " + loginUser);
+            return loginUser;
         } catch (NoSuchAlgorithmException e) {
             System.err.println("알고리즘을 찾을 수 없습니다: " + e.getMessage());
         }
