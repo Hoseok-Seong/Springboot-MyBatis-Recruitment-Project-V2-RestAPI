@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.aop.UserId;
 import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.userPage.UserPageApplyDto;
@@ -34,15 +35,15 @@ public class UserPageController {
     private final BookmarkRepository bookmarkRepository;
 
     @GetMapping("/myapply")
-    public @ResponseBody ResponseEntity<?> mypage() {
-        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
-        System.out.println("테스트 : " + loginUser);
-        if (loginUser == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.",
-                    HttpStatus.UNAUTHORIZED);
-        }
+    public @ResponseBody ResponseEntity<?> mypage(@UserId int principalId) {
+        // LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        // System.out.println("테스트 : " + loginUser);
+        // if (loginUser == null) {
+        //     throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.",
+        //             HttpStatus.UNAUTHORIZED);
+        // }
 
-        List<UserPageApplyDto> userPageDtos = applyRepository.findAllApply(loginUser.getId());
+        List<UserPageApplyDto> userPageDtos = applyRepository.findAllApply(principalId);
         for (UserPageApplyDto post : userPageDtos) {
             post.getRecruitmentList().calculateDiffDays(); // D-Day 계산
         }
@@ -51,14 +52,14 @@ public class UserPageController {
     }
 
     @GetMapping("/mymatching")
-    public @ResponseBody ResponseEntity<?> mymatching() throws Exception {
-        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.",
-                    HttpStatus.UNAUTHORIZED);
-        }
+    public @ResponseBody ResponseEntity<?> mymatching(@UserId int principalId) throws Exception {
+        // LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        // if (loginUser == null) {
+        //     throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.",
+        //             HttpStatus.UNAUTHORIZED);
+        // }
 
-        List<UserPageMatchingDto> posts = userSkillRepository.userJoinRecruitmentWithMatching(loginUser.getId());
+        List<UserPageMatchingDto> posts = userSkillRepository.userJoinRecruitmentWithMatching(principalId);
 
         for (UserPageMatchingDto post : posts) {
             List<String> skills = Convert.skillMapping(post.getUserMatching().getUserSkillDto().getSkill());
@@ -70,12 +71,12 @@ public class UserPageController {
     }
 
     @GetMapping("/mybookmark")
-    public @ResponseBody ResponseEntity<?> mybookmark() {
-        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+    public @ResponseBody ResponseEntity<?> mybookmark(@UserId int principalId) {
+        // LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
         // if (principal == null) {
         //     throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
         // }
-        List<UserPageBookmarkDto> posts = bookmarkRepository.BookmarkJoinRecruitOfUserPage(loginUser.getId());
+        List<UserPageBookmarkDto> posts = bookmarkRepository.BookmarkJoinRecruitOfUserPage(principalId);
         // d-day 계산
         for (UserPageBookmarkDto post : posts) {
             post.getRecruitmentList().calculateDiffDays();

@@ -7,7 +7,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.aop.UserId;
 import shop.mtcoding.job.config.auth.JwtProvider;
 import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
@@ -126,11 +126,11 @@ public class UserController {
 
     @PostMapping("/user/update")
     public String userUpdate(@RequestBody UpdateUserReqDto updateUserReqDto,
-            @RequestParam(required = false) List<Integer> skill) {
-        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
-        if (loginUser == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        }
+            @RequestParam(required = false) List<Integer> skill, @UserId int principalId) {
+        // LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        // if (loginUser == null) {
+        //     throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
+        // }
 
         if (updateUserReqDto.getPassword() == null || updateUserReqDto.getPassword().isEmpty()) {
             throw new CustomException("비밀번호를 작성해주세요");
@@ -142,7 +142,7 @@ public class UserController {
             throw new CustomException("전화번호를 입력해주세요");
         }
 
-        userService.유저회원정보수정하기(updateUserReqDto, loginUser.getId(), skill);
+        userService.유저회원정보수정하기(updateUserReqDto, principalId, skill);
         session.invalidate();
 
         return "redirect:/";

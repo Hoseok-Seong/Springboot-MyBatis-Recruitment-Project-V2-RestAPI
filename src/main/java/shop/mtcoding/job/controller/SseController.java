@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.aop.UserId;
 import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.apply.ApplyRespDto.NotifyListRespDto;
@@ -29,21 +30,21 @@ public class SseController {
     private final HttpSession session;
 
     @GetMapping(value = "/notify", produces = "text/event-stream")
-    public @ResponseBody ResponseEntity<?> notify(HttpServletRequest request, HttpServletResponse response)
+    public @ResponseBody ResponseEntity<?> notify(HttpServletRequest request, HttpServletResponse response, @UserId int principalId)
             throws IOException {
-        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
-        if (principal == null) {
-            return ResponseEntity.badRequest().build();
-        }
+        // LoginUser principal = (LoginUser) session.getAttribute("loginUser");
+        // if (principal == null) {
+        //     return ResponseEntity.badRequest().build();
+        // }
 
         SseEmitter emitter = new SseEmitter();
         CompletableFuture.runAsync(() -> {
             try {
-                List<NotifyListRespDto> notifies = applyRepository.findNotifyByUserId(principal.getId());
+                List<NotifyListRespDto> notifies = applyRepository.findNotifyByUserId(principalId);
                 for (NotifyListRespDto notify : notifies) {
                     if (notify.getNotify()) {
                         emitter.send("마이페이지-지원현황에서 결과를 확인해주세요");
-                        applyRepository.updateNotifyById(principal.getId(), false);
+                        applyRepository.updateNotifyById(principalId, false);
                     }
                 }
             } catch (Exception e) {

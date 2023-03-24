@@ -39,13 +39,10 @@ public class ApplyController {
 
     @PostMapping("/apply/{id}")
     public @ResponseBody ResponseEntity<?> insertApply(@RequestBody InsertApplyReqDto insertApplyReqDto,
-            @PathVariable int id) {
-        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
-        if (principal == null) {
-            throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
-        }
+            @PathVariable int id, @UserId int principalId) {
 
-        RecruitmentPostDetailRespDto recruitmentPostDto = recruitmentPostRepository.findByIdWithEnterpriseId(id);
+        RecruitmentPostDetailRespDto recruitmentPostDto = recruitmentPostRepository.findByIdWithEnterpriseId(
+                principalId);
 
         // d-day 계산
         long diffDays = DateUtil.deadline(recruitmentPostDto.getDeadline());
@@ -54,16 +51,16 @@ public class ApplyController {
             throw new CustomApiException("이력서 제출기간이 지났습니다", HttpStatus.BAD_REQUEST);
         }
 
-        applyService.이력서제출(insertApplyReqDto, principal.getId());
+        applyService.이력서제출(insertApplyReqDto, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 제출 성공", null), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/apply/{id}")
     public @ResponseBody ResponseEntity<?> deleteApply(@PathVariable int id, @UserId int principalId) {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
-        }
+        // User principal = (User) session.getAttribute("principal");
+        // if (principal == null) {
+        //     throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
+        // }
         applyService.이력서제출취소(id, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "지원서 삭제 성공", null), HttpStatus.OK);
 
@@ -73,10 +70,10 @@ public class ApplyController {
     public @ResponseBody ResponseEntity<?> updateResult(
             @RequestBody UpdateApplicantResultReqDto updateApplicantResultReqDto, @PathVariable int id,
             @EntId int principalId) {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
-        }
+        // Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
+        // if (principalEnt == null) {
+        //     throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
+        // }
 
         applyService.합격불합격(id, updateApplicantResultReqDto, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "처리 성공", null), HttpStatus.OK);

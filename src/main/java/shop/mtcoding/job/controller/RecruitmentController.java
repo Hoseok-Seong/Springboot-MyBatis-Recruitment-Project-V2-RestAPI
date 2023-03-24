@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.aop.EntId;
 import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.bookmark.BookmartRespDto;
@@ -60,18 +61,14 @@ public class RecruitmentController {
     private final ResumeRepository resumeRepository;
 
     @DeleteMapping("/recruitment/{id}")
-    public @ResponseBody ResponseEntity<?> delete(@PathVariable int id) {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
-        }
-        recruitmentService.채용공고삭제(id, principalEnt.getId());
+    public @ResponseBody ResponseEntity<?> delete(@PathVariable int id, @EntId int principalId) {
+        recruitmentService.채용공고삭제(id, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 삭제 성공", null), HttpStatus.OK);
     }
 
     @PutMapping("/recruitment/{id}")
     public @ResponseBody ResponseEntity<?> updateRecruitmentPost(@PathVariable int id,
-            @ModelAttribute UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto) {
+            @ModelAttribute UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto, @EntId int principalId) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
@@ -126,14 +123,14 @@ public class RecruitmentController {
             throw new CustomApiException("과거는 선택 할 수 없습니다.");
         }
 
-        recruitmentService.채용공고수정(id, updateRecruitmentPostReqDto, principalEnt.getId());
+        recruitmentService.채용공고수정(id, updateRecruitmentPostReqDto, principalId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 수정 성공", null), HttpStatus.CREATED);
     }
 
     @PostMapping("/recruitment")
     public @ResponseBody ResponseEntity<?> saveRecruitmentPost(
-            @ModelAttribute SaveRecruitmentPostReqDto saveRecruitmentPostReqDto) {
+            @ModelAttribute SaveRecruitmentPostReqDto saveRecruitmentPostReqDto, @EntId int principalId) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
@@ -188,7 +185,7 @@ public class RecruitmentController {
             throw new CustomApiException("과거는 선택 할 수 없습니다.");
         }
 
-        recruitmentService.채용공고쓰기(saveRecruitmentPostReqDto, principalEnt.getId());
+        recruitmentService.채용공고쓰기(saveRecruitmentPostReqDto, principalId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 작성 성공", null), HttpStatus.CREATED);
     }
