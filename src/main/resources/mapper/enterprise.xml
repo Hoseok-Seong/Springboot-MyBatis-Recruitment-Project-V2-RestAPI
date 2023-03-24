@@ -38,4 +38,8 @@
    <select id="findByEnterprisenameAndPassword" resultType="shop.mtcoding.job.model.enterprise.Enterprise">
       select * from enterprise_tb where enterprise_name = #{enterpriseName} and password = #{password}         
    </select>
+
+    <select id="findByEnterprisenameAndPasswordByJwt" resultType="shop.mtcoding.job.model.enterprise.Enterprise">
+      select * from enterprise_tb where enterprise_name = #{enterpriseName} and password = #{password}         
+   </select>
 </mapper>

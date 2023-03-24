@@ -77,8 +77,7 @@ public class UserController {
         } else {
             return ResponseEntity.badRequest().body("로그인 실패");
         }
-        // return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null),
-        // HttpStatus.OK);
+    
     }
 
     @GetMapping("/logout")

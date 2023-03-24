@@ -28,6 +28,7 @@ public class JwtProvider {
                 .sign(Algorithm.HMAC512(SECRET));
         return TOKEN_PREFIX + jwt;
     }
+    
 
     public static DecodedJWT verify(String jwt) throws SignatureVerificationException, TokenExpiredException {
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC512("Highre"))

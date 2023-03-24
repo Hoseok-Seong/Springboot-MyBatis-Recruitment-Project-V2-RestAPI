@@ -1,6 +1,7 @@
 package shop.mtcoding.job.service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,14 +24,14 @@ public class EnterpriseService {
     private final EnterpriseRepository enterpriseRepository;
 
     @Transactional(readOnly = true)
-    public Enterprise 기업로그인하기(LoginEnterpriseReqDto loginEnterpriseReqDto) {
+    public Optional<Enterprise> 기업로그인하기(LoginEnterpriseReqDto loginEnterpriseReqDto) {
         try {
             String salt = enterpriseRepository.findSaltByEnterprisename(loginEnterpriseReqDto.getEnterpriseName());
             if (salt == null) {
                 throw new CustomApiException("아이디가 존재하지 않습니다");
             }
             String sha256Hash = Sha256Encoder.sha256(loginEnterpriseReqDto.getPassword() + salt);
-            Enterprise principalEnt = enterpriseRepository.findByEnterprisenameAndPassword(
+            Optional<Enterprise> principalEnt = enterpriseRepository.findByEnterprisenameAndPasswordByJwt(
                     loginEnterpriseReqDto.getEnterpriseName(),
                     sha256Hash);
             return principalEnt;

@@ -1,5 +1,7 @@
 package shop.mtcoding.job.controller;
 
+import java.util.Optional;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.config.aop.EntId;
+import shop.mtcoding.job.config.auth.JwtProvider;
+import shop.mtcoding.job.config.auth.LoginEnt;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.JoinEnterpriseReqDto;
 import shop.mtcoding.job.dto.enterprise.EnterpriseReqDto.LoginEnterpriseReqDto;
@@ -44,17 +48,12 @@ public class EnterpriseController {
             throw new CustomApiException("비밀번호를 작성해주세요");
         }
         // 1. 로그인하기 service
-        Enterprise principalEnt = enterpriseService.기업로그인하기(loginEnterpriseReqDto);
+        Optional<Enterprise> principalEnt = enterpriseService.기업로그인하기(loginEnterpriseReqDto);
+        
+        LoginEnt loginEnt = LoginEnt.builder().id(principalEnt.get().getId()).role(principalEnt.get().getRole()).build();
+        session.setAttribute("loginEnt", loginEnt);
 
-        // 2. session에 저장
-        session.setAttribute("principalEnt", principalEnt);
-
-        // 3. principal 유효성 검사
-        if (session.getAttribute("principalEnt") == null) {
-            throw new CustomApiException("존재하지 않는 아이디거나 비밀번호를 다시 확인해주시기 바랍니다");
-        }
-
-        // 4. 아이디 기억
+        // 2. 아이디 기억
         if (loginEnterpriseReqDto.getRememberEnt().equals("true")) {
             Cookie cookie = new Cookie("rememberEnt", loginEnterpriseReqDto.getEnterpriseName());
             cookie.setPath("/");
@@ -68,7 +67,15 @@ public class EnterpriseController {
             response.addCookie(cookie);
         }
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null), HttpStatus.OK);
+        // 3. 토큰 헤더에 저장
+        if (principalEnt.isPresent()) { // 값이 있다면
+            String jwt = JwtProvider.createEnt(principalEnt.get());
+
+            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
+        } else {
+            return ResponseEntity.badRequest().body("로그인 실패");
+        }
+
     }
 
     @PostMapping("/ns/enterprise/join")

@@ -7,6 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class LoginEnt {
+    public static Object builder;
     private Integer id;
     private String role;
 
