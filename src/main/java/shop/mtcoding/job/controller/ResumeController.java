@@ -20,7 +20,6 @@ import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.resume.SaveResumeDto;
 import shop.mtcoding.job.dto.resume.UpdateResumeDto;
 import shop.mtcoding.job.handler.exception.CustomApiException;
-import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.resume.Resume;
 import shop.mtcoding.job.model.resume.ResumeRepository;
 import shop.mtcoding.job.model.user.User;
@@ -35,17 +34,17 @@ public class ResumeController {
 
     private final ResumeRepository resumeRepository;
 
-    @GetMapping("/resumes")
+    @GetMapping("/s/resumes")
     public @ResponseBody ResponseEntity<?> resumeList() {
         User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        }
+        // if (principal == null) {
+        //     throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
+        // }
         List<Resume> resumeList = resumeRepository.findByUserId(principal.getId());
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 목록 보기 완료", resumeList), HttpStatus.OK);
     }
 
-    @PostMapping("/resume")
+    @PostMapping("/s/resume")
     public @ResponseBody ResponseEntity<?> save(@RequestBody SaveResumeDto saveResumeDto) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {

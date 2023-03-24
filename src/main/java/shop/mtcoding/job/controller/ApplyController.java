@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.InsertApplyReqDto;
 import shop.mtcoding.job.dto.apply.ApplyReqDto.UpdateApplicantResultReqDto;
@@ -37,7 +38,7 @@ public class ApplyController {
     @PostMapping("/apply/{id}")
     public @ResponseBody ResponseEntity<?> insertApply(@RequestBody InsertApplyReqDto insertApplyReqDto,
             @PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
+        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
         if (principal == null) {
             throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
         }
@@ -57,7 +58,7 @@ public class ApplyController {
 
     @DeleteMapping("/apply/{id}")
     public @ResponseBody ResponseEntity<?> deleteApply(@PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
+        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
         if (principal == null) {
             throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
         }

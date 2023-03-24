@@ -38,12 +38,8 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    @GetMapping("/loginForm")
-    public String loginForm() {
-        return "login/loginForm";
-    }
 
-    @PostMapping("/user/login")
+    @PostMapping("/s/user/login")
     public @ResponseBody ResponseEntity<?> userLogin(
             @RequestBody LoginUserReqDto loginUserReqDto, HttpServletResponse response) {
         if (loginUserReqDto.getUsername() == null || loginUserReqDto.getUsername().isEmpty()) {
@@ -55,16 +51,11 @@ public class UserController {
         // 1. 로그인하기 service
         Optional<User> principal = userService.유저로그인하기(loginUserReqDto);
 
-        // 2. session에 저장
+        // 2. id, role 세션에 담기
         LoginUser loginUser = LoginUser.builder().id(principal.get().getId()).role(principal.get().getRole()).build();
         session.setAttribute("loginUser", loginUser);
 
-        // 3. principal 유효성 검사
-        if (session.getAttribute("loginUser") == null) {
-            throw new CustomApiException("존재하지 않는 아이디거나 비밀번호를 다시 확인해주시기 바랍니다");
-        }
-
-        // 4. 아이디 기억
+        // 2. 아이디 기억
         if (loginUserReqDto.getRemember().equals("true")) {
             Cookie cookie = new Cookie("remember", loginUserReqDto.getUsername());
             cookie.setPath("/");
@@ -78,6 +69,7 @@ public class UserController {
             response.addCookie(cookie);
         }
 
+        // 3. 토큰 헤더에 저장
         if (principal.isPresent()) { // 값이 있다면
             String jwt = JwtProvider.create(principal.get());
 
@@ -93,11 +85,6 @@ public class UserController {
     public String logout() {
         session.invalidate();
         return "redirect:/";
-    }
-
-    @GetMapping("/joinForm")
-    public String joinForm() {
-        return "join/joinForm";
     }
 
     @PostMapping("/user/join")
@@ -135,11 +122,6 @@ public class UserController {
         } else {
             return new ResponseDto<>(1, "해당 아이디로 회원가입이 가능합니다.", true);
         }
-    }
-
-    @GetMapping("/updateForm")
-    public String updateForm() {
-        return "user/updateForm";
     }
 
     @PostMapping("/user/update")
