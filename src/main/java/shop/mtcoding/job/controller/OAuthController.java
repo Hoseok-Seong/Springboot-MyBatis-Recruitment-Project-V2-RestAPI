@@ -2,7 +2,6 @@ package shop.mtcoding.job.controller;
 
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
-import shop.mtcoding.job.dto.ResponseDto;
+import shop.mtcoding.job.config.auth.JwtProvider;
 import shop.mtcoding.job.model.enterprise.Enterprise;
 import shop.mtcoding.job.model.enterprise.EnterpriseRepository;
 import shop.mtcoding.job.model.user.User;
@@ -26,12 +25,12 @@ public class OAuthController {
     private final EnterpriseRepository enterpriseRepository;
 
     @GetMapping("/kakao_user_callback")
-    public ResponseEntity<?> kakaoUserCallback(String code) throws JsonProcessingException {
+    public ResponseEntity<String> kakaoUserCallback(String code) throws JsonProcessingException {
 
         // 1. code 값 존재 유무 확인
         if (code == null || code.isEmpty()) {
             // code가 없다
-            return new ResponseEntity<>(new ResponseDto<>(1, "code없음", null), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("code없음");
         }
 
         String accessToken = oAuthService.토큰받기_유저(code);
@@ -44,24 +43,25 @@ public class OAuthController {
         // 3. 존재하지 않을 시, 강제 회원가입 후, 그 user 정보로 session 생성(자동 로그인)
         if (user == null) {
             userRepository.insert("kakao_" + id, UUID.randomUUID().toString(), UUID.randomUUID().toString(), "", email,
-                    "", "");
+                    "", "user");
+            String jwt = JwtProvider.create(user);
+            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
         } // 처음 가입시 이름 전화번호 공백
 
         // 4. 존재할 시
         if (user != null) {
-
+            String jwt = JwtProvider.create(user);
+            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
         }
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "카카오 로그인", null), HttpStatus.OK);
     }
 
     @GetMapping("/kakao_enterprise_callback")
-    public ResponseEntity<?> kakaoEnterpriseCallback(String code) throws JsonProcessingException {
+    public ResponseEntity<String> kakaoEnterpriseCallback(String code) throws JsonProcessingException {
 
         // 1. code 값 존재 유무 확인
         if (code == null || code.isEmpty()) {
             // code가 없다
-            return new ResponseEntity<>(new ResponseDto<>(1, "code없음", null), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("code없음");
         }
 
         String accessToken = oAuthService.토큰받기_기업(code);
@@ -75,14 +75,15 @@ public class OAuthController {
         if (enterprise == null) {
             enterpriseRepository.insert("kakao_" + id, UUID.randomUUID().toString(), UUID.randomUUID().toString(), "",
                     "", email,
-                    "", "", "");
+                    "", "", "enterprise");
+            String jwt = JwtProvider.createEnt(enterprise);
+            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
         } // 처음 가입시 주소 전화번호 size sector 공백
 
         // 4. 존재할 시
         if (enterprise != null) {
-
+            String jwt = JwtProvider.createEnt(enterprise);
+            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
         }
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "카카오 로그인", null), HttpStatus.OK);
     }
 }
