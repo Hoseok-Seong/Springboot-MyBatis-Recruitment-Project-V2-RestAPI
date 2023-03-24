@@ -201,12 +201,11 @@ public class RecruitmentController {
     }
 
     @GetMapping("/recruitment/{id}/updateForm")
-    public ResponseEntity<?> recruitmentUpdateForm(@PathVariable int id, @EntId int principalId) {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
+    public ResponseEntity<?> recruitmentUpdateForm(@PathVariable int id, @EntId Integer principalId) {
+        if (principalId == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
         }
-        RecruitmentPost recruitmentPS = recruitmentPostRepository.findById(principalId);
+        RecruitmentPost recruitmentPS = recruitmentPostRepository.findById(id);
         if (recruitmentPS == null) {
             throw new CustomException("없는 채용공고를 수정할 수 없습니다");
         }

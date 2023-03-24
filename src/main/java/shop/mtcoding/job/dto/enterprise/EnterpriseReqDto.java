@@ -24,6 +24,7 @@ public class EnterpriseReqDto {
         private String email;
         private String sector;
         private String size;
+        private String role;
     }
 
     @Setter

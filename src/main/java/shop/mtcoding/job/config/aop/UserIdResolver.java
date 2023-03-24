@@ -11,7 +11,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import lombok.RequiredArgsConstructor;
-import shop.mtcoding.job.model.user.User;
+import shop.mtcoding.job.config.auth.LoginUser;
 
 @Component
 @RequiredArgsConstructor
@@ -22,8 +22,8 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
     @Nullable
     public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-        User principal = (User) session.getAttribute("principal");
-        return principal.getId();
+        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+        return loginUser.getId();
     }
 
     @Override

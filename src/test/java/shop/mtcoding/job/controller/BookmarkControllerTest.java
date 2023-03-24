@@ -5,8 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
-import shop.mtcoding.job.model.user.User;
+import shop.mtcoding.job.config.auth.LoginUser;
 
 @Transactional
 @AutoConfigureMockMvc
@@ -38,21 +36,14 @@ public class BookmarkControllerTest {
             .withSubject("토큰제목")
             .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
             .withClaim("id", 1)
-            .withClaim("role", "guest")
+            .withClaim("role", "test")
             .sign(Algorithm.HMAC512("Highre"));
 
     @BeforeEach
     public void setUp() throws Exception {
-        // 데이터 인서트
-        User user = new User();
-        user.setId(1);
-        user.setUsername("ssar");
-        user.setPassword("1234");
-        user.setEmail("ssar@nate.com");
-        user.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-
+        LoginUser loginUser = new LoginUser(1, "test");
         mockSession = new MockHttpSession();
-        mockSession.setAttribute("principal", user);
+        mockSession.setAttribute("loginUser", loginUser);
     }
 
     @Test

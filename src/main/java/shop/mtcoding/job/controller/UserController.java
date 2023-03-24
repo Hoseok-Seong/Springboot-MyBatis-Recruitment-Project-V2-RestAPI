@@ -76,6 +76,7 @@ public class UserController {
         } else {
             return ResponseEntity.badRequest().body("로그인 실패");
         }
+
     }
 
     @GetMapping("/logout")
@@ -108,7 +109,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/user/usernameSameCheck")
+    @GetMapping("/ns/user/usernameSameCheck")
     public @ResponseBody ResponseDto<?> check(@RequestBody JoinUserReqDto joinUserReqDto) {
         if (joinUserReqDto.getUsername() == null || joinUserReqDto.getUsername().isEmpty()) {
             return new ResponseDto<>(-1, "아이디가 입력되지 않았습니다.", null);

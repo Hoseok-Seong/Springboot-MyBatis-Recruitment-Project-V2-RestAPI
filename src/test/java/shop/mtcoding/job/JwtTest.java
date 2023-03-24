@@ -3,7 +3,6 @@ package shop.mtcoding.job;
 import java.util.Date;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -11,12 +10,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import shop.mtcoding.job.config.auth.JwtProvider;
-
 public class JwtTest {
-
-    @Autowired
-    private JwtProvider jwtProvider;
 
     @Test
     public void createJwt_test() {
