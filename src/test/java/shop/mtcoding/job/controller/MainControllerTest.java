@@ -1,4 +1,4 @@
-package shop.mtcoding.job;
+package shop.mtcoding.job.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -25,7 +25,7 @@ public class MainControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/"));
+                get("/ns/main"));
 
         MvcResult result = resultActions.andReturn();
         String content = result.getResponse().getContentAsString();

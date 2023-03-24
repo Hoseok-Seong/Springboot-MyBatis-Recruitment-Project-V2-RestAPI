@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.aop.EntId;
+import shop.mtcoding.job.config.aop.UserId;
+import shop.mtcoding.job.config.auth.LoginEnt;
+import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.bookmark.BookmartRespDto;
 import shop.mtcoding.job.dto.recruitmentPost.RecruitmentPostAndSkillUpdateRespDto;
@@ -35,13 +38,11 @@ import shop.mtcoding.job.dto.recruitmentPost.RecruitmentUpdateRespDto.Recruitmen
 import shop.mtcoding.job.handler.exception.CustomApiException;
 import shop.mtcoding.job.handler.exception.CustomException;
 import shop.mtcoding.job.model.bookmark.BookmarkRepository;
-import shop.mtcoding.job.model.enterprise.Enterprise;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPost;
 import shop.mtcoding.job.model.recruitmentPost.RecruitmentPostRepository;
 import shop.mtcoding.job.model.recruitmentSkill.RecruitmentSkillRepository;
 import shop.mtcoding.job.model.resume.Resume;
 import shop.mtcoding.job.model.resume.ResumeRepository;
-import shop.mtcoding.job.model.user.User;
 import shop.mtcoding.job.service.RecruitmentService;
 
 @RequiredArgsConstructor
@@ -60,20 +61,16 @@ public class RecruitmentController {
     private final ResumeRepository resumeRepository;
 
     @DeleteMapping("/recruitment/{id}")
-    public @ResponseBody ResponseEntity<?> delete(@PathVariable int id) {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
-            throw new CustomApiException("회원 인증이 실패했습니다", HttpStatus.UNAUTHORIZED);
-        }
-        recruitmentService.채용공고삭제(id, principalEnt.getId());
+    public @ResponseBody ResponseEntity<?> delete(@PathVariable int id, @EntId int principalId) {
+        recruitmentService.채용공고삭제(id, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 삭제 성공", null), HttpStatus.OK);
     }
 
     @PutMapping("/recruitment/{id}")
     public @ResponseBody ResponseEntity<?> updateRecruitmentPost(@PathVariable int id,
-            @RequestBody UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto) {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
+            @RequestBody UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto, @EntId int principalId) {
+        LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
+        if (loginEnt == null) {
             throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
         }
         if (updateRecruitmentPostReqDto.getTitle() == null || updateRecruitmentPostReqDto.getTitle().isEmpty()) {
@@ -126,16 +123,16 @@ public class RecruitmentController {
             throw new CustomApiException("과거는 선택 할 수 없습니다.");
         }
 
-        recruitmentService.채용공고수정(id, updateRecruitmentPostReqDto, principalEnt.getId());
+        recruitmentService.채용공고수정(id, updateRecruitmentPostReqDto, principalId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 수정 성공", null), HttpStatus.CREATED);
     }
 
     @PostMapping("/recruitment")
     public @ResponseBody ResponseEntity<?> saveRecruitmentPost(
-            @RequestBody SaveRecruitmentPostReqDto saveRecruitmentPostReqDto) {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
+            @RequestBody SaveRecruitmentPostReqDto saveRecruitmentPostReqDto, @EntId int principalId) {
+        LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
+        if (loginEnt == null) {
             throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
         }
         if (saveRecruitmentPostReqDto.getTitle() == null || saveRecruitmentPostReqDto.getTitle().isEmpty()) {
@@ -188,31 +185,30 @@ public class RecruitmentController {
             throw new CustomApiException("과거는 선택 할 수 없습니다.");
         }
 
-        recruitmentService.채용공고쓰기(saveRecruitmentPostReqDto, principalEnt.getId());
+        recruitmentService.채용공고쓰기(saveRecruitmentPostReqDto, principalId);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 작성 성공", null), HttpStatus.CREATED);
     }
 
     @GetMapping("/recruitment/saveForm")
     public String recruitmentSaveForm() {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
+        LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
+        if (loginEnt == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
         }
         return "recruitment/saveForm";
     }
 
     @GetMapping("/recruitment/{id}/updateForm")
-    public ResponseEntity<?> recruitmentUpdateForm(@PathVariable int id) {
-        Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
-        if (principalEnt == null) {
+    public ResponseEntity<?> recruitmentUpdateForm(@PathVariable int id, @EntId Integer principalId) {
+        if (principalId == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
         }
-        RecruitmentPost recruitmentPS = recruitmentPostRepository.findById(principalEnt.getId());
+        RecruitmentPost recruitmentPS = recruitmentPostRepository.findById(id);
         if (recruitmentPS == null) {
             throw new CustomException("없는 채용공고를 수정할 수 없습니다");
         }
-        if (recruitmentPS.getEnterpriseId() != principalEnt.getId()) {
+        if (recruitmentPS.getEnterpriseId() != principalId) {
             throw new CustomException("채용공고를 수정할 권한이 없습니다", HttpStatus.FORBIDDEN);
         }
 
@@ -227,12 +223,13 @@ public class RecruitmentController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/recruitment/detail/{id}")
-    public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
+    @GetMapping("/ns/recruitment/detail/{id}")
+    public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id, @UserId int principalId) {
+        LoginUser principal = (LoginUser) session.getAttribute("loginUser");
+
         BookmartRespDto bookmartRespDto = new BookmartRespDto();
         if (principal != null) {
-            bookmartRespDto = bookmarkRepository.findByRecruitmentIdAndUserId(id, principal.getId());
+            bookmartRespDto = bookmarkRepository.findByRecruitmentIdAndUserId(id, principalId);
         } else {
             bookmartRespDto = null;
         }
@@ -247,7 +244,7 @@ public class RecruitmentController {
 
         List<Resume> resumeDtos = new ArrayList<>();
         if (principal != null) {
-            resumeDtos = resumeRepository.findByUserId(principal.getId());
+            resumeDtos = resumeRepository.findByUserId(principalId);
         } else {
             resumeDtos = null;
         }
@@ -258,8 +255,8 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "상세보기 페이지 성공", recruitmentDetailPageDto), HttpStatus.OK);
     }
 
-    @GetMapping("/recruitment/list")
-    public ResponseEntity<?> recruitmentPostList(Model model) {
+    @GetMapping("/ns/recruitment/list")
+    public ResponseEntity<?> recruitmentPostList() {
         List<RecruitmentPostListRespDto> posts = recruitmentPostRepository.findByPost();
         // d-day 계산
         for (RecruitmentPostListRespDto post : posts) {
@@ -269,7 +266,7 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 목록", posts), HttpStatus.OK);
     }
 
-    @PostMapping("/recruitment/search")
+    @PostMapping("/ns/recruitment/search")
     public ResponseEntity<?> searchList(@RequestBody RecruitmentPostSearchRespDto recruitmentPostSearchRespDto) {
         List<RecruitmentPostSearchRespDto> postPSList = recruitmentService.채용정보검색(recruitmentPostSearchRespDto);
 
@@ -281,7 +278,7 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "검색 성공", postPSList), HttpStatus.OK);
     }
 
-    @PostMapping("/recruitment/category")
+    @PostMapping("/ns/recruitment/category")
     public ResponseEntity<?> category(@RequestBody RecruitmentPostCategoryRespDto recruitmentPostCategoryRespDto) {
         List<RecruitmentPostCategoryRespDto> postPSList = recruitmentService.카테고리검색(recruitmentPostCategoryRespDto);
 

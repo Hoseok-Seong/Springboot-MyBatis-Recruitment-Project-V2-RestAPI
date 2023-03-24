@@ -19,11 +19,9 @@ public class MainController {
 
     private final MainService mainService;
 
-    @GetMapping({ "/", "/main" })
+    @GetMapping("/ns/main")
     public @ResponseBody ResponseEntity<?> main() {
-
         List<RecruitmentPostListRespDto> posts = mainService.게시글목록보기();
-
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 목록", posts), HttpStatus.OK);
     }
 }

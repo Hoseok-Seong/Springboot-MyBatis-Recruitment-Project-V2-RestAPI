@@ -7,8 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,13 +20,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.resume.UpdateResumeDto;
 import shop.mtcoding.job.model.resume.Resume;
 import shop.mtcoding.job.model.resume.ResumeRepository;
-import shop.mtcoding.job.model.user.User;
 
+@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class ResumeControllerTest {
@@ -43,18 +45,18 @@ public class ResumeControllerTest {
     @Autowired
     private ResumeRepository resumeRepository;
 
+    String jwt = JWT.create()
+            .withSubject("토큰제목")
+            .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+            .withClaim("id", 1)
+            .withClaim("role", "test")
+            .sign(Algorithm.HMAC512("Highre"));
+
     @BeforeEach
     public void setUp() {
-        // 데이터 인서트
-        User user = new User();
-        user.setId(1);
-        user.setUsername("ssar");
-        user.setPassword("1234");
-        user.setEmail("ssar@nate.com");
-        user.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-
+        LoginUser loginUser = new LoginUser(1, "test");
         mockSession = new MockHttpSession();
-        mockSession.setAttribute("principal", user);
+        mockSession.setAttribute("loginUser", loginUser);
 
         Resume resume = new Resume();
         resume.setId(1);
@@ -71,14 +73,14 @@ public class ResumeControllerTest {
     }
 
     @Test
-    @Transactional
     public void resume_test() throws Exception {
         // given
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/resumes").session(mockSession));
+                get("/resumes").session(mockSession).header("Authorization", jwt));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println(responseBody);
         // then
         resultActions.andExpect(jsonPath("$.code").value(1));
         resultActions.andExpect(status().isOk());
@@ -99,19 +101,19 @@ public class ResumeControllerTest {
         resume.setEducation("학력1");
         resume.setLanguage("외국어1");
         resume.setBirthdate("생일1");
-
+        String requestBody = om.writeValueAsString(resume);
         // when
         ResultActions resultActions = mvc.perform(
-                post("/resume")
-                        .session(mockSession));
-        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+                post("/resume").content(requestBody).contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .session(mockSession).header("Authorization", jwt));
 
         // then
+        resultActions.andExpect(jsonPath("$.code").value(1));
+        resultActions.andExpect(status().isCreated());
 
     }
 
     @Test
-    @Transactional
     public void resumeUpdate_test() throws Exception {
         // given
         int id = 1;
@@ -137,7 +139,7 @@ public class ResumeControllerTest {
                 put("/resume/" + id)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .session(mockSession));
+                        .session(mockSession).header("Authorization", jwt));
 
         // then
         resultActions.andExpect(status().isOk());
@@ -145,14 +147,13 @@ public class ResumeControllerTest {
     }
 
     @Test
-    @Transactional
     public void resumeDelete_test() throws Exception {
         int id = 1;
         // when
         ResultActions resultActions = mvc.perform(
                 delete("/resume/" + id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .session(mockSession));
+                        .session(mockSession).header("Authorization", jwt));
 
         // then
         resultActions.andExpect(status().isOk());

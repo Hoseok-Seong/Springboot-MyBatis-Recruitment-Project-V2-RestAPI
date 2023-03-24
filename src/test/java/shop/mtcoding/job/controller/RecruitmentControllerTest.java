@@ -6,8 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,11 +19,15 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 
-import shop.mtcoding.job.model.enterprise.Enterprise;
+import shop.mtcoding.job.config.auth.LoginEnt;
+import shop.mtcoding.job.config.auth.LoginUser;
 
+@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class RecruitmentControllerTest {
@@ -34,26 +37,18 @@ public class RecruitmentControllerTest {
 
         private MockHttpSession mockSession;
 
-        @Autowired
-        private ObjectMapper om;
+        String jwt = JWT.create()
+                        .withSubject("토큰제목")
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+                        .withClaim("id", 1)
+                        .withClaim("role", "test")
+                        .sign(Algorithm.HMAC512("Highre"));
 
         @BeforeEach
         public void setUp() {
-                Enterprise enterprise = new Enterprise();
-                enterprise.setId(1);
-                enterprise.setEnterpriseName("긴트");
-                enterprise.setPassword(
-                                "356067e7d02ead0e9086e3f9e9cef88e8f6ca59222cd180bbf1a6205b7b40631");
-                enterprise.setSalt("{bcrypt}$2a$10$4h5bhPEcnLEsQ7fe.1Rx5OfeEH0VLV9LE0kDb1WqwWMRsjsCptRmy");
-                enterprise.setAddress("강남구 삼성동 75-6 수당빌딩 4층");
-                enterprise.setContact("010-7763-4370");
-                enterprise.setEmail("company@nate.com");
-                enterprise.setSector("스타트업");
-                enterprise.setSize("스타트업");
-                enterprise.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
-
+                LoginEnt loginEnt = new LoginEnt(1, "test");
                 mockSession = new MockHttpSession();
-                mockSession.setAttribute("principalEnt", enterprise);
+                mockSession.setAttribute("loginEnt", loginEnt);
         }
 
         @Test
@@ -63,7 +58,7 @@ public class RecruitmentControllerTest {
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                delete("/recruitment/" + id).session(mockSession));
+                                delete("/recruitment/" + id).session(mockSession).header("Authorization", jwt));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 System.out.println("delete_test : " + responseBody);
 
@@ -77,10 +72,13 @@ public class RecruitmentControllerTest {
         public void detail_test() throws Exception {
                 // given
                 int id = 1;
+                LoginUser loginUser = new LoginUser(1, "test");
+                mockSession = new MockHttpSession();
+                mockSession.setAttribute("loginUser", loginUser);
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                get("/recruitment/detail/" + id));
+                                get("/ns/recruitment/detail/" + id).session(mockSession));
 
                 MvcResult result = resultActions.andReturn();
                 String content = result.getResponse().getContentAsString();
@@ -97,10 +95,10 @@ public class RecruitmentControllerTest {
                 String searchString = "1";
 
                 // when
-                ResultActions resultActions = mvc.perform(post("/recruitment/search")
+                ResultActions resultActions = mvc.perform(post("/ns/recruitment/search")
                                 .content("{\"searchString\": \"" + searchString + "\"}")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .session(mockSession));
+                                .session(mockSession).header("Authorization", jwt));
 
                 // then
                 resultActions.andExpect(jsonPath("$..[0].title").value("프론트엔드 개발자"));
@@ -114,7 +112,8 @@ public class RecruitmentControllerTest {
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                get("/recruitment/" + id + "/updateForm").session(mockSession));
+                                get("/recruitment/" + id + "/updateForm").session(mockSession).header("Authorization",
+                                                jwt));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 System.out.println("data_test : " + responseBody);
 

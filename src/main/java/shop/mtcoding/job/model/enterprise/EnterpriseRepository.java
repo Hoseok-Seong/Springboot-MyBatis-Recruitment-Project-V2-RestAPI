@@ -1,6 +1,7 @@
 package shop.mtcoding.job.model.enterprise;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -16,7 +17,8 @@ public interface EnterpriseRepository {
                         @Param("address") String address,
                         @Param("contact") String contact,
                         @Param("email") String email, @Param("size") String size,
-                        @Param("sector") String sector);
+                        @Param("sector") String sector,
+                        @Param("role") String role);
 
         public int updateById(@Param("id") int id,
                         @Param("password") String password,
@@ -33,6 +35,9 @@ public interface EnterpriseRepository {
         public Enterprise findByName(String enterpriseName);
 
         public Enterprise findByEnterprisenameAndPassword(@Param("enterpriseName") String enterpriseName,
+                        @Param("password") String password);
+
+        public Optional<Enterprise> findByEnterprisenameAndPasswordByJwt(@Param("enterpriseName") String enterpriseName,
                         @Param("password") String password);
 
         public Enterprise findByUserId(int id);

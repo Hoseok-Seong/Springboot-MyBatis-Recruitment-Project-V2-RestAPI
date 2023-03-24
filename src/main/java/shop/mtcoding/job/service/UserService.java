@@ -2,6 +2,7 @@ package shop.mtcoding.job.service;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +27,18 @@ public class UserService {
     private final UserSkillRepository userSkillRepository;
 
     @Transactional(readOnly = true)
-    public User 유저로그인하기(LoginUserReqDto loginUserReqDto) {
+    public Optional<User> 유저로그인하기(LoginUserReqDto loginUserReqDto) {
+
         try {
             String salt = userRepository.findSaltByUsername(loginUserReqDto.getUsername());
             if (salt == null) {
                 throw new CustomApiException("아이디가 존재하지 않습니다");
             }
             String sha256Hash = Sha256Encoder.sha256(loginUserReqDto.getPassword() + salt);
-            User principal = userRepository.findByUsernameAndPassword(loginUserReqDto.getUsername(),
+            Optional<User> loginUser = userRepository.findByUsernameAndPasswordByJwt(loginUserReqDto.getUsername(),
                     sha256Hash);
-            return principal;
+            System.out.println("테스트 : " + loginUser);
+            return loginUser;
         } catch (NoSuchAlgorithmException e) {
             System.err.println("알고리즘을 찾을 수 없습니다: " + e.getMessage());
         }
@@ -55,7 +58,8 @@ public class UserService {
             String salt = SaltEncoder.salt();
             String sha256Hash = Sha256Encoder.sha256(joinUserReqDto.getPassword() + salt);
             int result = userRepository.insert(joinUserReqDto.getUsername(), sha256Hash, salt,
-                    joinUserReqDto.getName(), joinUserReqDto.getEmail(), joinUserReqDto.getContact());
+                    joinUserReqDto.getName(), joinUserReqDto.getEmail(), joinUserReqDto.getContact(),
+                    joinUserReqDto.getRole());
             if (result != 1) {
                 throw new CustomException("회원가입이 실패하였습니다");
             }

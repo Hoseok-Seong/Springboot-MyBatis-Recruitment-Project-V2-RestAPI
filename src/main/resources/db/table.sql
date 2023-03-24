@@ -6,6 +6,7 @@ create table user_tb(
     name varchar(100) not null,
     email varchar(100) not null,
     contact varchar(100) not null,
+    role varchar(100) not null,
     created_at timestamp not null
 );
 
@@ -19,6 +20,7 @@ create table enterprise_tb(
     email varchar(100) not null,
     sector varchar(100) not null,
     size varchar(100) not null,
+    role varchar(100) not null,
     created_at timestamp not null
 );
 

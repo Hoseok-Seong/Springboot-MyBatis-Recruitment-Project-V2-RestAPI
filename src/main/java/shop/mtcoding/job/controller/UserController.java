@@ -1,12 +1,12 @@
 package shop.mtcoding.job.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.aop.UserId;
+import shop.mtcoding.job.config.auth.JwtProvider;
+import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.user.UserReqDto.JoinUserReqDto;
 import shop.mtcoding.job.dto.user.UserReqDto.LoginUserReqDto;
@@ -35,12 +38,7 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    @GetMapping("/loginForm")
-    public String loginForm() {
-        return "login/loginForm";
-    }
-
-    @PostMapping("/user/login")
+    @PostMapping("/ns/user/login")
     public @ResponseBody ResponseEntity<?> userLogin(
             @RequestBody LoginUserReqDto loginUserReqDto, HttpServletResponse response) {
         if (loginUserReqDto.getUsername() == null || loginUserReqDto.getUsername().isEmpty()) {
@@ -50,17 +48,13 @@ public class UserController {
             throw new CustomApiException("비밀번호를 작성해주세요");
         }
         // 1. 로그인하기 service
-        User principal = userService.유저로그인하기(loginUserReqDto);
+        Optional<User> principal = userService.유저로그인하기(loginUserReqDto);
 
-        // 2. session에 저장
-        session.setAttribute("principal", principal);
+        // 2. id, role 세션에 담기
+        LoginUser loginUser = LoginUser.builder().id(principal.get().getId()).role(principal.get().getRole()).build();
+        session.setAttribute("loginUser", loginUser);
 
-        // 3. principal 유효성 검사
-        if (session.getAttribute("principal") == null) {
-            throw new CustomApiException("존재하지 않는 아이디거나 비밀번호를 다시 확인해주시기 바랍니다");
-        }
-
-        // 4. 아이디 기억
+        // 2. 아이디 기억
         if (loginUserReqDto.getRemember().equals("true")) {
             Cookie cookie = new Cookie("remember", loginUserReqDto.getUsername());
             cookie.setPath("/");
@@ -74,7 +68,15 @@ public class UserController {
             response.addCookie(cookie);
         }
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null), HttpStatus.OK);
+        // 3. 토큰 헤더에 저장
+        if (principal.isPresent()) { // 값이 있다면
+            String jwt = JwtProvider.create(principal.get());
+
+            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
+        } else {
+            return ResponseEntity.badRequest().body("로그인 실패");
+        }
+
     }
 
     @GetMapping("/logout")
@@ -83,12 +85,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/joinForm")
-    public String joinForm() {
-        return "join/joinForm";
-    }
-
-    @PostMapping("/user/join")
+    @PostMapping("/ns/user/join")
     public String userJoin(@RequestBody JoinUserReqDto joinUserReqDto,
             @RequestParam(required = false) List<Integer> skill) {
         if (joinUserReqDto.getUsername() == null || joinUserReqDto.getUsername().isEmpty()) {
@@ -112,7 +109,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/user/usernameSameCheck")
+    @GetMapping("/ns/user/usernameSameCheck")
     public @ResponseBody ResponseDto<?> check(@RequestBody JoinUserReqDto joinUserReqDto) {
         if (joinUserReqDto.getUsername() == null || joinUserReqDto.getUsername().isEmpty()) {
             return new ResponseDto<>(-1, "아이디가 입력되지 않았습니다.", null);
@@ -125,19 +122,9 @@ public class UserController {
         }
     }
 
-    @GetMapping("/updateForm")
-    public String updateForm() {
-        return "user/updateForm";
-    }
-
     @PostMapping("/user/update")
     public String userUpdate(@RequestBody UpdateUserReqDto updateUserReqDto,
-            @RequestParam(required = false) List<Integer> skill) {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("회원 인증이 되지 않았습니다. 로그인을 해주세요.", HttpStatus.UNAUTHORIZED);
-        }
-
+            @RequestParam(required = false) List<Integer> skill, @UserId int principalId) {
         if (updateUserReqDto.getPassword() == null || updateUserReqDto.getPassword().isEmpty()) {
             throw new CustomException("비밀번호를 작성해주세요");
         }
@@ -148,7 +135,7 @@ public class UserController {
             throw new CustomException("전화번호를 입력해주세요");
         }
 
-        userService.유저회원정보수정하기(updateUserReqDto, principal.getId(), skill);
+        userService.유저회원정보수정하기(updateUserReqDto, principalId, skill);
         session.invalidate();
 
         return "redirect:/";

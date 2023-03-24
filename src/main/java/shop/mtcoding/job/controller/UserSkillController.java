@@ -18,11 +18,9 @@ public class UserSkillController {
 
     private final UserService userService;
 
-    @PostMapping("/user/skill")
+    @PostMapping("/ns/user/skill")
     public ResponseEntity<?> skill(Integer userId, @RequestParam("skill") List<Integer> skill) {
-
         userService.유저스킬추가(userId, skill);
-
         return new ResponseEntity<>(new ResponseDto<>(1, "유저스킬 추가", null), HttpStatus.OK);
     }
 }

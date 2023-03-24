@@ -44,7 +44,7 @@ public class OAuthController {
         // 3. 존재하지 않을 시, 강제 회원가입 후, 그 user 정보로 session 생성(자동 로그인)
         if (user == null) {
             userRepository.insert("kakao_" + id, UUID.randomUUID().toString(), UUID.randomUUID().toString(), "", email,
-                    "");
+                    "", "");
         } // 처음 가입시 이름 전화번호 공백
 
         // 4. 존재할 시
@@ -75,7 +75,7 @@ public class OAuthController {
         if (enterprise == null) {
             enterpriseRepository.insert("kakao_" + id, UUID.randomUUID().toString(), UUID.randomUUID().toString(), "",
                     "", email,
-                    "", "");
+                    "", "", "");
         } // 처음 가입시 주소 전화번호 size sector 공백
 
         // 4. 존재할 시
