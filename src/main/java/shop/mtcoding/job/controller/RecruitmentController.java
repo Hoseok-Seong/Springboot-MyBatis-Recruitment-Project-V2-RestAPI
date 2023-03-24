@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.config.aop.EntId;
+import shop.mtcoding.job.config.aop.UserId;
 import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.bookmark.BookmartRespDto;
@@ -200,16 +201,16 @@ public class RecruitmentController {
     }
 
     @GetMapping("/recruitment/{id}/updateForm")
-    public ResponseEntity<?> recruitmentUpdateForm(@PathVariable int id) {
+    public ResponseEntity<?> recruitmentUpdateForm(@PathVariable int id, @EntId int principalId) {
         Enterprise principalEnt = (Enterprise) session.getAttribute("principalEnt");
         if (principalEnt == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
         }
-        RecruitmentPost recruitmentPS = recruitmentPostRepository.findById(principalEnt.getId());
+        RecruitmentPost recruitmentPS = recruitmentPostRepository.findById(principalId);
         if (recruitmentPS == null) {
             throw new CustomException("없는 채용공고를 수정할 수 없습니다");
         }
-        if (recruitmentPS.getEnterpriseId() != principalEnt.getId()) {
+        if (recruitmentPS.getEnterpriseId() != principalId) {
             throw new CustomException("채용공고를 수정할 권한이 없습니다", HttpStatus.FORBIDDEN);
         }
 
@@ -224,12 +225,12 @@ public class RecruitmentController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/recruitment/detail/{id}")
-    public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id) {
+    @GetMapping("/ns/recruitment/detail/{id}")
+    public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id, @UserId int principalId) {
         LoginUser principal = (LoginUser) session.getAttribute("loginUser");
         BookmartRespDto bookmartRespDto = new BookmartRespDto();
         if (principal != null) {
-            bookmartRespDto = bookmarkRepository.findByRecruitmentIdAndUserId(id, principal.getId());
+            bookmartRespDto = bookmarkRepository.findByRecruitmentIdAndUserId(id, principalId);
         } else {
             bookmartRespDto = null;
         }
@@ -244,7 +245,7 @@ public class RecruitmentController {
 
         List<Resume> resumeDtos = new ArrayList<>();
         if (principal != null) {
-            resumeDtos = resumeRepository.findByUserId(principal.getId());
+            resumeDtos = resumeRepository.findByUserId(principalId);
         } else {
             resumeDtos = null;
         }

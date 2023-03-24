@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,9 +23,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.job.model.enterprise.Enterprise;
+import shop.mtcoding.job.model.user.User;
 
 @Transactional
 @AutoConfigureMockMvc
@@ -38,6 +42,13 @@ public class RecruitmentControllerTest {
 
         @Autowired
         private ObjectMapper om;
+
+        String jwt = JWT.create()
+                        .withSubject("토큰제목")
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+                        .withClaim("id", 1)
+                        .withClaim("role", "guest")
+                        .sign(Algorithm.HMAC512("Highre"));
 
         @BeforeEach
         public void setUp() {
@@ -65,7 +76,7 @@ public class RecruitmentControllerTest {
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                delete("/recruitment/" + id).session(mockSession));
+                                delete("/recruitment/" + id).session(mockSession).header("Authorization", jwt));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 System.out.println("delete_test : " + responseBody);
 
@@ -79,10 +90,23 @@ public class RecruitmentControllerTest {
         public void detail_test() throws Exception {
                 // given
                 int id = 1;
+                User principal = new User();
+                principal.setId(1);
+                principal.setUsername("ssar");
+                principal.setPassword(
+                                "356067e7d02ead0e9086e3f9e9cef88e8f6ca59222cd180bbf1a6205b7b40631");
+                principal.setSalt("{bcrypt}$2a$10$4h5bhPEcnLEsQ7fe.1Rx5OfeEH0VLV9LE0kDb1WqwWMRsjsCptRmy");
+                principal.setName("김동석");
+                principal.setEmail("ssar@nate.com");
+                principal.setContact("010-1111-2222");
+                principal.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+
+                mockSession = new MockHttpSession();
+                mockSession.setAttribute("principal", principal);
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                get("/recruitment/detail/" + id));
+                                get("/ns/recruitment/detail/" + id).session(mockSession));
 
                 MvcResult result = resultActions.andReturn();
                 String content = result.getResponse().getContentAsString();
@@ -99,10 +123,10 @@ public class RecruitmentControllerTest {
                 String searchString = "1";
 
                 // when
-                ResultActions resultActions = mvc.perform(post("/recruitment/search")
+                ResultActions resultActions = mvc.perform(post("/ns/recruitment/search")
                                 .content("{\"searchString\": \"" + searchString + "\"}")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .session(mockSession));
+                                .session(mockSession).header("Authorization", jwt));
 
                 // then
                 resultActions.andExpect(jsonPath("$..[0].title").value("프론트엔드 개발자"));
@@ -116,7 +140,8 @@ public class RecruitmentControllerTest {
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                get("/recruitment/" + id + "/updateForm").session(mockSession));
+                                get("/recruitment/" + id + "/updateForm").session(mockSession).header("Authorization",
+                                                jwt));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 System.out.println("data_test : " + responseBody);
 

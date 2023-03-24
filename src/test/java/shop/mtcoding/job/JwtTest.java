@@ -1,15 +1,22 @@
 package shop.mtcoding.job;
 
+import java.util.Date;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import shop.mtcoding.job.config.auth.JwtProvider;
 
 public class JwtTest {
+
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @Test
     public void createJwt_test() {
@@ -21,13 +28,14 @@ public class JwtTest {
                 .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .withClaim("id", 1)
                 .withClaim("role", "guest")
-                .sign(Algorithm.HMAC512("메타코딩"));
+                .sign(Algorithm.HMAC512("Highre"));
         System.out.println(jwt);
         // then
     }
 
     @Test
     public void verifyJwt_test() {
+
         // given
         String jwt = JWT.create()
                 .withSubject("토큰제목")
