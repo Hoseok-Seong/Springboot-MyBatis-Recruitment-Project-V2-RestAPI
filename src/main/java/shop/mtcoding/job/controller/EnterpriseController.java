@@ -101,6 +101,9 @@ public class EnterpriseController {
         if (joinEnterpriseReqDto.getSize() == null || joinEnterpriseReqDto.getSize().isEmpty()) {
             throw new CustomException("기업규모를 작성해주세요");
         }
+        if (joinEnterpriseReqDto.getRole() == null || joinEnterpriseReqDto.getRole().isEmpty()) {
+            throw new CustomException("role을 작성해주세요");
+        }
 
         enterpriseService.기업가입하기(joinEnterpriseReqDto);
 

@@ -103,6 +103,9 @@ public class UserController {
         if (joinUserReqDto.getContact() == null || joinUserReqDto.getContact().isEmpty()) {
             throw new CustomException("전화번호를 입력해주세요");
         }
+        if (joinUserReqDto.getRole() == null || joinUserReqDto.getRole().isEmpty()) {
+            throw new CustomException("role을 입력해주세요");
+        }
 
         userService.유저가입하기(joinUserReqDto, skill);
 
