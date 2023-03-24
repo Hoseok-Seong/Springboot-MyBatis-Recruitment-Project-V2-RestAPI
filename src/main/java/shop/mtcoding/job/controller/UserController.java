@@ -1,6 +1,7 @@
 package shop.mtcoding.job.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.job.config.auth.JwtProvider;
+import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.user.UserReqDto.JoinUserReqDto;
 import shop.mtcoding.job.dto.user.UserReqDto.LoginUserReqDto;
@@ -50,13 +53,14 @@ public class UserController {
             throw new CustomApiException("비밀번호를 작성해주세요");
         }
         // 1. 로그인하기 service
-        User principal = userService.유저로그인하기(loginUserReqDto);
+        Optional<User> principal = userService.유저로그인하기(loginUserReqDto);
 
         // 2. session에 저장
-        session.setAttribute("principal", principal);
+        LoginUser loginUser = LoginUser.builder().id(principal.get().getId()).role(principal.get().getRole()).build();
+        session.setAttribute("loginUser", loginUser);
 
         // 3. principal 유효성 검사
-        if (session.getAttribute("principal") == null) {
+        if (session.getAttribute("loginUser") == null) {
             throw new CustomApiException("존재하지 않는 아이디거나 비밀번호를 다시 확인해주시기 바랍니다");
         }
 
@@ -74,7 +78,15 @@ public class UserController {
             response.addCookie(cookie);
         }
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null), HttpStatus.OK);
+        if (principal.isPresent()) { // 값이 있다면
+            String jwt = JwtProvider.create(principal.get());
+
+            return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
+        } else {
+            return ResponseEntity.badRequest().body("로그인 실패");
+        }
+        // return new ResponseEntity<>(new ResponseDto<>(1, "로그인 성공", null),
+        // HttpStatus.OK);
     }
 
     @GetMapping("/logout")
