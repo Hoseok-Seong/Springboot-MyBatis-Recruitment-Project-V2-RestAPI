@@ -49,6 +49,7 @@
 
 - REST API 구현
 - MyBatis ORM 구현
+- Junit 테스트 완료
 
 <br>
 
