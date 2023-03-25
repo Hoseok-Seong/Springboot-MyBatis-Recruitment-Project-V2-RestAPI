@@ -24,7 +24,7 @@ public class OAuthController {
     private final UserRepository userRepository;
     private final EnterpriseRepository enterpriseRepository;
 
-    @GetMapping("/kakao_user_callback")
+    @GetMapping("/ns/kakao_user_callback")
     public ResponseEntity<?> kakaoUserCallback(String code) throws JsonProcessingException {
         // 1. code 값 존재 유무 확인
         if (code == null || code.isEmpty()) {
@@ -56,7 +56,7 @@ public class OAuthController {
         return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
     }
 
-    @GetMapping("/kakao_enterprise_callback")
+    @GetMapping("/ns/kakao_enterprise_callback")
     public ResponseEntity<?> kakaoEnterpriseCallback(String code) throws JsonProcessingException {
         // 1. code 값 존재 유무 확인
         if (code == null || code.isEmpty()) {
