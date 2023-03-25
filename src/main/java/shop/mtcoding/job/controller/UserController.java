@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.config.aop.UserId;
 import shop.mtcoding.job.config.auth.JwtProvider;
-import shop.mtcoding.job.config.auth.LoginUser;
 import shop.mtcoding.job.dto.ResponseDto;
 import shop.mtcoding.job.dto.user.UserReqDto.JoinUserReqDto;
 import shop.mtcoding.job.dto.user.UserReqDto.LoginUserReqDto;
@@ -34,8 +32,6 @@ import shop.mtcoding.job.service.UserService;
 public class UserController {
     private final UserService userService;
 
-    private final HttpSession session;
-
     private final UserRepository userRepository;
 
     @PostMapping("/ns/user/login")
@@ -49,10 +45,6 @@ public class UserController {
         }
         // 1. 로그인하기 service
         Optional<User> principal = userService.유저로그인하기(loginUserReqDto);
-
-        // 2. id, role 세션에 담기
-        LoginUser loginUser = LoginUser.builder().id(principal.get().getId()).role(principal.get().getRole()).build();
-        session.setAttribute("loginUser", loginUser);
 
         // 2. 아이디 기억
         if (loginUserReqDto.getRemember().equals("true")) {
@@ -71,18 +63,10 @@ public class UserController {
         // 3. 토큰 헤더에 저장
         if (principal.isPresent()) { // 값이 있다면
             String jwt = JwtProvider.create(principal.get());
-
             return ResponseEntity.ok().header(JwtProvider.HEADER, jwt).body("로그인 성공");
         } else {
             return ResponseEntity.badRequest().body("로그인 실패");
         }
-
-    }
-
-    @GetMapping("/logout")
-    public String logout() {
-        session.invalidate();
-        return "redirect:/";
     }
 
     @PostMapping("/ns/user/join")
@@ -103,9 +87,11 @@ public class UserController {
         if (joinUserReqDto.getContact() == null || joinUserReqDto.getContact().isEmpty()) {
             throw new CustomException("전화번호를 입력해주세요");
         }
+        if (joinUserReqDto.getRole() == null || joinUserReqDto.getRole().isEmpty()) {
+            throw new CustomException("role을 입력해주세요");
+        }
 
         userService.유저가입하기(joinUserReqDto, skill);
-
         return "redirect:/";
     }
 
@@ -136,8 +122,6 @@ public class UserController {
         }
 
         userService.유저회원정보수정하기(updateUserReqDto, principalId, skill);
-        session.invalidate();
-
         return "redirect:/";
     }
 }

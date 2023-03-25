@@ -76,7 +76,7 @@ public class ApplyControllerTest {
                 // when
                 ResultActions resultActions = mvc.perform(
                                 post("/apply/" + id).content(requestBody)
-                                                .header("Authorization", jwt)
+                                                .header("Authorization", jwt).session(mockSession)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
                 // then

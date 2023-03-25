@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import shop.mtcoding.job.config.auth.JwtProvider;
+import shop.mtcoding.job.config.auth.LoginEnt;
 import shop.mtcoding.job.config.auth.LoginUser;
 
 import javax.servlet.*;
@@ -30,10 +31,17 @@ public class JwtVerifyFilter implements Filter {
                 int id = decodedJWT.getClaim("id").asInt();
                 String role = decodedJWT.getClaim("role").asString();
 
-                // 내부적으로 권한처리
-                HttpSession session = req.getSession();
-                LoginUser loginUser = LoginUser.builder().id(id).role(role).build();
-                session.setAttribute("loginUser", loginUser);
+                if (role == "user") {
+                    HttpSession session = req.getSession();
+                    LoginUser loginUser = LoginUser.builder().id(id).role(role).build();
+                    session.setAttribute("loginUser", loginUser);
+                }
+
+                if (role == "enterprise") {
+                    HttpSession session = req.getSession();
+                    LoginEnt loginEnt = LoginEnt.builder().id(id).role(role).build();
+                    session.setAttribute("loginEnt", loginEnt);
+                }
                 chain.doFilter(req, resp);
             } catch (SignatureVerificationException sve) {
                 resp.setStatus(401);
