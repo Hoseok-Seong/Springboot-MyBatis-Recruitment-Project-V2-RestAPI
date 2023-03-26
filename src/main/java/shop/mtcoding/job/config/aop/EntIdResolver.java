@@ -3,6 +3,7 @@ package shop.mtcoding.job.config.aop;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -12,6 +13,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.job.config.auth.LoginEnt;
+import shop.mtcoding.job.handler.exception.CustomApiException;
 
 @Component
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class EntIdResolver implements HandlerMethodArgumentResolver {
             NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
         if (session != null) {
             if (session.getAttribute("loginEnt") == null) {
-                return null;
+                throw new CustomApiException("기업회원으로 로그인해주세요", HttpStatus.BAD_REQUEST);
             } else {
                 LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
                 return loginEnt.getId();
