@@ -110,7 +110,7 @@ public class UserController {
 
     @PostMapping("/user/update")
     public String userUpdate(@RequestBody UpdateUserReqDto updateUserReqDto,
-            @RequestParam(required = false) List<Integer> skill, @UserId int principalId) {
+            @RequestParam(required = false) List<Integer> skill, @UserId Integer principalId) {
         if (updateUserReqDto.getPassword() == null || updateUserReqDto.getPassword().isEmpty()) {
             throw new CustomException("비밀번호를 작성해주세요");
         }

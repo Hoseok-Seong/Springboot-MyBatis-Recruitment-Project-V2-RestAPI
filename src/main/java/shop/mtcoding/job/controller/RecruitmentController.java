@@ -61,14 +61,14 @@ public class RecruitmentController {
     private final ResumeRepository resumeRepository;
 
     @DeleteMapping("/recruitment/{id}")
-    public @ResponseBody ResponseEntity<?> delete(@PathVariable int id, @EntId int principalId) {
+    public @ResponseBody ResponseEntity<?> delete(@PathVariable int id, @EntId Integer principalId) {
         recruitmentService.채용공고삭제(id, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 삭제 성공", null), HttpStatus.OK);
     }
 
     @PutMapping("/recruitment/{id}")
     public @ResponseBody ResponseEntity<?> updateRecruitmentPost(@PathVariable int id,
-            @RequestBody UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto, @EntId int principalId) {
+            @RequestBody UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto, @EntId Integer principalId) {
         LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
         if (loginEnt == null) {
             throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
@@ -130,7 +130,7 @@ public class RecruitmentController {
 
     @PostMapping("/recruitment")
     public @ResponseBody ResponseEntity<?> saveRecruitmentPost(
-            @RequestBody SaveRecruitmentPostReqDto saveRecruitmentPostReqDto, @EntId int principalId) {
+            @RequestBody SaveRecruitmentPostReqDto saveRecruitmentPostReqDto, @EntId Integer principalId) {
         LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
         if (loginEnt == null) {
             throw new CustomApiException("로그인을 먼저 해주세요", HttpStatus.UNAUTHORIZED);
@@ -224,7 +224,7 @@ public class RecruitmentController {
     }
 
     @GetMapping("/ns/recruitment/detail/{id}")
-    public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id, @UserId int principalId) {
+    public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id, @UserId Integer principalId) {
         LoginUser principal = (LoginUser) session.getAttribute("loginUser");
 
         BookmartRespDto bookmartRespDto = new BookmartRespDto();

@@ -30,26 +30,26 @@ public class ResumeController {
     private final ResumeRepository resumeRepository;
 
     @GetMapping("/resumes")
-    public @ResponseBody ResponseEntity<?> resumeList(@UserId int principalId) {
+    public @ResponseBody ResponseEntity<?> resumeList(@UserId Integer principalId) {
         List<Resume> resumeList = resumeRepository.findByUserId(principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 목록 보기 완료", resumeList), HttpStatus.OK);
     }
 
     @PostMapping("/resume")
-    public @ResponseBody ResponseEntity<?> save(@RequestBody SaveResumeDto saveResumeDto, @UserId int principalId) {
+    public @ResponseBody ResponseEntity<?> save(@RequestBody SaveResumeDto saveResumeDto, @UserId Integer principalId) {
         resumeService.이력서쓰기(saveResumeDto, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 쓰기 성공", null), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/resume/{id}")
-    public @ResponseBody ResponseEntity<?> delete(@PathVariable int id, @UserId int principalId) {
+    public @ResponseBody ResponseEntity<?> delete(@PathVariable int id, @UserId Integer principalId) {
         resumeService.이력서삭제(id, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 삭제 성공", null), HttpStatus.OK);
     }
 
     @PutMapping("/resume/{id}")
     public @ResponseBody ResponseEntity<?> update(@PathVariable int id,
-            @RequestBody UpdateResumeDto updateResumeDto, @UserId int principalId) throws Exception {
+            @RequestBody UpdateResumeDto updateResumeDto, @UserId Integer principalId) throws Exception {
         resumeService.이력서수정(id, updateResumeDto, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 수정 성공", null), HttpStatus.OK);
     }

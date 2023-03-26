@@ -7,19 +7,16 @@ import javax.servlet.http.HttpSession;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 @Component
 public class CustomInterceptor implements HandlerInterceptor {
 
-    private final HttpSession session;
-
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-            @Nullable ModelAndView modelAndView) throws Exception {
-        session.invalidate();
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
+            @Nullable Exception ex) throws Exception {
+        HttpSession session = request.getSession(false); // getSession(false)로 세션이 없을 경우 null을 반환하도록 설정
+        if (session != null) {
+            session.invalidate();
+        }
     }
 }

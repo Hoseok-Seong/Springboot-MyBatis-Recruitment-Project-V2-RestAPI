@@ -20,7 +20,7 @@ public class FilterRegisterConfig {
         registration.setOrder(1);
 
         Map<String, String> initParameters = new HashMap<>();
-        initParameters.put("exclusions", "/ns/*"); // 제외할 URL 패턴 설정
+        initParameters.put("exclusions", "/ns/**"); // 제외할 URL 패턴 설정
         registration.setInitParameters(initParameters);
 
         return registration;
