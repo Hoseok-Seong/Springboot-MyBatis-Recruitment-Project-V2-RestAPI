@@ -58,7 +58,7 @@ public class RecruitmentControllerTest {
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                delete("/recruitment/" + id).session(mockSession).header("Authorization", jwt));
+                                delete("/recruitments/" + id).session(mockSession).header("Authorization", jwt));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 System.out.println("delete_test : " + responseBody);
 
@@ -78,7 +78,7 @@ public class RecruitmentControllerTest {
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                get("/ns/recruitment/detail/" + id).session(mockSession));
+                                get("/ns/recruitments/detail/" + id).session(mockSession));
 
                 MvcResult result = resultActions.andReturn();
                 String content = result.getResponse().getContentAsString();
@@ -95,7 +95,7 @@ public class RecruitmentControllerTest {
                 String searchString = "1";
 
                 // when
-                ResultActions resultActions = mvc.perform(post("/ns/recruitment/search")
+                ResultActions resultActions = mvc.perform(post("/ns/recruitments/search")
                                 .content("{\"searchString\": \"" + searchString + "\"}")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .session(mockSession).header("Authorization", jwt));
@@ -112,7 +112,7 @@ public class RecruitmentControllerTest {
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                get("/recruitment/" + id + "/updateForm").session(mockSession).header("Authorization",
+                                get("/recruitments/" + id + "/updateForm").session(mockSession).header("Authorization",
                                                 jwt));
                 String responseBody = resultActions.andReturn().getResponse().getContentAsString();
                 System.out.println("data_test : " + responseBody);

@@ -28,21 +28,21 @@ public class EntPageController {
 
     private final BookmarkRepository bookmarkRepository;
 
-    @GetMapping("/myapplicant")
+    @GetMapping("/myapplicants")
     public @ResponseBody ResponseEntity<?> myapplicant(@EntId Integer principalId) {
         List<EntPageMyApplicantRespDto> myApplicantRespDtos = applyRepository
                 .findByEnterpriseIdJoinApplyResume(principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "인증 성공", myApplicantRespDtos), HttpStatus.OK);
     }
 
-    @GetMapping("/myrecommend")
+    @GetMapping("/myrecommends")
     public @ResponseBody ResponseEntity<?> myrecommend(@EntId Integer principalId) {
         List<EntPageMyRecommendRespDto> myrecommendRespDto = recruitmentSkillRepository
                 .enterpriseMatching(principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "인증 성공", myrecommendRespDto), HttpStatus.OK);
     }
 
-    @GetMapping("/mybookmarkEnt")
+    @GetMapping("/mybookmarksEnt")
     public @ResponseBody ResponseEntity<?> mybookmark(@EntId Integer principalId) {
         List<EntPageMyBookmarkRespDto> mybookmarkEntRespDto = bookmarkRepository
                 .findByEnterpriseId(principalId);

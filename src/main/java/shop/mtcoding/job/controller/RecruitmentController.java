@@ -60,13 +60,13 @@ public class RecruitmentController {
 
     private final ResumeRepository resumeRepository;
 
-    @DeleteMapping("/recruitment/{id}")
+    @DeleteMapping("/recruitments/{id}")
     public @ResponseBody ResponseEntity<?> delete(@PathVariable int id, @EntId Integer principalId) {
         recruitmentService.채용공고삭제(id, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 삭제 성공", null), HttpStatus.OK);
     }
 
-    @PutMapping("/recruitment/{id}")
+    @PutMapping("/recruitments/{id}")
     public @ResponseBody ResponseEntity<?> updateRecruitmentPost(@PathVariable int id,
             @RequestBody UpdateRecruitmentPostReqDto updateRecruitmentPostReqDto, @EntId Integer principalId) {
         LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
@@ -128,7 +128,7 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 수정 성공", null), HttpStatus.CREATED);
     }
 
-    @PostMapping("/recruitment")
+    @PostMapping("/recruitments")
     public @ResponseBody ResponseEntity<?> saveRecruitmentPost(
             @RequestBody SaveRecruitmentPostReqDto saveRecruitmentPostReqDto, @EntId Integer principalId) {
         LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
@@ -190,7 +190,7 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "채용공고 작성 성공", null), HttpStatus.CREATED);
     }
 
-    @GetMapping("/recruitment/saveForm")
+    @GetMapping("/recruitments/saveForm")
     public String recruitmentSaveForm() {
         LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
         if (loginEnt == null) {
@@ -199,7 +199,7 @@ public class RecruitmentController {
         return "recruitment/saveForm";
     }
 
-    @GetMapping("/recruitment/{id}/updateForm")
+    @GetMapping("/recruitments/{id}/updateForm")
     public ResponseEntity<?> recruitmentUpdateForm(@PathVariable int id, @EntId Integer principalId) {
         if (principalId == null) {
             throw new CustomException("기업회원으로 로그인을 해주세요", HttpStatus.UNAUTHORIZED);
@@ -223,7 +223,7 @@ public class RecruitmentController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/ns/recruitment/detail/{id}")
+    @GetMapping("/ns/recruitments/detail/{id}")
     public ResponseEntity<?> recruitmentPostDetail(@PathVariable int id, @UserId Integer principalId) {
         LoginUser principal = (LoginUser) session.getAttribute("loginUser");
 
@@ -255,7 +255,7 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "상세보기 페이지 성공", recruitmentDetailPageDto), HttpStatus.OK);
     }
 
-    @GetMapping("/ns/recruitment/list")
+    @GetMapping("/ns/recruitments/list")
     public ResponseEntity<?> recruitmentPostList() {
         List<RecruitmentPostListRespDto> posts = recruitmentPostRepository.findByPost();
         // d-day 계산
@@ -266,7 +266,7 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "게시글 목록", posts), HttpStatus.OK);
     }
 
-    @PostMapping("/ns/recruitment/search")
+    @PostMapping("/ns/recruitments/search")
     public ResponseEntity<?> searchList(@RequestBody RecruitmentPostSearchRespDto recruitmentPostSearchRespDto) {
         List<RecruitmentPostSearchRespDto> postPSList = recruitmentService.채용정보검색(recruitmentPostSearchRespDto);
 
@@ -278,7 +278,7 @@ public class RecruitmentController {
         return new ResponseEntity<>(new ResponseDto<>(1, "검색 성공", postPSList), HttpStatus.OK);
     }
 
-    @PostMapping("/ns/recruitment/category")
+    @PostMapping("/ns/recruitments/category")
     public ResponseEntity<?> category(@RequestBody RecruitmentPostCategoryRespDto recruitmentPostCategoryRespDto) {
         List<RecruitmentPostCategoryRespDto> postPSList = recruitmentService.카테고리검색(recruitmentPostCategoryRespDto);
 

@@ -29,7 +29,7 @@ public class ApplyController {
 
     private final RecruitmentPostRepository recruitmentPostRepository;
 
-    @PostMapping("/apply/{id}")
+    @PostMapping("/applications/{id}")
     public @ResponseBody ResponseEntity<?> insertApply(@RequestBody InsertApplyReqDto insertApplyReqDto,
             @PathVariable int id, @UserId Integer principalId) {
 
@@ -47,13 +47,13 @@ public class ApplyController {
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 제출 성공", null), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/apply/{id}")
+    @DeleteMapping("/applications/{id}")
     public @ResponseBody ResponseEntity<?> deleteApply(@PathVariable int id, @UserId Integer principalId) {
         applyService.이력서제출취소(id, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "지원서 삭제 성공", null), HttpStatus.OK);
     }
 
-    @PutMapping("/apply/result/{id}")
+    @PutMapping("/applications/result/{id}")
     public @ResponseBody ResponseEntity<?> updateResult(
             @RequestBody UpdateApplicantResultReqDto updateApplicantResultReqDto, @PathVariable int id,
             @EntId Integer principalId) {

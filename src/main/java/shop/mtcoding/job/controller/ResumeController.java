@@ -35,19 +35,19 @@ public class ResumeController {
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 목록 보기 완료", resumeList), HttpStatus.OK);
     }
 
-    @PostMapping("/resume")
+    @PostMapping("/resumes")
     public @ResponseBody ResponseEntity<?> save(@RequestBody SaveResumeDto saveResumeDto, @UserId Integer principalId) {
         resumeService.이력서쓰기(saveResumeDto, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 쓰기 성공", null), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/resume/{id}")
+    @DeleteMapping("/resumes/{id}")
     public @ResponseBody ResponseEntity<?> delete(@PathVariable int id, @UserId Integer principalId) {
         resumeService.이력서삭제(id, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 삭제 성공", null), HttpStatus.OK);
     }
 
-    @PutMapping("/resume/{id}")
+    @PutMapping("/resumes/{id}")
     public @ResponseBody ResponseEntity<?> update(@PathVariable int id,
             @RequestBody UpdateResumeDto updateResumeDto, @UserId Integer principalId) throws Exception {
         resumeService.이력서수정(id, updateResumeDto, principalId);

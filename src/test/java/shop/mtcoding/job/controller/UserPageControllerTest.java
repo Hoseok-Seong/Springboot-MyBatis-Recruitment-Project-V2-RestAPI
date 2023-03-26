@@ -51,7 +51,7 @@ public class UserPageControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/myapply").session(mockSession).header("Authorization", jwt));
+                get("/myapplications").session(mockSession).header("Authorization", jwt));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
 
         System.out.println("테스트 : " + responseBody);
@@ -66,7 +66,7 @@ public class UserPageControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mymatching").session(mockSession).header("Authorization", jwt));
+                get("/mymatches").session(mockSession).header("Authorization", jwt));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
 
         System.out.println("테스트 : " + responseBody);
@@ -78,7 +78,7 @@ public class UserPageControllerTest {
     @Test
     public void bookmark_test() throws Exception {
         ResultActions resultActions = mvc.perform(
-                get("/mybookmark").session(mockSession).header("Authorization", jwt));
+                get("/mybookmarks").session(mockSession).header("Authorization", jwt));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
 
         System.out.println("테스트 : " + responseBody);

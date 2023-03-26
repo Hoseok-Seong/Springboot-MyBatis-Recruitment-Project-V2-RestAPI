@@ -51,7 +51,7 @@ public class EntPageControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/myapplicant").session(mockSession).header("Authorization", jwt));
+                get("/myapplicants").session(mockSession).header("Authorization", jwt));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("data_test : " + responseBody);
 
@@ -66,7 +66,7 @@ public class EntPageControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/myrecommend").session(mockSession).header("Authorization", jwt));
+                get("/myrecommends").session(mockSession).header("Authorization", jwt));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("data_test : " + responseBody);
 
@@ -81,7 +81,7 @@ public class EntPageControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(
-                get("/mybookmarkEnt").session(mockSession).header("Authorization", jwt));
+                get("/mybookmarksEnt").session(mockSession).header("Authorization", jwt));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("data_test : " + responseBody);
 

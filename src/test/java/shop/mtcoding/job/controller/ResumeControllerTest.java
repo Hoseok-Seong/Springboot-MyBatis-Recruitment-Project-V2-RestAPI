@@ -104,7 +104,7 @@ public class ResumeControllerTest {
         String requestBody = om.writeValueAsString(resume);
         // when
         ResultActions resultActions = mvc.perform(
-                post("/resume").content(requestBody).contentType(MediaType.APPLICATION_JSON_VALUE)
+                post("/resumes").content(requestBody).contentType(MediaType.APPLICATION_JSON_VALUE)
                         .session(mockSession).header("Authorization", jwt));
 
         // then
@@ -136,7 +136,7 @@ public class ResumeControllerTest {
 
         // WHEN
         ResultActions resultActions = mvc.perform(
-                put("/resume/" + id)
+                put("/resumes/" + id)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .session(mockSession).header("Authorization", jwt));
@@ -151,7 +151,7 @@ public class ResumeControllerTest {
         int id = 1;
         // when
         ResultActions resultActions = mvc.perform(
-                delete("/resume/" + id)
+                delete("/resumes/" + id)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .session(mockSession).header("Authorization", jwt));
 
