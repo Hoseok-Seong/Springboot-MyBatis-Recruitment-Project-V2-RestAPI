@@ -113,7 +113,8 @@ public class EnterpriseController {
     }
 
     @PostMapping("/enterprise/update")
-    public String enterpriseUpdate(@RequestBody UpdateEnterpriseReqDto updateEnterpriseReqDto, @EntId int principalId) {
+    public String enterpriseUpdate(@RequestBody UpdateEnterpriseReqDto updateEnterpriseReqDto,
+            @EntId Integer principalId) {
         if (updateEnterpriseReqDto.getPassword() == null || updateEnterpriseReqDto.getPassword().isEmpty()) {
             throw new CustomException("비밀번호를 작성해주세요");
         }

@@ -27,7 +27,7 @@ public class SseController {
 
     @GetMapping(value = "/notify", produces = "text/event-stream")
     public @ResponseBody ResponseEntity<?> notify(HttpServletRequest request, HttpServletResponse response,
-            @UserId int principalId)
+            @UserId Integer principalId)
             throws IOException {
         SseEmitter emitter = new SseEmitter();
         CompletableFuture.runAsync(() -> {

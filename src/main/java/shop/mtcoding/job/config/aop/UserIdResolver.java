@@ -22,8 +22,15 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
     @Nullable
     public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-        LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
-        return loginUser.getId();
+        if (session != null) {
+            if (session.getAttribute("loginUser") == null) {
+                return null;
+            } else {
+                LoginUser loginUser = (LoginUser) session.getAttribute("loginUser");
+                return loginUser.getId();
+            }
+        }
+        return null;
     }
 
     @Override

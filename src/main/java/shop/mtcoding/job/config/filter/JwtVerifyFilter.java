@@ -1,17 +1,23 @@
 package shop.mtcoding.job.config.filter;
 
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import shop.mtcoding.job.config.auth.JwtProvider;
-import shop.mtcoding.job.config.auth.LoginEnt;
-import shop.mtcoding.job.config.auth.LoginUser;
+import java.io.IOException;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import shop.mtcoding.job.config.auth.JwtProvider;
+import shop.mtcoding.job.config.auth.LoginEnt;
+import shop.mtcoding.job.config.auth.LoginUser;
 
 public class JwtVerifyFilter implements Filter {
 
@@ -31,13 +37,13 @@ public class JwtVerifyFilter implements Filter {
                 int id = decodedJWT.getClaim("id").asInt();
                 String role = decodedJWT.getClaim("role").asString();
 
-                if (role == "user") {
+                if (role.equals("user")) {
                     HttpSession session = req.getSession();
                     LoginUser loginUser = LoginUser.builder().id(id).role(role).build();
                     session.setAttribute("loginUser", loginUser);
                 }
 
-                if (role == "enterprise") {
+                if (role.equals("enterprise")) {
                     HttpSession session = req.getSession();
                     LoginEnt loginEnt = LoginEnt.builder().id(id).role(role).build();
                     session.setAttribute("loginEnt", loginEnt);

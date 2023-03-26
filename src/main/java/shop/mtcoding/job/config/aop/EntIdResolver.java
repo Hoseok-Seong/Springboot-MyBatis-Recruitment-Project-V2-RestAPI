@@ -22,8 +22,15 @@ public class EntIdResolver implements HandlerMethodArgumentResolver {
     @Nullable
     public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
-        LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
-        return loginEnt.getId();
+        if (session != null) {
+            if (session.getAttribute("loginEnt") == null) {
+                return null;
+            } else {
+                LoginEnt loginEnt = (LoginEnt) session.getAttribute("loginEnt");
+                return loginEnt.getId();
+            }
+        }
+        return null;
     }
 
     @Override

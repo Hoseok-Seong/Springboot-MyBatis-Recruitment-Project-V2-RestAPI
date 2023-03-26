@@ -18,7 +18,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final UserIdResolver userIdResolver;
     private final EntIdResolver entIdResolver;
-    private final CustomInterceptor customInterceptor;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
@@ -28,8 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(customInterceptor)
-                .excludePathPatterns("/ns/*");
+        registry.addInterceptor(new CustomInterceptor())
+                .excludePathPatterns("/ns/**");
     }
-
 }

@@ -31,7 +31,7 @@ public class ApplyController {
 
     @PostMapping("/apply/{id}")
     public @ResponseBody ResponseEntity<?> insertApply(@RequestBody InsertApplyReqDto insertApplyReqDto,
-            @PathVariable int id, @UserId int principalId) {
+            @PathVariable int id, @UserId Integer principalId) {
 
         RecruitmentPostDetailRespDto recruitmentPostDto = recruitmentPostRepository.findByIdWithEnterpriseId(
                 id);
@@ -48,7 +48,7 @@ public class ApplyController {
     }
 
     @DeleteMapping("/apply/{id}")
-    public @ResponseBody ResponseEntity<?> deleteApply(@PathVariable int id, @UserId int principalId) {
+    public @ResponseBody ResponseEntity<?> deleteApply(@PathVariable int id, @UserId Integer principalId) {
         applyService.이력서제출취소(id, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "지원서 삭제 성공", null), HttpStatus.OK);
     }
@@ -56,7 +56,7 @@ public class ApplyController {
     @PutMapping("/apply/result/{id}")
     public @ResponseBody ResponseEntity<?> updateResult(
             @RequestBody UpdateApplicantResultReqDto updateApplicantResultReqDto, @PathVariable int id,
-            @EntId int principalId) {
+            @EntId Integer principalId) {
         applyService.합격불합격(id, updateApplicantResultReqDto, principalId);
         return new ResponseEntity<>(new ResponseDto<>(1, "처리 성공", null), HttpStatus.OK);
     }
