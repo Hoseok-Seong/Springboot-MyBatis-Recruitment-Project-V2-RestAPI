@@ -72,7 +72,7 @@ public class RecruitmentControllerTest {
         public void detail_test() throws Exception {
                 // given
                 int id = 1;
-                LoginUser loginUser = new LoginUser(1, "test");
+                LoginUser loginUser = new LoginUser(1, "user");
                 mockSession = new MockHttpSession();
                 mockSession.setAttribute("loginUser", loginUser);
 

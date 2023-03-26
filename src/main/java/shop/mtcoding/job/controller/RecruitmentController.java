@@ -229,7 +229,7 @@ public class RecruitmentController {
 
         BookmartRespDto bookmartRespDto = new BookmartRespDto();
         if (principal != null) {
-            bookmartRespDto = bookmarkRepository.findByRecruitmentIdAndUserId(id, principalId);
+            bookmartRespDto = bookmarkRepository.findByRecruitmentIdAndUserId(id, principal.getId());
         } else {
             bookmartRespDto = null;
         }

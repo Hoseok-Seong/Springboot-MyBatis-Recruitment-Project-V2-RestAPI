@@ -28,7 +28,7 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String requestURI = request.getRequestURI();
         if (session != null) {
-            if (requestURI.matches("/ns/recruitment/detail/.*")) {
+            if (session.getAttribute("loginUser") == null && requestURI.matches("/ns/recruitment/detail/.*")) {
                 return null;
             }
             if (session.getAttribute("loginUser") == null) {
