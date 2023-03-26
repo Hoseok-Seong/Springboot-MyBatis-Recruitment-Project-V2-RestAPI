@@ -1,5 +1,6 @@
 package shop.mtcoding.job.config.aop;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.core.MethodParameter;
@@ -24,7 +25,12 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
     @Nullable
     public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception {
+        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        String requestURI = request.getRequestURI();
         if (session != null) {
+            if (requestURI.matches("/ns/recruitment/detail/.*")) {
+                return null;
+            }
             if (session.getAttribute("loginUser") == null) {
                 throw new CustomApiException("개인회원으로 로그인해주세요", HttpStatus.BAD_REQUEST);
             } else {
