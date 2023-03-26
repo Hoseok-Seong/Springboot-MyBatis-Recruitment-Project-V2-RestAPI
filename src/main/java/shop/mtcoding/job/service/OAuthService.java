@@ -26,7 +26,7 @@ public class OAuthService {
         MultiValueMap<String, String> xForm = new LinkedMultiValueMap<>();
         xForm.add("grant_type", "authorization_code");
         xForm.add("client_id", "071439854cd251579034dfdc2efbbf62");
-        xForm.add("redirect_uri", "http://localhost:8080/kakao_user_callback"); // 2차 검증
+        xForm.add("redirect_uri", "http://localhost:8080/ns/kakao_user_callback"); // 2차 검증
         xForm.add("code", code); // 핵심
 
         // 3. ACCESS 토큰 받기, 카카오의 유저의 resource 접근 가능해짐
@@ -56,7 +56,7 @@ public class OAuthService {
         MultiValueMap<String, String> xForm = new LinkedMultiValueMap<>();
         xForm.add("grant_type", "authorization_code");
         xForm.add("client_id", "071439854cd251579034dfdc2efbbf62");
-        xForm.add("redirect_uri", "http://localhost:8080/kakao_enterprise_callback"); // 2차 검증
+        xForm.add("redirect_uri", "http://localhost:8080/ns/kakao_enterprise_callback"); // 2차 검증
         xForm.add("code", code); // 핵심
 
         // 3. ACCESS 토큰 받기, 카카오의 유저의 resource 접근 가능해짐
