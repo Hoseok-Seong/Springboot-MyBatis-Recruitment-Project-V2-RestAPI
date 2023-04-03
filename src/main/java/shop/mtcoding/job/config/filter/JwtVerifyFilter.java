@@ -29,10 +29,11 @@ public class JwtVerifyFilter implements Filter {
 
         // 요청 URL 가져오기
         String requestUri = req.getRequestURI();
-        if (!requestUri.startsWith("/ns/")) {
-            String prefixJwt = req.getHeader(JwtProvider.HEADER);
-            String jwt = prefixJwt.replace(JwtProvider.TOKEN_PREFIX, "");
+        if (JwtInterface.whiteUrlList.stream().noneMatch(url -> requestUri.startsWith(url))) {
+
             try {
+                String prefixJwt = req.getHeader(JwtProvider.HEADER);
+                String jwt = prefixJwt.replace(JwtProvider.TOKEN_PREFIX, "");
                 DecodedJWT decodedJWT = JwtProvider.verify(jwt);
                 int id = decodedJWT.getClaim("id").asInt();
                 String role = decodedJWT.getClaim("role").asString();
@@ -49,7 +50,7 @@ public class JwtVerifyFilter implements Filter {
                     session.setAttribute("loginEnt", loginEnt);
                 }
                 chain.doFilter(req, resp);
-            } catch (SignatureVerificationException sve) {
+            } catch (NullPointerException | SignatureVerificationException sve) {
                 resp.setStatus(401);
                 resp.setContentType("text/plain; charset=utf-8");
                 resp.getWriter().println("검증 실패 : 로그인 재요청");

@@ -25,7 +25,7 @@ import shop.mtcoding.job.model.apply.ApplyRepository;
 public class SseController {
     private final ApplyRepository applyRepository;
 
-    @GetMapping(value = "/notify", produces = "text/event-stream")
+    @GetMapping(value = "/notifications", produces = "text/event-stream")
     public @ResponseBody ResponseEntity<?> notify(HttpServletRequest request, HttpServletResponse response,
             @UserId Integer principalId)
             throws IOException {

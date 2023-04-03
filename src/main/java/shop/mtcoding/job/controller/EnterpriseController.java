@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -32,7 +33,7 @@ public class EnterpriseController {
 
     private final EnterpriseRepository enterpriseRepository;
 
-    @PostMapping("/ns/enterprise/login")
+    @PostMapping("/ns/enterprises/login")
     public @ResponseBody ResponseEntity<?> enterpriseLogin(@RequestBody LoginEnterpriseReqDto loginEnterpriseReqDto,
             HttpServletResponse response) {
         if (loginEnterpriseReqDto.getEnterpriseName() == null || loginEnterpriseReqDto.getEnterpriseName().isEmpty()) {
@@ -68,7 +69,7 @@ public class EnterpriseController {
         }
     }
 
-    @PostMapping("/ns/enterprise/join")
+    @PostMapping("/ns/enterprises/join")
     public String enterpriseJoin(@RequestBody JoinEnterpriseReqDto joinEnterpriseReqDto) {
         if (joinEnterpriseReqDto.getEnterpriseName() == null || joinEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             throw new CustomException("아이디를 작성해주세요");
@@ -99,7 +100,7 @@ public class EnterpriseController {
         return "redirect:/";
     }
 
-    @GetMapping("/ns/enterprise/enterpriseNameSameCheckEnt")
+    @GetMapping("/ns/enterprises/enterpriseNameSameCheckEnt")
     public @ResponseBody ResponseDto<?> check(@RequestBody LoginEnterpriseReqDto loginEnterpriseReqDto) {
         if (loginEnterpriseReqDto.getEnterpriseName() == null || loginEnterpriseReqDto.getEnterpriseName().isEmpty()) {
             return new ResponseDto<>(-1, "아이디가 입력되지 않았습니다.", null);
@@ -112,7 +113,7 @@ public class EnterpriseController {
         }
     }
 
-    @PostMapping("/enterprise/update")
+    @PutMapping("/enterprises")
     public String enterpriseUpdate(@RequestBody UpdateEnterpriseReqDto updateEnterpriseReqDto,
             @EntId Integer principalId) {
         if (updateEnterpriseReqDto.getPassword() == null || updateEnterpriseReqDto.getPassword().isEmpty()) {

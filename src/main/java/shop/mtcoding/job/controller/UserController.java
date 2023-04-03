@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,7 +35,7 @@ public class UserController {
 
     private final UserRepository userRepository;
 
-    @PostMapping("/ns/user/login")
+    @PostMapping("/ns/users/login")
     public @ResponseBody ResponseEntity<?> userLogin(
             @RequestBody LoginUserReqDto loginUserReqDto, HttpServletResponse response) {
         if (loginUserReqDto.getUsername() == null || loginUserReqDto.getUsername().isEmpty()) {
@@ -69,7 +70,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/ns/user/join")
+    @PostMapping("/ns/users/join")
     public String userJoin(@RequestBody JoinUserReqDto joinUserReqDto,
             @RequestParam(required = false) List<Integer> skill) {
         if (joinUserReqDto.getUsername() == null || joinUserReqDto.getUsername().isEmpty()) {
@@ -95,7 +96,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @GetMapping("/ns/user/usernameSameCheck")
+    @GetMapping("/ns/users/usernameSameCheck")
     public @ResponseBody ResponseDto<?> check(@RequestBody JoinUserReqDto joinUserReqDto) {
         if (joinUserReqDto.getUsername() == null || joinUserReqDto.getUsername().isEmpty()) {
             return new ResponseDto<>(-1, "아이디가 입력되지 않았습니다.", null);
@@ -108,7 +109,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user/update")
+    @PutMapping("/users")
     public String userUpdate(@RequestBody UpdateUserReqDto updateUserReqDto,
             @RequestParam(required = false) List<Integer> skill, @UserId Integer principalId) {
         if (updateUserReqDto.getPassword() == null || updateUserReqDto.getPassword().isEmpty()) {

@@ -52,7 +52,7 @@ public class BookmarkControllerTest {
         int id = 1;
         // when
         ResultActions resultActions = mvc.perform(
-                post("/bookmark/" + id).session(mockSession).header("Authorization", jwt));
+                post("/bookmarks/" + id).session(mockSession).header("Authorization", jwt));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
 
         System.out.println("테스트 : " + responseBody);
@@ -67,7 +67,7 @@ public class BookmarkControllerTest {
         int id = 1;
         // when
         ResultActions resultActions = mvc.perform(
-                delete("/bookmark/" + id).session(mockSession).header("Authorization", jwt));
+                delete("/bookmarks/" + id).session(mockSession).header("Authorization", jwt));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
 
         System.out.println("테스트 : " + responseBody);

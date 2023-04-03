@@ -28,7 +28,7 @@ public class UserPageController {
 
     private final BookmarkRepository bookmarkRepository;
 
-    @GetMapping("/myapply")
+    @GetMapping("/myapplications")
     public @ResponseBody ResponseEntity<?> mypage(@UserId Integer principalId) {
         List<UserPageApplyDto> userPageDtos = applyRepository.findAllApply(principalId);
         for (UserPageApplyDto post : userPageDtos) {
@@ -37,7 +37,7 @@ public class UserPageController {
         return new ResponseEntity<>(new ResponseDto<>(1, "성공", userPageDtos), HttpStatus.OK);
     }
 
-    @GetMapping("/mymatching")
+    @GetMapping("/mymatches")
     public @ResponseBody ResponseEntity<?> mymatching(@UserId Integer principalId) throws Exception {
         List<UserPageMatchingDto> posts = userSkillRepository.userJoinRecruitmentWithMatching(principalId);
 
@@ -50,7 +50,7 @@ public class UserPageController {
         return new ResponseEntity<>(new ResponseDto<>(1, "성공", posts), HttpStatus.OK);
     }
 
-    @GetMapping("/mybookmark")
+    @GetMapping("/mybookmarks")
     public @ResponseBody ResponseEntity<?> mybookmark(@UserId Integer principalId) {
         List<UserPageBookmarkDto> posts = bookmarkRepository.BookmarkJoinRecruitOfUserPage(principalId);
         // d-day 계산

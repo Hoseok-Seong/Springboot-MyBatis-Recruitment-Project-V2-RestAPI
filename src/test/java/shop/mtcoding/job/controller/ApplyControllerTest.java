@@ -75,7 +75,7 @@ public class ApplyControllerTest {
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                post("/apply/" + id).content(requestBody)
+                                post("/applications/" + id).content(requestBody)
                                                 .header("Authorization", jwt).session(mockSession)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
@@ -91,7 +91,7 @@ public class ApplyControllerTest {
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                delete("/apply/" + id).session(mockSession).header("Authorization", jwt));
+                                delete("/applications/" + id).session(mockSession).header("Authorization", jwt));
 
                 // then
                 resultActions.andExpect(jsonPath("$.code").value(1));
@@ -117,7 +117,7 @@ public class ApplyControllerTest {
 
                 // when
                 ResultActions resultActions = mvc.perform(
-                                put("/apply/result/" + id).content(requestBody).session(mockSession)
+                                put("/applications/result/" + id).content(requestBody).session(mockSession)
                                                 .header("Authorization", jwt)
                                                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 

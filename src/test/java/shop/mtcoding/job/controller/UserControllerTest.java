@@ -3,6 +3,7 @@ package shop.mtcoding.job.controller;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Date;
@@ -67,7 +68,7 @@ public class UserControllerTest {
         System.out.println(requestBody);
 
         // when
-        ResultActions resultActions = mvc.perform(post("/ns/user/login").content(requestBody)
+        ResultActions resultActions = mvc.perform(post("/ns/users/login").content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 
         // then
@@ -89,7 +90,7 @@ public class UserControllerTest {
         System.out.println(requestBody);
 
         // when
-        ResultActions resultActions = mvc.perform(post("/ns/user/join").content(requestBody)
+        ResultActions resultActions = mvc.perform(post("/ns/users/join").content(requestBody)
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
         // then
         resultActions.andExpect(status().is3xxRedirection());
@@ -112,7 +113,7 @@ public class UserControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(
-                post("/user/update")
+                put("/users")
                         .session(mockSession)
                         .content(requestBody).header("Authorization", jwt)
                         .contentType(MediaType.APPLICATION_JSON_VALUE));

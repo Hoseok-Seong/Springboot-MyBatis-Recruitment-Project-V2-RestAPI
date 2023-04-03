@@ -32,7 +32,7 @@ public class EntIdResolver implements HandlerMethodArgumentResolver {
                 return loginEnt.getId();
             }
         }
-        return null;
+        return EntInterface.defaultValue;
     }
 
     @Override
