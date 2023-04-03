@@ -29,7 +29,7 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
         String requestURI = request.getRequestURI();
         if (session != null) {
             if (session.getAttribute("loginUser") == null && requestURI.matches("/ns/recruitment/detail/.*")) {
-                return null;
+                return UserInterface.defaultValue;
             }
             if (session.getAttribute("loginUser") == null) {
                 throw new CustomApiException("개인회원으로 로그인해주세요", HttpStatus.BAD_REQUEST);
@@ -38,7 +38,7 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
                 return loginUser.getId();
             }
         }
-        return null;
+        return UserInterface.defaultValue;
     }
 
     @Override
