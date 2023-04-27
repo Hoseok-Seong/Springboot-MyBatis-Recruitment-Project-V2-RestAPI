@@ -11,6 +11,16 @@
 
 <br> 
 
+# 시연영상
+[![youtube](http://img.youtube.com/vi/fA5lgoRrtc8/0.jpg)](https://www.youtube.com/watch?v=fA5lgoRrtc8)
+
+<br>
+
+# 발표자료
+[미니프로젝트_5조.pdf](https://drive.google.com/file/d/1MLZSKSRlG25xghCQiTmhbgGRrbcM9YeV/view?usp=share_link)
+
+<br>
+
 # ⏰ 개발 기간
 - 2023.03.20~2023.03.27(1주)
 
