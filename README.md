@@ -28,6 +28,15 @@
 
 <br>
 
+## Contact
+
+|                                                 성호석(팀장)                                                  |                                                 김호현                                                  |                                                                          임지상                                                                          |                                                 심동환                                                  |
+| :-----------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: |
+| <img src="https://avatars.githubusercontent.com/u/93416157?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/122351733?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/67888405?v=4" alt="profile" width="100" height="100"> | <img src="https://avatars.githubusercontent.com/u/122349890?v=4" alt="profile" width="100" height="100"> |
+|                                   [@Hoseok-Seong](https://github.com/Hoseok-Seong)                                   |                                 [@Khohyeon](https://github.com/Khohyeon)                                 |                                                        [@tero1115](https://github.com/tero1115)                                                         |                              [@controller22](https://github.com/controller22)                              |
+
+<br>
+
 # ⏰ 개발 기간
 - 2023.03.20~2023.03.27(1주)
 
