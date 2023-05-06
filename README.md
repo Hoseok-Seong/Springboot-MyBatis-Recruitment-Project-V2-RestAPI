@@ -1,17 +1,24 @@
 <!-- # Springboot-MyBatis-Recruitment-Project -->
 
-# HIGHRE - 개발자를 위한 구인구직 웹사이트 - V2
-![image](https://user-images.githubusercontent.com/122351733/223630188-a70350c4-3496-4705-bfe3-c031f68d27f3.png)
+<!-- # Springboot-MyBatis-Recruitment-Project -->
+# Highre V2
 
-<br> 
+<h1 align="center">
+  <br>
+  <br>
+  <img width="300" alt="image" src="https://user-images.githubusercontent.com/93416157/235137778-5fedc41e-8e17-4fdf-bd08-887200f946f4.png">
+  <br>
+  <br>
+  <br>
+</h1>
 
-# 소개
+# 👨‍👨‍👧 서비스 소개
 >'고용하다'라는 의미의 Hire와 '더 높은'이라는 의미의 Higher를
-><br>합쳐 고객들에게 더 좋은 일자리를 제공한다는 의미를 담았습니다
+><br>합친 의미를 가진 구인구직 웹사이트 프로젝트입니다
 
-<br> 
+<br>
 
-# 시연영상
+# 데모영상
 [![youtube](http://img.youtube.com/vi/fA5lgoRrtc8/0.jpg)](https://www.youtube.com/watch?v=fA5lgoRrtc8)
 
 <br>
@@ -27,130 +34,23 @@
 <br>
 
 # ⚙️ 기술스택
-- 언어: JDK 11
-- 백엔드: Springboot 2.7.8
-- 프론트엔드: HTML5, CSS3, Javascript, JSP, Bootstrap
-- 데이터베이스: 테스트 H2, 프로덕션 MySQL, MyBatis, Redis 세션
-- 테스트: Junit
-- IDE: Visual Studio Code
-- VCS: Github
+<img src="https://img.shields.io/badge/JDK-11-007396?style=for-the-badge&logo=java&logoColor=white"><br><img src="https://img.shields.io/badge/Springboot-6DB33F?style=for-the-badge&logo=Springboot&logoColor=white">
+<br>
+<img src="https://img.shields.io/badge/html-E34F26?style=for-the-badge&logo=html5&logoColor=white"><img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"><img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"><img src="https://img.shields.io/badge/jquery-0769AD?style=for-the-badge&logo=jquery&logoColor=white"><img src="https://img.shields.io/badge/jsp-F5C300?style=for-the-badge&logo=jsp&logoColor=white"><img src="https://img.shields.io/badge/bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white">
+<br>
+<img src="https://img.shields.io/badge/H2-512BD4?style=for-the-badge&logo=H2&logoColor=white"><img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"><img src="https://img.shields.io/badge/MyBatis-색상?style=for-the-badge&logo=MyBatis&logoColor=white"><img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white">
+<br>
+<img src="https://img.shields.io/badge/junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white">
+<br>
+<img src="https://img.shields.io/badge/visualstudiocode-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white">
+<br>
+<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"><img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
 
 <br>
 
-# 🖥 아키텍쳐(MVC)
+# 📋  ERD-Diagram
 
-![image](https://user-images.githubusercontent.com/122351733/223648466-ee6ce325-64b3-4f82-888b-5d627e5e55fe.png)
-
-<br>
-
-# 📝 기능정리
-## Front-End
-- Header, Footer 레이아웃
-- 메인, 로그인, 회원가입 페이지
-- 이력서 메인, 등록, 목록 보기, 상세 보기 페이지
-- 채용공고 리스트, 등록, 상세보기 페이지
-- 개인-기업) 정보 수정
-- 개인) 마이페이지 - 지원 현황, 매칭 서비스, 북마크
-- 기업) 마이페이지 - 지원자 현황, 매칭 서비스, 북마크
-
-<br>
-
-## Back-End
-<details>
-  <summary>로그인</summary>
-  <ul>
-  <br>
-    <li>로그인 기능</li>
-    <li>아이디 중복 체크 및 Password 중복 검사</li>
-    <li>비밀번호 HASH256, Salt 암호화</li>
-    <li>로그인 시 아이디 기억하기 기능(Cookie)</li>
-    <li>로그인 시 최초 접속 페이지 유지하기 기능</li>
-  <br>
-  </ul>
-</details>
-<details>
-  <summary>회원가입</summary>
-  <ul>
-  <br>
-    <li>회원가입 기능</li>
-    <li>회원가입 시 기술스택 선택 기능</li>
-    <li>회원정보 수정 기능</li>
-  <br>
-  </ul>
-</details>
-<details>
-  <summary>이력서</summary>
-  <ul>
-  <br>
-    <li>이력서 등록 기능</li>
-    <li>이력서 수정 기능</li>
-    <li>이력서 삭제 기능</li>
-    <li>이력서 선택해서 채용공고 지원하기, 지원 취소하기 기능</li>
-  <br>
-  </ul>
-</details>
-<details>
-  <summary>채용공고</summary>
-  <ul>
-  <br>
-    <li>채용공고 등록 기능</li>
-    <li>채용공고 수정 기능</li>
-    <li>채용공고 삭제 기능</li>
-    <li>채용공고 제목, 내용으로 검색 기능</li>
-    <li>채용공고 카테고리별 검색 기능</li>
-    <li>마감일자 기능</li>
-    <li>공고 등록시 기술스택 선택 기능</li>
-  <br>
-  </ul>
-</details>
-<details>
-  <summary>북마크</summary>
-  <ul>
-  <br>
-    <li>북마크하기 기능</li>
-    <li>북마크 취소하기 기능</li>
-  <br>
-  </ul>
-</details>
-<details>
-  <summary>기업 마이페이지</summary>
-  <ul>
-  <br>
-    <li>나의 기업 정보</li>
-    <li>지원자 현황 보기(지원자 개인정보와 이력서 열람 기능)</li>
-    <li>지원자 합격/불합격 처리하기(마이페이지 동기화 기능)</li>
-    <li>나를 북마크한 회원 보기</li>
-    <li>기술스택 기준 구직자 매칭서비스</li>
-  <br>
-  </ul>
-</details>
-<details>
-  <summary>개인 마이페이지</summary>
-  <ul>
-  <br>
-    <li>나의 회원 정보</li>
-    <li>나의 지원 현황 보기/지원 취소하기 기능</li>
-    <li>내가 북마크한 기업 보기</li>
-    <li>기술스택 기준 기업 매칭서비스</li>
-  <br>
-  </ul>
-</details>
-<details>
-  <summary>알림 기능</summary>
-  <ul>
-  <br>
-    <li>SSE 통신으로 서류 발표 알림 기능</li>
-  <br>
-  </ul>
-</details>
-<details>
-  <summary>Redis</summary>
-  <ul>
-  <br>
-    <li>Redis 세션 DB 구현</li>
-  <br>
-  </ul>
-</details>
+![erd](https://user-images.githubusercontent.com/93416157/236497375-e2d3e29a-1e19-488d-b4ff-04d0de803732.png)
 
 <br>
 
